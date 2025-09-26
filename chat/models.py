@@ -4,7 +4,7 @@ from accounts.models import User
 
 class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
-    tenant_id = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="chats")
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="chats")
     tipo = models.CharField(max_length=20)
     criado_em = models.DateField(auto_now_add=True)
 
@@ -13,12 +13,12 @@ class Chat(models.Model):
 
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
-    tenant_id = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="messages")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_sent")
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="messages")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_sent")
     destinatario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_received")
-    chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     conteudo = models.TextField()
     criado_em = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"Tenant: {self.tenant_id}, Chat: {self.chat_id.chat_id}, De: {self.user_id}, Para: {self.destinatario}, Mensagem: {self.conteudo[:30]}..."
+        return f"Tenant: {self.tenant}, Chat: {self.chat}, De: {self.user}, Para: {self.destinatario}, Mensagem: {self.conteudo[:30]}..."
