@@ -31,7 +31,10 @@
             </td>
             <td>{{ tenant.paleta_de_cores }}</td>
             <td>{{ tenant.criado_em }}</td>
+            <td><a href="{% url 'tenant_edit' tenant.pk %}">Editar</a></td>
+            <td><a href="{% url 'tenant_delete' tenant.pk %}">Excluir</a></td>
           </tr>
+
           {% empty %}
           <tr>
             <td colspan="6">Nenhum tenant cadastrado.</td>

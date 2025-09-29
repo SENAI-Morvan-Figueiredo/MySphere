@@ -14,3 +14,9 @@ class TenantListView(ListView):
     model = Tenant
     template_name = 'tenants/tenants_list.html'
     context_object_name = 'tenants'
+    
+class TenantUpdateView(UpdateView):
+    model = Tenant
+    form_class = TenantForm
+    template_name = 'tenants/tenants_form.html'
+    success_url = reverse_lazy('tenant_list')
