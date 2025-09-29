@@ -20,3 +20,8 @@ class TenantUpdateView(UpdateView):
     form_class = TenantForm
     template_name = 'tenants/tenants_form.html'
     success_url = reverse_lazy('tenant_list')
+
+class TenantDeleteView(DeleteView):
+    model = Tenant
+    template_name = 'tenants/tenants_delete.html'
+    success_url = reverse_lazy('tenant_list')

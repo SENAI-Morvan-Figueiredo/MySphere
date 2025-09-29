@@ -1,0 +1,23 @@
+<html>
+<!-- tenants/tenants_delete.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Deletar Tenant</title>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2>Confirmar Exclusão</h2>
+    <p>Tem certeza que deseja excluir o Tenant</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <a href="{% url 'tenant_list' %}" class="btn btn-secondary">Cancelar</a>
+      <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+</div>
+
+</body>
+</html>
