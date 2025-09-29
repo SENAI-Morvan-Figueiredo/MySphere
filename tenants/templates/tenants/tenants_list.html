@@ -1,0 +1,46 @@
+<html>
+  <!-- tenants/tenants_list.html -->
+  <!DOCTYPE html>
+  <html lang="pt-br">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Lista de Tenants</title>
+    </head>
+    <body>
+      <h1>Lista de Tenants</h1>
+
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+          <tr>
+            <th>tenant_id</th>
+            <th>nome</th>
+            <th>domínio</th>
+            <th>logo</th>
+            <th>paleta de cores</th>
+            <th>criado em</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tenant in tenants %}
+          <tr>
+            <td>{{ tenant.tenant_id }}</td>
+            <td>{{ tenant.nome }}</td>
+            <td>{{ tenant.dominio }}</td>
+            <td>
+              <img src="{{ tenant.logo_url }}" alt="Logo" width="50" />
+            </td>
+            <td>{{ tenant.paleta_de_cores }}</td>
+            <td>{{ tenant.criado_em }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">Nenhum tenant cadastrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a href="{% url 'tenant_create' %}">criar</a>
+    </body>
+  </html>
+</html>
