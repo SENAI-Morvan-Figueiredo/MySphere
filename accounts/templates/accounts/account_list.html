@@ -1,10 +1,26 @@
-{%for user in users%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Usuários</title>
+</head>
+<body>
+    <h2>Usuários</h2>
 
-<p>{{ user.nome}}</p>
-<p>{{ user.email}}</p>
-<p>{{ user.senha}}</p>
-<p>{{ user.foto}}</p>
-<p>{{ user.data_nascimento}}</p>
-<p>{{ user.tenant}}</p>
+    {% if user.is_authenticated %}
+        <p>USUARIO LOGADO: {{ user.username }}</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Sair</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Entrar</a></p>
+    {% endif %}
 
-{% endfor %}
+    <a href="{% url 'novo' %}">Novo usuário</a> |
+    <ul>
+        {% for user in users %}
+            <li>{{ user.nome }} - {{ user.email }} - {{ user.role }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

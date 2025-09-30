@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body style="font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 5px; width: 300px;">
+        <h2 style="text-align: center;">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <p style="color:red; text-align: center;">Usuário ou senha incorretos!</p>
+            {% endif %}
+            <div style="margin-bottom: 10px;">
+                <label for="id_username">Email ou Username:</label><br>
+                <input type="text" name="username" id="id_username" style="width: 100%;" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="id_password">Senha:</label><br>
+                <input type="password" name="password" id="id_password" style="width: 100%;" required>
+            </div>
+            <div style="text-align: center;">
+                <button type="submit" style="padding: 5px 15px;">Entrar</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
