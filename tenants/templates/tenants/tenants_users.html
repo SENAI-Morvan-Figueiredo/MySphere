@@ -1,0 +1,48 @@
+<html>
+  <!DOCTYPE html>
+  <html lang="pt-br">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Lista de Tenants</title>
+    </head>
+    <body>
+      <h1>Lista de Tenants</h1>
+      <a href="{% url 'novo' %}">Adicionar a este Tenent</a>
+
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>nome</th>
+            <th>email</th>
+            <th>role</th>
+            <th>data nascimento</th>
+            <th>adicionado em</th>
+            <th>SUPERUSER</th>
+            <th>STAFF</th>
+            <th>tenant_id</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.pk }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.data_nascimento }}</td>
+            <td>{{ user.date_joined }}</td>
+            <td>{{ user.is_superuser }}</td>
+            <td>{{ user.is_staff }}</td>
+            <td>{{ user.tenant_id }}</td>
+        {% empty %}
+            <tr>
+                <td colspan="9">Nenhum User cadastrado nesse Tenent</td>
+            </tr>
+        {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</html>

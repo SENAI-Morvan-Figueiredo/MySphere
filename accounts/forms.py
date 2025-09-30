@@ -16,3 +16,19 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+class UserFormTenant(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'data_nascimento', 'role', 'foto']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get("password")
+        if password:
+            user.set_password(password)
+        if commit:
+            user.save()
+        return user

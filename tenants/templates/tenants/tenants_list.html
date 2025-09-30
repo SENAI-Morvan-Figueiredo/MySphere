@@ -1,49 +1,53 @@
 <html>
-  <!-- tenants/tenants_list.html -->
-  <!DOCTYPE html>
-  <html lang="pt-br">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Lista de Tenants</title>
-    </head>
-    <body>
-      <h1>Lista de Tenants</h1>
+<!-- tenants/tenants_list.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
 
-      <table border="1" cellspacing="0" cellpadding="5">
-        <thead>
-          <tr>
-            <th>tenant_id</th>
-            <th>nome</th>
-            <th>domínio</th>
-            <th>logo</th>
-            <th>paleta de cores</th>
-            <th>criado em</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for tenant in tenants %}
-          <tr>
-            <td>{{ tenant.tenant_id }}</td>
-            <td>{{ tenant.nome }}</td>
-            <td>{{ tenant.dominio }}</td>
-            <td>
-              <img src="{{ tenant.logo_url }}" alt="Logo" width="50" />
-            </td>
-            <td>{{ tenant.paleta_de_cores }}</td>
-            <td>{{ tenant.criado_em }}</td>
-            <td><a href="{% url 'tenant_edit' tenant.pk %}">Editar</a></td>
-            <td><a href="{% url 'tenant_delete' tenant.pk %}">Excluir</a></td>
-          </tr>
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Tenants</title>
+</head>
 
-          {% empty %}
-          <tr>
-            <td colspan="6">Nenhum tenant cadastrado.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+<body>
+  <h1>Lista de Tenants</h1>
 
-      <a href="{% url 'tenant_create' %}">criar</a>
-    </body>
-  </html>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>tenant_id</th>
+        <th>nome</th>
+        <th>domínio</th>
+        <th>logo</th>
+        <th>paleta de cores</th>
+        <th>criado em</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tenant in tenants %}
+        <tr>
+          <td>{{ tenant.tenant_id }}</td>
+          <td>{{ tenant.nome }}</td>
+          <td>{{ tenant.dominio }}</td>
+          <td>
+            <img src="{{ tenant.logo_url }}" alt="Logo" width="50" />
+          </td>
+          <td>{{ tenant.paleta_de_cores }}</td>
+          <td>{{ tenant.criado_em }}</td>
+          <td><a href="{% url 'tenant_edit' tenant.pk %}">Editar</a></td>
+          <td><a href="{% url 'tenant_delete' tenant.pk %}">Excluir</a></td>
+          <td><a href="{% url 'tenant_users' tenant.pk %}">Users</a></td>
+        </tr> 
+      {% empty %}
+      <tr>
+        <td colspan="6">Nenhum tenant cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'tenant_create' %}">criar</a>
+</body>
+
+</html>
+
 </html>
