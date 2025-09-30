@@ -45,6 +45,11 @@ INSTALLED_APPS = [
     'fead'
 ]
 
+AUTH_USER_MODEL = "accounts.User"
+
+LOGIN_REDIRECT_URL = '/user/usuarios/' 
+LOGOUT_REDIRECT_URL = '/user/usuarios/' 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
