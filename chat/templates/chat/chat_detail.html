@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .chat-header {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .mensagens {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .mensagem {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            max-width: 70%;
+            clear: both;
+        }
+
+        .mensagem.remetente {
+            background-color: #d1e7dd;
+            float: right;
+            text-align: right;
+        }
+
+        .mensagem.destinatario {
+            background-color: #f8d7da;
+            float: left;
+            text-align: left;
+        }
+
+        .chat-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .chat-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #0d6efd;
+            color: white;
+            cursor: pointer;
+        }
+
+        .chat-form button:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* Scrollbar estilizado */
+        .mensagens::-webkit-scrollbar {
+            width: 6px;
+        }
+        .mensagens::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Chat entre {{ chat.user1.username }} e {{ chat.user2.username }}
+        </div>
+
+        <div class="mensagens" id="mensagens">
+            {% for msg in mensagens %}
+                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}">
+                    <strong>{{ msg.remetente.username }}:</strong> {{ msg.conteudo }}
+                </div>
+            {% empty %}
+                <p>Nenhuma mensagem ainda.</p>
+            {% endfor %}
+        </div>
+
+        <form method="post" class="chat-form">
+            {% csrf_token %}
+            {{ form.conteudo }}
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        // Mantém o scroll sempre no final
+        const mensagensDiv = document.getElementById('mensagens');
+        mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
+    </script>
+</body>
+</html>

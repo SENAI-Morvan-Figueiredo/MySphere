@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Chats</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .chat { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Meus Chats</h1>
+    {% if chats %}
+        {% for chat in chats %}
+            <div class="chat">
+                <strong>Chat com:</strong> 
+                {% if chat.user1 == request.user %}{{ chat.user2.username }}
+                {% else %}{{ chat.user1.username }}{% endif %}
+                <br>
+                Criado em: {{ chat.criado_em }}
+                <br>
+                <a href="{% url 'chat_detail' chat.id %}">Abrir Chat</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Você não tem chats ainda.</p>
+    {% endif %}
+</body>
+</html>
