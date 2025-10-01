@@ -16,6 +16,16 @@
         <h1>NÃO LOGADO</h1>
     {% endif %}
 
+    {% if user.is_authenticated %}
+        <p>USUARIO LOGADO: {{ user.username }}</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Sair</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Entrar</a></p>
+    {% endif %}
+
     </ul>
 </body>
 </html>

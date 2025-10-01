@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Tenant
 from accounts.models import User
 from .forms import TenantForm
@@ -28,10 +29,15 @@ class TenantDeleteView(DeleteView):
     template_name = 'tenants/tenants_delete.html'
     success_url = reverse_lazy('tenant_list')
     
-class TenantListUsersView(ListView):
+class TenantListUsersView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = User
     template_name = 'tenants/tenants_users.html'
     context_object_name = 'users'
+
+    def test_func(self):
+        user = self.request.user
+        tenant_id = self.kwargs["pk"]
+        return user.is_superuser or (user.is_staff and user.tenant_id == int(tenant_id))
     
     def get_queryset(self):
         tenant_id = self.kwargs["pk"]
