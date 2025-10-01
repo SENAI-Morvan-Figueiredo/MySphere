@@ -6,11 +6,12 @@
 <body>
     <h2>Usuários</h2>
 
-    <a href="{% url 'novo' %}">Novo usuário</a> |
+    <a href="{% url 'novo' %}">Novo usuário</a> 
     <ul>
         {% for user in users %}
             <li>{{ user.nome }} - {{ user.email }} - {{ user.role }}</li>
         {% endfor %}
     </ul>
+    <a href="{% url 'login' %}">LOGIN</a> 
 </body>
 </html>

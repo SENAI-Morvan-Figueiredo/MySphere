@@ -1,7 +1,7 @@
 from django import forms
 from .models import User
 
-class UserForm(forms.ModelForm):
+class UserForm(forms.ModelForm): # add user via superuser
     password = forms.CharField(widget=forms.PasswordInput, required=True)
 
     class Meta:
@@ -17,7 +17,7 @@ class UserForm(forms.ModelForm):
             user.save()
         return user
     
-class UserFormTenant(forms.ModelForm):
+class UserFormTenant(forms.ModelForm): # add user via staff
     password = forms.CharField(widget=forms.PasswordInput, required=True)
     
     class Meta:
