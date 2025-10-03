@@ -20,8 +20,7 @@ class User_Task(models.Model):
     atribuido_por = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="tasks_assigned")
     concluido = models.BooleanField()
     concluido_em = models.DateTimeField(blank=True, null=True)
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="task_users")
-
+    
     def save(self, *args, **kwargs):
         if self.concluido and not self.concluido_em:
             from django.utils import timezone
