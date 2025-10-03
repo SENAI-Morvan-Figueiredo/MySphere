@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Tasks</title>
+</head>
+<body>
+  <h1>Lista de Tasks</h1>
+
+  <p><a href="#">Criar nova Task</a></p>
+
+  <table border="1" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Descrição</th>
+        <th>Pontos</th>
+        <th>Criado por</th>
+        <th>Criado em</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>{{ task.titulo }}</td>
+        <td>{{ task.descricao|default:"—" }}</td>
+        <td>{{ task.pontos }}</td>
+        <td>{{ task.criado_por.username }}</td>
+        <td>{{ task.criado_em }}</td>
+        <td>
+          <a href="#">Ver</a> 
+          <a href="#">Editar</a> 
+          <form action="#" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Apagar</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">Nenhuma task encontrada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

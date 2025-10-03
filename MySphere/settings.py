@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'accounts',
     'chat',
     'tenants',
-    'fead'
+    'fead',
+    'gamification',
 ]
 
 AUTH_USER_MODEL = "accounts.User"
