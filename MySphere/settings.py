@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-la*^kt%-et6k^1q3is3=e37u8#kg+p3%^yis!7(qf#77f+wd)o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev', 'https://*.repl.co']
 
 
 # Application definition
@@ -42,13 +44,14 @@ INSTALLED_APPS = [
     'accounts',
     'chat',
     'tenants',
-    'fead'
+    'feed'
 ]
 
 AUTH_USER_MODEL = "accounts.User"
 
-LOGIN_REDIRECT_URL = '/user/usuarios/' 
-LOGOUT_REDIRECT_URL = '/user/usuarios/' 
+LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = '/' 
+LOGOUT_REDIRECT_URL = '/user/login/' 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tenants.middleware.TenantMiddleware',
 ]
 
 ROOT_URLCONF = 'MySphere.urls'
@@ -83,6 +87,7 @@ WSGI_APPLICATION = 'MySphere.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Check if DATABASE_URL is available for PostgreSQL, otherwise use SQLite
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
@@ -126,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

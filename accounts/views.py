@@ -13,6 +13,11 @@ class Users(ListView):
     model = User
     template_name = "accounts/account_list.html"
     context_object_name = "users"
+    
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return User.objects.filter(tenant=self.request.user.tenant)
+        return User.objects.none()
 
 class Home(ListView):
     model = User
