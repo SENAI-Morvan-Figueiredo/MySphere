@@ -4,9 +4,9 @@ from .models import Task, User_Task
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['titulo', 'descricao', 'pontos', 'criado_por', 'tenant']
+        fields = ['titulo', 'descricao', 'pontos']
         
 class UserTaskForm(forms.ModelForm):
     class Meta:
         model = User_Task
-        fields = ['user', 'task', 'atribuido_por', 'concluido', 'concluido_em']
+        fields = ['user', 'task']

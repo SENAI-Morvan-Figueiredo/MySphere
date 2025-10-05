@@ -18,12 +18,12 @@ class User_Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks_done")
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="completed_by")    
     atribuido_por = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="tasks_assigned")
-    concluido = models.BooleanField()
+    concluido = models.BooleanField(default=False)
     concluido_em = models.DateTimeField(blank=True, null=True)
-    
+
     def save(self, *args, **kwargs):
         if self.concluido and not self.concluido_em:
-            from django.utils import timezone
+            from django.utils import timezone   
             self.concluido_em = timezone.now()
         super().save(*args, **kwargs)
 
