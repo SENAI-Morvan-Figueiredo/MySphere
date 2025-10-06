@@ -36,7 +36,7 @@ def chat_detail(request, chat_id):
     if request.user not in [chat.user1, chat.user2]:
         return redirect("chat_list")
 
-    messages = chat.messages.order_by("criado_em")
+    mensagens = chat.messages.order_by("criado_em")  # <- ajustado
     if request.method == "POST":
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -48,4 +48,4 @@ def chat_detail(request, chat_id):
     else:
         form = MessageForm()
 
-    return render(request, "chat/chat_detail.html", {"chat": chat, "messages": messages, "form": form})
+    return render(request, "chat/chat_detail.html", {"chat": chat, "mensagens": mensagens, "form": form})

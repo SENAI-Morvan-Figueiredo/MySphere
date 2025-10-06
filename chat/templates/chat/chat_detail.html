@@ -97,7 +97,7 @@
 
         <div class="mensagens" id="mensagens">
             {% for msg in mensagens %}
-                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}">
+                <div id="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}">
                     <strong>{{ msg.remetente.username }}:</strong> {{ msg.conteudo }}
                 </div>
             {% empty %}

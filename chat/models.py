@@ -40,15 +40,14 @@ class Message(models.Model):
 
     @property
     def conteudo(self):
-        return fernet.decrypt(self.conteudo_encrypted).decode()
+        try:
+            # Cria o Fernet usando a chave atual dos settings
+            fernet = Fernet(settings.FERNET_KEY.encode())
+            return fernet.decrypt(bytes(self.conteudo_encrypted)).decode()
+        except Exception:
+            return "<mensagem corrompida>"
 
     @conteudo.setter
     def conteudo(self, value):
+        fernet = Fernet(settings.FERNET_KEY.encode())
         self.conteudo_encrypted = fernet.encrypt(value.encode())
-
-    def __str__(self):
-        try:
-            preview = self.conteudo[:30]
-        except Exception:
-            preview = "<mensagem inválida>"
-        return f"De {self.remetente.username} em {self.chat}: {preview}..."
