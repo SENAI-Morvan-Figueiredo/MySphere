@@ -56,10 +56,10 @@ class UserTaskUpdateView(TenantAccessMixin, UpdateView):
 
 # VIEWS - DELETE 
 
-class TaskDeleteView(TenantAccessMixin, DeleteView):
+class TaskDeleteView(DeleteView):
     model = Task
     success_url = reverse_lazy('task_list')
 
-class UserTaskDeleteView(TenantAccessMixin, DeleteView):
+class UserTaskDeleteView(DeleteView):
     model = User_Task
     success_url = reverse_lazy('user_task_list')

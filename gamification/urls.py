@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TaskListView, UserTaskListView, PointsListView # LIST
+from .views import TaskListView, UserTaskListView, PointsListView#, #PointsUserView # LIST
 from .views import TaskCreateView, UserTaskCreateView # CREATE
 from .views import TaskUpdateView, UserTaskUpdateView # EDIT
 from .views import TaskDeleteView, UserTaskDeleteView # DELETE
@@ -14,4 +14,5 @@ urlpatterns = [
     path('usertask/<int:pk>/edit/', UserTaskUpdateView.as_view(), name='user_task_edit'), 
     path('usertask/<int:pk>/delete/', UserTaskDeleteView.as_view(), name='user_task_delete'), 
     path('points/', PointsListView.as_view(), name='point_list'), 
+    # path('points/<int:user_id>/', PointsUserView.as_view(), name='points_user')
 ]
