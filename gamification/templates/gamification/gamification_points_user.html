@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pontos</title>
+</head>
+
+<body>
+    <h1>Pontos {{ user.username }}</h1>
+
+    {% for point in points %}
+
+    <p>Pontos: {{ point.pontos }}</p>
+    <p>Nivel: {{ point.nivel }}</p>
+
+    {% endfor %}
+
+    <a href="#">Minhas Tarefas</a>
+
+</body>
+
+</html>

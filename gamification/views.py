@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
 from .models import Task, User_Task, Points
 from .forms import TaskForm, UserTaskForm
@@ -21,6 +21,17 @@ class PointsListView(TenantAccessMixin, ListView):
     model = Points
     template_name = 'gamification/gamification_points_list.html'
     context_object_name = 'points'
+    
+class PointsUserView(ListView):
+    model = Points 
+    template_name = 'gamification/gamification_points_user.html'
+    context_object_name = 'points'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        print(f'USER AQUI: {user}')
+        return queryset.filter(user_id=user)
 
 # VIEWS - CREATE
 
