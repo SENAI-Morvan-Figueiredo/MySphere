@@ -24,6 +24,8 @@ urlpatterns = [
     path('tenants/', include('tenants.urls')),
     path('user/', include('accounts.urls')),
     path('', include('feed.urls')),
+    path('chat/', include('chat.urls')),
+    
 ]
 
 if settings.DEBUG:

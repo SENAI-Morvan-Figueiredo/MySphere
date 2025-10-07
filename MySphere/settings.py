@@ -18,6 +18,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -35,6 +36,10 @@ CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev', 'https://*.repl.co']
 # Application definition
 
 INSTALLED_APPS = [
+    "django_cryptography",
+
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,6 +87,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'MySphere.wsgi.application'
+ASGI_APPLICATION = 'mysphere.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 
 # Database
@@ -90,6 +106,7 @@ WSGI_APPLICATION = 'MySphere.wsgi.application'
 # Check if DATABASE_URL is available for PostgreSQL, otherwise use SQLite
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+FERNET_KEY = env("FERNET_KEY")
 
 DATABASES = {
     "default": env.db()
