@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Tasks do Usuário</title>
+</head>
+<body>
+  <h1>Tasks de Usuários</h1>
+
+  <table border="1" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Usuário</th>
+        <th>Task</th>
+        <th>Atribuído por</th>
+        <th>Concluído</th>
+        <th>Concluído em</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ut in user_tasks %}
+      <tr>
+        <td>{{ ut.user.username }}</td>
+        <td>{{ ut.task.titulo }}</td>
+        <td>{% if ut.atribuido_por %}{{ ut.atribuido_por.username }}{% else %}—{% endif %}</td>
+        <td>{% if ut.concluido %}Sim{% else %}Não{% endif %}</td>
+        <td>{{ ut.concluido_em|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">Nenhum registro de tarefas de usuário.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p>
+    <a href="{% url 'user_task_create' %}">Atribuir Task a User</a>
+    <a href="#">Ver Pontos</a>
+    <a href="#">Ver Tasks</a>
+  </p>
+</body>
+</html>

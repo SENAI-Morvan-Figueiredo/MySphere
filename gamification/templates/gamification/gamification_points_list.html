@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Pontos</title>
+</head>
+<body>
+  <h1>Pontos</h1>
+
+  {% if points %}
+    {% if points.pontos is not None %}
+      <h2>{{ points.user.username }}</h2>
+      <p>Pontos: {{ points.pontos }}</p>
+      <p>Nível: {{ points.nivel }}</p>
+      <p>Última atualização: {{ points.ultima_atualizacao }}</p>
+    {% else %}
+      <table border="1" cellpadding="5"> 
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Pontos</th>
+            <th>Nível</th>
+            <th>Última atualização</th>
+            <th>Tenant</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in points %}
+          <tr>
+            <td>{{ p.user.username }}</td>
+            <td>{{ p.pontos }}</td>
+            <td>{{ p.nivel }}</td>
+            <td>{{ p.ultima_atualizacao }}</td>
+            <td>{{ p.tenant }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">Nenhum registro de pontos encontrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  {% else %}
+    <p>Nenhum registro de pontos para exibir.</p>
+  {% endif %}
+
+  <p><a href="#">Voltar às Tasks</a></p>
+</body>
+</html>

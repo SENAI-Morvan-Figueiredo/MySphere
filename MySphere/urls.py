@@ -25,7 +25,7 @@ urlpatterns = [
     path('user/', include('accounts.urls')),
     path('', include('feed.urls')),
     path('chat/', include('chat.urls')),
-    
+    path('game/', include('gamification.urls')),
 ]
 
 if settings.DEBUG:
