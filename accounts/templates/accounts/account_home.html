@@ -1,32 +1,43 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Lista de Usuários</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/user_home.css' %}">
 </head>
 <body>
-    <h2>USUARIO LOGADOO</h2>
+    <div class="profile-container">
+        {% if user.is_authenticated %}
+            <div class="profile-header">
+                <div class="profile-photo"></div>
+                <h2>{{ user.username }}</h2>
+                <p class="user-email">{{ user.email }}</p>
+            </div>
 
-    {% if user.is_authenticated %}
-        <h1>{{ user.email }}</h1>
-        <h1>{{ user.role }}</h1>
-        <h1>{{ user.data_nascimento }}</h1>
-        <h1>{{ user.tenant }}</h1>
-        <p>SUPERUSER: {{ user.is_superuser }}</p>
-        <p>STAFF: {{ user.is_staff }}</p>
-    {% else %}
-        <h1>NÃO LOGADO</h1>
-    {% endif %}
+            <div class="profile-info">
+                {% if user.role %}
+                    <p><strong>Função:</strong> {{ user.role }}</p>
+                {% endif %}
+                {% if user.data_nascimento %}
+                    <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
+                {% endif %}
+                {% if user.tenant %}
+                    <p><strong>Tenant:</strong> {{ user.tenant }}</p>
+                {% endif %}
+            </div>
 
-    {% if user.is_authenticated %}
-        <p>USUARIO LOGADO: {{ user.username }}</p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Sair</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}">Entrar</a></p>
-    {% endif %}
-
-    </ul>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Sair</button>
+            </form>
+        {% else %}
+            <div class="not-logged">
+                <h2>Você não está logado</h2>
+                <a href="{% url 'login' %}" class="login-link">Entrar</a>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
