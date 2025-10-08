@@ -12,6 +12,16 @@ class TaskListView(TenantAccessMixin, ListView):
     template_name = 'gamification/gamification_tasks_list.html'
     context_object_name = 'tasks'
 
+class TaskUserView(ListView):
+    model = User_Task 
+    template_name = 'gamification/gamification_tasks_user.html'
+    context_object_name = 'user_tasks'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        return queryset.filter(user_id=user)
+
 class UserTaskListView(TenantAccessMixin, ListView):
     model = User_Task
     template_name = 'gamification/gamification_users_tasks_list.html'
@@ -30,7 +40,6 @@ class PointsUserView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         user = self.request.user
-        print(f'USER AQUI: {user}')
         return queryset.filter(user_id=user)
 
 # VIEWS - CREATE

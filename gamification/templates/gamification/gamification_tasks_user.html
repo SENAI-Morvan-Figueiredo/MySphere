@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>Tarefas</title>
+</head>
+
+<body>
+    <h1>Tarefas de {{ user.username }}</h1>
+
+
+    {% for user_task in user_tasks %}
+
+    <div class="card" style="border: black, 1px, solid;">
+        <p>Titulo: {{ user_task.task.titulo }}</p>
+        <p>Descricao: {{ user_task.task.descricao }}</p>
+        <p>Valor de Pontos: {{ user_task.task.pontos }}</p>
+    </div>
+    {% endfor %}
+
+    <a href="#">Meus Pontos</a>
+
+</body>
+
+</html>
