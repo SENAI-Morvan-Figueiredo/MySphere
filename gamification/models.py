@@ -1,6 +1,7 @@
 from django.db import models
 from tenants.models import Tenant
 from accounts.models import User
+from django.core.exceptions import ValidationError
 
 class Task(models.Model):
     task_id = models.AutoField(primary_key=True, unique=True)
@@ -20,6 +21,9 @@ class User_Task(models.Model):
     atribuido_por = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="tasks_assigned")
     concluido = models.BooleanField(default=False)
     concluido_em = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('user', 'task')
 
     def save(self, *args, **kwargs):
         if self.concluido and not self.concluido_em:

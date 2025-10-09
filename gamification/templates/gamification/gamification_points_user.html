@@ -7,17 +7,47 @@
 </head>
 
 <body>
-    <h1>Pontos {{ user.username }}</h1>
+    <h1>Gamificação - {{ user.username }}</h1>
 
-    {% for point in points %}
+    <main>
+        <section>
+            <h2>Meus Pontos</h2>
 
-    <p>Pontos: {{ point.pontos }}</p>
-    <p>Nivel: {{ point.nivel }}</p>
+            {% if points %}
+                {% for point in points %}
+                    <article>
+                        <p>Pontos: {{ point.pontos }}</p>
+                        <p>Nível: {{ point.nivel }}</p>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não possui pontos registrados.</p>
+            {% endif %}
+        </section>
 
-    {% endfor %}
+        <hr>
 
-    <a href="#">Minhas Tarefas</a>
+        <section>
+            <h2>Minhas Tarefas</h2>
 
+            {% if user_tasks %}
+                {% for user_task in user_tasks %}
+                   <article  style="border: 5px, black, dotted;">  <!-- SO PRA APARECER AS TASKS ESSE PONTILHADO -->
+                        <p>Título: {{ user_task.task.titulo }}</p>
+                        <p>Descrição: {{ user_task.task.descricao }}</p>
+                        <p>Valor de Pontos: {{ user_task.task.pontos }}</p>
+                        <p>Status: {% if user_task.concluido %}Concluída{% else %}Pendente{% endif %}</p>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não possui tarefas atribuídas.</p>
+            {% endif %}
+        </section>
+
+        <nav>
+            <a href="#">Ver todas as tarefas</a>
+        </nav>
+    </main>
 </body>
 
 </html>
