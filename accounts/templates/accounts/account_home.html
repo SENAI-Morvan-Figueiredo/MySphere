@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="{% static 'accounts/css/user_home.css' %}">
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">My<span>Sphere</span></div>
+
+        {% if user.is_authenticated %}
+        <div class="user-info">
+            <div class="avatar">{{ user.username|first|upper }}</div>
+            <span class="username">{{ user.username }}</span>
+        </div>
+        {% endif %}
+    </nav>
+
+    <!-- Conteúdo principal -->
     <div class="profile-container">
         {% if user.is_authenticated %}
             <div class="profile-header">
@@ -23,9 +36,14 @@
                 {% if user.data_nascimento %}
                     <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
                 {% endif %}
-                {% if user.tenant %}
-                    <p><strong>Tenant:</strong> {{ user.tenant }}</p>
-                {% endif %}
+
+            <!-- Seção Sobre -->
+            <div class="about-section">
+                <h3>Sobre</h3>
+                <p>
+                    Profissional dedicado e curioso por tecnologia. Apaixonado por aprender, criar e colaborar 
+                    em projetos que fazem a diferença. Sempre em busca de desafios para crescer pessoal e profissionalmente.
+                </p>
             </div>
 
             <form method="post" action="{% url 'logout' %}">

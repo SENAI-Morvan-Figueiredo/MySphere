@@ -1,20 +1,69 @@
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.logo span {
+    color: #3b82f6;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    background-color: #7c6ee4;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
 }
 
+.username {
+    font-size: 15px;
+    color: #333;
+}
+
+/* CONTEÚDO PRINCIPAL */
 .profile-container {
-    background: #fff;
-    width: 420px;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
+   background: #fff;
+   width: 420px;
+   margin: 60px auto;
+   padding: 30px;
+   border-radius: 12px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+   margin-top: 10vh;
+   
 }
 
 .profile-header {
@@ -47,12 +96,34 @@ body {
     font-size: 15px;
     line-height: 1.8;
     color: #444;
+    flex-direction: row;
 }
 
 .profile-info p strong {
     color: #222;
 }
 
+/* SEÇÃO SOBRE */
+.about-section {
+    text-align: left;
+    margin-top: 30px;
+}
+
+.about-section h3 {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.about-section p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+/* BOTÕES */
 .logout-btn {
     margin-top: 30px;
     background-color: #e8f0ff;
