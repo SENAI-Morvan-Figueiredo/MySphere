@@ -2,6 +2,9 @@ from django.db import models
 from tenants.models import Tenant
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
