@@ -33,7 +33,7 @@
 > Linguagem principal utilizada no **Back-end**, responsável pela lógica do sistema, integração com o banco de dados e controle das rotas (views, models, urls, etc.).
 
 > ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)  
-> **Framework Python** usado para o desenvolvimento rápido e seguro do Back-end, facilitando a criação de aplicações escaláveis com o padrão **MVC (Model-View-Controller)**.
+> **Framework Python** usado para o desenvolvimento rápido e seguro do Back-end, facilitando a criação de aplicações escaláveis com o padrão **MVT (Model-View-Template)**.
 
 > ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)  
 > Banco de dados **relacional e robusto**, utilizado para armazenar as informações dos usuários e **isolar os dados de cada tenant** de forma segura e eficiente.
@@ -49,7 +49,7 @@
 
 ## 🧩 Arquitetura do Sistema
 
-O MySphere foi desenvolvido com uma arquitetura **modular e escalável**, baseada no padrão **MVC** do Django.  
+O MySphere foi desenvolvido com uma arquitetura **modular e escalável**, baseada no padrão **MVT** do Django.  
 Cada empresa (tenant) possui seu próprio ambiente isolado de dados, garantindo segurança e personalização.
 
 **Principais camadas:**
@@ -57,8 +57,6 @@ Cada empresa (tenant) possui seu próprio ambiente isolado de dados, garantindo 
 - **Views:** controlam a lógica e as regras de negócio de cada funcionalidade.
 - **Templates:** responsáveis pela renderização das páginas HTML.
 - **Static Files:** armazenam os arquivos CSS, JS e imagens.
-
-## 🧠 Passo a passo
 
 ## 👨‍💻 Desenvolvedores
 
