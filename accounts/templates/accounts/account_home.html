@@ -21,8 +21,12 @@
     </nav>
 
     <!-- Conteúdo principal -->
+
     <main class="profile-container">
       {% if user.is_authenticated %}
+
+      <button id="editar_btn">editar</button>
+
       <section class="profile-header">
         <div class="profile-photo"></div>
         <h2>{{ user.username }}</h2>

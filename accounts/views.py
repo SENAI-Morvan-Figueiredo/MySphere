@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from .models import User
@@ -70,3 +70,11 @@ class novo(CreateView):
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'  
     redirect_authenticated_user = True     
+    
+    
+    
+# class editar(UpdateView):
+#     model = User
+#     fields = ['foto', 'data_nascimento']  # Campos que podem ser editados
+#     template_name = 'account_home.html'
+#     success_url = reverse_lazy('account_home')

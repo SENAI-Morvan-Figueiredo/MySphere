@@ -10,5 +10,4 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('home/', views.feed_view, name='home'),
-    path('home/<str:username>/', views.feed_view, name='home_usuario'),
 ]
