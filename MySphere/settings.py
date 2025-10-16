@@ -37,9 +37,6 @@ CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev', 'https://*.repl.co']
 
 INSTALLED_APPS = [
     "django_cryptography",
-
-
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,16 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    
     'accounts',
     'chat',
     'tenants',
-    'feed'
+    'feed',
+    'gamification',
 ]
 
 AUTH_USER_MODEL = "accounts.User"
