@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import TaskListView, UserTaskListView, PointsListView # LIST 
-from .views import GameHomeView 
+from .views import GameHomeView, concluir_tarefa
 from .views import TaskCreateView, UserTaskCreateView # CREATE
 from .views import TaskUpdateView, UserTaskUpdateView # EDIT
 from .views import TaskDeleteView, UserTaskDeleteView # DELETE
@@ -16,4 +16,5 @@ urlpatterns = [
     path('usertask/<int:pk>/delete/', UserTaskDeleteView.as_view(), name='user_task_delete'), 
     path('points/lista/', PointsListView.as_view(), name='point_list'), # STAFF
     path('', GameHomeView.as_view(), name='game_home'), # USER
+    path('usertask/<int:task_id>/concluir/', concluir_tarefa, name='concluir_tarefa'),
 ]

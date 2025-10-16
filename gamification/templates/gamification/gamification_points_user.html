@@ -1,53 +1,54 @@
+{% load static %}
 <!doctype html>
 <html lang="pt-br">
-
 <head>
     <meta charset="utf-8">
-    <title>Pontos</title>
+    <title>Pontos - {{ user.username }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-
 <body>
-    <h1>Gamificação - {{ user.username }}</h1>
+    <nav class="navbar"></nav>
 
-    <main>
-        <section>
+    <main class="container">
+        <section class="pontuacao">
             <h2>Meus Pontos</h2>
-
             {% if points %}
                 {% for point in points %}
-                    <article>
-                        <p>Pontos: {{ point.pontos }}</p>
-                        <p>Nível: {{ point.nivel }}</p>
+                    <article class="card">
+                        <p><strong>Pontos:</strong> {{ point.pontos }}</p>
+                        <p><strong>Nível:</strong> {{ point.nivel }}</p>
                     </article>
                 {% endfor %}
             {% else %}
-                <p>Você ainda não possui pontos registrados.</p>
+                <p class="vazio">Você ainda não possui pontos registrados.</p>
             {% endif %}
         </section>
 
-        <hr>
-
-        <section>
+        <section class="tarefas">
             <h2>Minhas Tarefas</h2>
-
             {% if user_tasks %}
                 {% for user_task in user_tasks %}
-                   <article  style="border: 5px, black, dotted;">  <!-- SO PRA APARECER AS TASKS ESSE PONTILHADO -->
-                        <p>Título: {{ user_task.task.titulo }}</p>
-                        <p>Descrição: {{ user_task.task.descricao }}</p>
-                        <p>Valor de Pontos: {{ user_task.task.pontos }}</p>
-                        <p>Status: {% if user_task.concluido %}Concluída{% else %}Pendente{% endif %}</p>
+                    <article class="task-card">
+                        <p><strong>Título:</strong> {{ user_task.task.titulo }}</p>
+                        <p><strong>Descrição:</strong> {{ user_task.task.descricao }}</p>
+                        <p><strong>Valor de Pontos:</strong> {{ user_task.task.pontos }}</p>
+                        <p>Status:
+                            {% if user_task.concluido %}
+                                ✅ Concluída
+                            {% else %}
+                                ❌ Pendente
+                                <form method="POST" action="{% url 'concluir_tarefa' user_task.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Concluir</button>
+                                </form>
+                            {% endif %}
+                        </p>
                     </article>
                 {% endfor %}
             {% else %}
-                <p>Você ainda não possui tarefas atribuídas.</p>
+                <p class="vazio">Você ainda não possui tarefas atribuídas.</p>
             {% endif %}
         </section>
-
-        <nav>
-            <a href="#">Ver todas as tarefas</a>
-        </nav>
     </main>
 </body>
-
 </html>

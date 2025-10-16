@@ -4,6 +4,9 @@ from django.urls import reverse_lazy
 from .models import Task, User_Task, Points
 from .forms import TaskForm, UserTaskForm
 from .mixins import TenantAccessMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 # VIEWS - LIST
 
@@ -38,6 +41,17 @@ class GameHomeView(ListView):
         user = self.request.user
         context['user_tasks'] = User_Task.objects.filter(user=self.request.user)
         return context
+
+@require_POST
+@login_required
+def concluir_tarefa(request, task_id):
+    user_task = get_object_or_404(User_Task, id=task_id, user=request.user)
+
+    if not user_task.concluido:
+        user_task.concluido = True
+        user_task.save() 
+
+    return redirect('game_home')
 
 # VIEWS - CREATE
 
