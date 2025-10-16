@@ -32,4 +32,10 @@ class novo(CreateView):
 
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'  
-    redirect_authenticated_user = True     
+    redirect_authenticated_user = True
+    
+    def form_valid(self, form):
+        remember = self.request.POST.get('remember')
+        if not remember:
+            self.request.session.set_expiry(0)
+        return super().form_valid(form)     

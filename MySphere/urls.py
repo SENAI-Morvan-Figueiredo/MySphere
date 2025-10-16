@@ -23,9 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tenants/', include('tenants.urls')),
     path('user/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
     path('', include('feed.urls')),
     path('chat/', include('chat.urls')),
-    path('game/', include('gamification.urls')),
+    
 ]
 
 if settings.DEBUG:
