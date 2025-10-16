@@ -128,3 +128,12 @@ class TenantAccessMixin(LoginRequiredMixin):
                     logger.debug("Erro filtrando queryset do campo %s: %s", field_name, e)
                     continue
         return form
+
+class OnlyIsStaff(LoginRequiredMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not request.user.is_staff:
+            raise PermissionDenied("Somente Staff")
+        return super().dispatch(request, *args, **kwargs)
