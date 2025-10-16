@@ -120,8 +120,12 @@ body {
 
 
 /* ====== CONTAINER PRINCIPAL ====== */
+.containers{
+    display: flex;
+}
+
 .container-1 {
-    position: absolute;
+    position: relative;
     
     left: 0;
     width: 22vw;

@@ -6,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Chats</title>
+    {% block css %}{% endblock %} 
     <link rel="stylesheet" href="{% static 'chat/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/css/chat_detail.css' %}">
     <script src="{% static 'chat/js/script.js' %}"></script>
     
 </head>
@@ -28,47 +30,53 @@
                 </div>
             </div>
     </header>
-    <div class="container-1">
-        <div class="chat-menu">
-            <h1>Chat</h1>
-            <input type="text" placeholder="Pesquisar..." class="chat-barra" id="chatSearch">
-            <button class="add-btn">Novo Chat</button>
-            <hr>
-        </div>
-        <div class="chat-list">
-            {% if chats %}
-            {% for chat in chats %}
-            <a class="clique" href="{% url 'chat_detail' chat.id %}">
-                <div class="chat-block">
-                    {% if chat.user2.foto %}
-                        <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
-                    {% else %}
-                        <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
-                    {% endif %}
+    <div class="containers">
+        <div class="container-1">
+            <div class="chat-menu">
+                <h1>Chat</h1>
+                <input type="text" placeholder="Pesquisar..." class="chat-barra" id="chatSearch">
+                <button class="add-btn">Novo Chat</button>
+                <hr>
+            </div>
+            <div class="chat-list">
+                {% if chats %}
+                {% for chat in chats %}
+                <a class="clique" href="{% url 'chat_detail' chat.id %}">
+                    <div class="chat-block">
+                        {% if chat.user2.foto %}
+                            <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
+                        {% else %}
+                            <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
+                        {% endif %}
 
-                    <div class="chat-info">
-                        <div class="chat-info-header">
-                            {% if chat.user1 == request.user %}
-                                <strong>{{ chat.user2.username }}</strong>
-                            {% else %}
-                                <strong>{{ chat.user1.username }}</strong>
-                            {% endif %}
+                        <div class="chat-info">
+                            <div class="chat-info-header">
+                                {% if chat.user1 == request.user %}
+                                    <strong>{{ chat.user2.username }}</strong>
+                                {% else %}
+                                    <strong>{{ chat.user1.username }}</strong>
+                                {% endif %}
+                                {% if chat.messages.last %}
+                                    <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
+                                {% endif %}
+                            </div>
                             {% if chat.messages.last %}
-                                <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
+                                <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
+                            {% else %}
+                                <span class="chat-preview">Sem mensagens</span>
                             {% endif %}
                         </div>
-                        {% if chat.messages.last %}
-                            <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
-                        {% else %}
-                            <span class="chat-preview">Sem mensagens</span>
-                        {% endif %}
                     </div>
-                </div>
-            </a>
-            {% endfor %}
-        {% else %}
-            <p>Você não tem chats ainda.</p>
-        {% endif %}
+                </a>
+                {% endfor %}
+            {% else %}
+                <p>Você não tem chats ainda.</p>
+            {% endif %}
+            </div>
+        </div>
+        <div class="container-2">
+            {% block content %}
+            {% endblock content %}
         </div>
     </div>
 </body>

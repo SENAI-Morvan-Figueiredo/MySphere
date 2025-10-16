@@ -1,645 +1,200 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - {{ chat.user1.username }} e {{ chat.user2.username }}</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends 'chat/chat_list.html' %}
 
-        :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --primary-light: #3b82f6;
-            --background: #0b141a;
-            --chat-bg: #efeae2;
-            --panel-header: #202c33;
-            --message-out: #005c4b;
-            --message-in: #202c33;
-            --border: #2a3942;
-            --text-primary: #e9edef;
-            --text-secondary: #8696a0;
-            --text-tertiary: #667781;
-            --text-dark: #111b21;
-            --input-bg: #2a3942;
-            --shadow: 0 1px 3px rgba(11, 20, 26, 0.4);
-            --transition: all 0.2s ease;
-        }
+    {% block title %}Chat - {{ chat.user1.username }} e {{ chat.user2.username }}{% endblock %}
 
-        body {
-            font-family: 'Segoe UI', Helvetica Neue, Helvetica, Lucida Grande, Arial, Ubuntu, Cantarell, Fira Sans, sans-serif;
-            background: var(--background);
-            min-height: 100vh;
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .whatsapp-container {
-            width: 100%;
-            max-width: 1400px;
-            height: 95vh;
-            background: var(--background);
-            display: flex;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Chat Container */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--chat-bg);
-            position: relative;
-        }
-
-        /* Header */
-        .chat-header {
-            background: var(--panel-header);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
-            box-shadow: var(--shadow);
-            z-index: 10;
-        }
-
-        .header-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            cursor: pointer;
-        }
-
-        .header-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1em;
-            font-weight: 500;
-            flex-shrink: 0;
-        }
-
-        .header-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .header-name {
-            font-size: 1em;
-            font-weight: 400;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-
-        .header-status {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 20px;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: var(--transition);
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn:hover {
-            background: var(--input-bg);
-            color: var(--text-primary);
-        }
-
-        /* Messages Area */
-        .mensagens {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 8%;
-            background: var(--chat-bg);
-            background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .mensagem {
-            max-width: 65%;
-            padding: 6px 7px 8px 9px;
-            border-radius: 8px;
-            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-            position: relative;
-            word-wrap: break-word;
-            animation: messageSlide 0.2s ease;
-        }
-
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .mensagem.remetente {
-            background: var(--primary-color);
-            color: white;
-            align-self: flex-end;
-            border-radius: 8px 8px 0 8px;
-        }
-
-        .mensagem.destinatario {
-            background: var(--message-in);
-            color: var(--text-primary);
-            align-self: flex-start;
-            border-radius: 8px 8px 8px 0;
-        }
-
-        .mensagem-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .mensagem-autor {
-            font-size: 0.8em;
-            font-weight: 600;
-            opacity: 0.9;
-        }
-
-        .mensagem.remetente .mensagem-autor {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .mensagem.destinatario .mensagem-autor {
-            color: var(--primary-light);
-        }
-
-        .mensagem-conteudo {
-            font-size: 0.9em;
-            line-height: 1.4;
-            margin-bottom: 2px;
-            padding-right: 50px;
-        }
-
-        .mensagem-footer {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-            font-size: 0.7em;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
-
-        .mensagem-hora {
-            white-space: nowrap;
-        }
-
-        .check-icon {
-            font-size: 1.1em;
-        }
-
-        /* Empty State */
-        .empty-messages {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-tertiary);
-            gap: 15px;
-            padding: 40px;
-        }
-
-        .empty-messages-icon {
-            font-size: 5em;
-            opacity: 0.3;
-        }
-
-        .empty-messages p {
-            font-size: 1em;
-            text-align: center;
-        }
-
-        /* Footer / Input Area */
-        .chat-footer {
-            background: var(--panel-header);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .footer-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: var(--transition);
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .footer-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-
-        .chat-input {
-            width: 100%;
-            padding: 10px 45px 10px 15px;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            background: var(--input-bg);
-            color: var(--text-primary);
-            font-size: 0.95em;
-            font-family: inherit;
-            resize: none;
-            max-height: 100px;
-        }
-
-        .chat-input::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        .emoji-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1.5em;
-            padding: 4px;
-            transition: var(--transition);
-        }
-
-        .emoji-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .send-btn {
-            background: var(--primary-color);
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 12px;
-            border-radius: 50%;
-            transition: var(--transition);
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 45px;
-            height: 45px;
-        }
-
-        .send-btn:hover {
-            background: var(--primary-hover);
-            transform: scale(1.05);
-        }
-
-        .send-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Typing Indicator */
-        .typing-indicator {
-            display: none;
-            align-self: flex-start;
-            background: var(--message-in);
-            padding: 12px 16px;
-            border-radius: 8px 8px 8px 0;
-            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-        }
-
-        .typing-indicator.active {
-            display: block;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text-secondary);
-            animation: typingBounce 1.4s infinite;
-        }
-
-        .typing-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typingBounce {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-8px);
-            }
-        }
-
-        /* Scrollbar */
-        .mensagens::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .mensagens::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .mensagens::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
-        }
-
-        .mensagens::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
-
-            .whatsapp-container {
-                height: 100vh;
-                border-radius: 0;
-            }
-
-            .mensagens {
-                padding: 20px 5%;
-            }
-
-            .mensagem {
-                max-width: 80%;
-            }
-
-            .footer-actions .footer-btn:first-child {
-                display: none;
-            }
-        }
-
-        /* Acessibilidade */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="whatsapp-container">
-        <div class="chat-container">
-            <!-- Header -->
-            <header class="chat-header">
-                <div class="header-info">
-                    <div class="header-avatar">
-                        {{ chat.user1.username|first|upper }}{{ chat.user2.username|first|upper }}
-                    </div>
-                    <div class="header-details">
-                        <div class="header-name">
-                            {{ chat.user1.username }} e {{ chat.user2.username }}
+    {% block content %}
+        <div class="whatsapp-container">
+            <div class="chat-container">
+                <!-- Header -->
+                <header class="chat-header">
+                    <div class="header-info">
+                        <div class="header-avatar">
+                            {{ chat.user1.username|first|upper }}{{ chat.user2.username|first|upper }}
                         </div>
-                        <div class="header-status">online</div>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button class="icon-btn" title="Pesquisar" aria-label="Pesquisar mensagens">
-                        🔍
-                    </button>
-                    <button class="icon-btn" title="Menu" aria-label="Menu">
-                        ⋮
-                    </button>
-                </div>
-            </header>
-
-            <!-- Messages Area -->
-            <div class="mensagens" id="mensagens" role="log" aria-live="polite">
-                {% if mensagens %}
-                    {% for msg in mensagens %}
-                        <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
-                             role="article"
-                             aria-label="Mensagem de {{ msg.remetente.username }}">
-                            <div class="mensagem-header">
-                                <span class="mensagem-autor">{{ msg.remetente.username }}</span>
+                        <div class="header-details">
+                            <div class="header-name">
+                                {{ chat.user1.username }} e {{ chat.user2.username }}
                             </div>
-                            <div class="mensagem-conteudo">{{ msg.conteudo }}</div>
-                            <div class="mensagem-footer">
-                                <span class="mensagem-hora">{{ msg.criado_em|date:"H:i" }}</span>
-                                {% if msg.remetente == request.user %}
-                                    <span class="check-icon">✓✓</span>
-                                {% endif %}
-                            </div>
+                            <div class="header-status">online</div>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-messages">
-                        <div class="empty-messages-icon">💬</div>
-                        <p>Nenhuma mensagem ainda.<br>Envie uma mensagem para começar a conversa!</p>
                     </div>
-                {% endif %}
-                
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer / Input Area -->
-            <footer class="chat-footer">
-                <div class="footer-actions">
-                    <button class="footer-btn" title="Anexar" aria-label="Anexar arquivo">
-                        📎
-                    </button>
-                </div>
-                
-                <form method="post" id="chatForm" style="flex: 1; display: flex; gap: 10px; align-items: center;">
-                    {% csrf_token %}
-                    <div class="input-wrapper">
-                        <input 
-                            type="text"
-                            name="conteudo"
-                            class="chat-input"
-                            id="messageInput"
-                            placeholder="Escreva uma mensagem"
-                            autocomplete="off"
-                            maxlength="500"
-                            aria-label="Escreva uma mensagem"
-                        >
-                        <button type="button" class="emoji-btn" title="Emoji" aria-label="Adicionar emoji">
-                            😊
+                    <div class="header-actions">
+                        <button class="icon-btn" title="Pesquisar" aria-label="Pesquisar mensagens">
+                            🔍
+                        </button>
+                        <button class="icon-btn" title="Menu" aria-label="Menu">
+                            ⋮
                         </button>
                     </div>
-                    <button type="submit" class="send-btn" aria-label="Enviar mensagem">
-                        ➤
-                    </button>
-                </form>
-            </footer>
-        </div>
-    </div>
+                </header>
 
-    <script>
-        // Elementos
-        const mensagensDiv = document.getElementById('mensagens');
-        const messageInput = document.getElementById('messageInput');
-        const chatForm = document.getElementById('chatForm');
-        const typingIndicator = document.getElementById('typingIndicator');
-
-        // Scroll automático para o final
-        function scrollToBottom(smooth = false) {
-            mensagensDiv.scrollTo({
-                top: mensagensDiv.scrollHeight,
-                behavior: smooth ? 'smooth' : 'auto'
-            });
-        }
-
-        // Scroll inicial
-        scrollToBottom();
-
-        // Indicador de digitação (simulado)
-        let typingTimeout;
-        
-        if (messageInput && typingIndicator) {
-            messageInput.addEventListener('input', function() {
-                clearTimeout(typingTimeout);
-                
-                if (this.value.length > 0) {
-                    // Em produção, isso seria via WebSocket
-                    typingIndicator.classList.add('active');
-                    scrollToBottom(true);
+                <!-- Messages Area -->
+                <div class="mensagens" id="mensagens" role="log" aria-live="polite">
+                    {% if mensagens %}
+                        {% for msg in mensagens %}
+                            <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
+                                role="article"
+                                aria-label="Mensagem de {{ msg.remetente.username }}">
+                                <div class="mensagem-header">
+                                    <span class="mensagem-autor">{{ msg.remetente.username }}</span>
+                                </div>
+                                <div class="mensagem-conteudo">{{ msg.conteudo }}</div>
+                                <div class="mensagem-footer">
+                                    <span class="mensagem-hora">{{ msg.criado_em|date:"H:i" }}</span>
+                                    {% if msg.remetente == request.user %}
+                                        <span class="check-icon">✓✓</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-messages">
+                            <div class="empty-messages-icon">💬</div>
+                            <p>Nenhuma mensagem ainda.<br>Envie uma mensagem para começar a conversa!</p>
+                        </div>
+                    {% endif %}
                     
-                    typingTimeout = setTimeout(() => {
-                        typingIndicator.classList.remove('active');
-                    }, 1000);
-                }
-            });
-        }
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
 
-        // Envio do formulário
-        if (chatForm) {
-            chatForm.addEventListener('submit', function(e) {
-                if (messageInput && messageInput.value.trim() === '') {
-                    e.preventDefault();
-                    messageInput.focus();
-                    return;
-                }
-                
-                // Após envio, scroll será ajustado
-                setTimeout(() => scrollToBottom(true), 100);
-            });
-        }
+                <!-- Footer / Input Area -->
+                <footer class="chat-footer">
+                    <div class="footer-actions">
+                        <button class="footer-btn" title="Anexar" aria-label="Anexar arquivo">
+                            📎
+                        </button>
+                    </div>
+                    
+                    <form method="post" id="chatForm" style="flex: 1; display: flex; gap: 10px; align-items: center;">
+                        {% csrf_token %}
+                        <div class="input-wrapper">
+                            <input 
+                                type="text"
+                                name="conteudo"
+                                class="chat-input"
+                                id="messageInput"
+                                placeholder="Escreva uma mensagem"
+                                autocomplete="off"
+                                maxlength="500"
+                                aria-label="Escreva uma mensagem"
+                            >
+                            <button type="button" class="emoji-btn" title="Emoji" aria-label="Adicionar emoji">
+                                😊
+                            </button>
+                        </div>
+                        <button type="submit" class="send-btn" aria-label="Enviar mensagem">
+                            ➤
+                        </button>
+                    </form>
+                </footer>
+            </div>
+        </div>
 
-        // Enter para enviar (sem Shift)
-        if (messageInput) {
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-                    chatForm.submit();
-                }
-            });
-        }
+        <script>
+            // Elementos
+            const mensagensDiv = document.getElementById('mensagens');
+            const messageInput = document.getElementById('messageInput');
+            const chatForm = document.getElementById('chatForm');
+            const typingIndicator = document.getElementById('typingIndicator');
 
-        // Observer para novas mensagens
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.addedNodes.length) {
-                    scrollToBottom(true);
-                }
-            });
-        });
+            // Scroll automático para o final
+            function scrollToBottom(smooth = false) {
+                mensagensDiv.scrollTo({
+                    top: mensagensDiv.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
+            }
 
-        observer.observe(mensagensDiv, {
-            childList: true,
-            subtree: true
-        });
+            // Scroll inicial
+            scrollToBottom();
 
-        // Auto-focus no input
-        window.addEventListener('load', function() {
+            // Indicador de digitação (simulado)
+            let typingTimeout;
+            
+            if (messageInput && typingIndicator) {
+                messageInput.addEventListener('input', function() {
+                    clearTimeout(typingTimeout);
+                    
+                    if (this.value.length > 0) {
+                        // Em produção, isso seria via WebSocket
+                        typingIndicator.classList.add('active');
+                        scrollToBottom(true);
+                        
+                        typingTimeout = setTimeout(() => {
+                            typingIndicator.classList.remove('active');
+                        }, 1000);
+                    }
+                });
+            }
+
+            // Envio do formulário
+            if (chatForm) {
+                chatForm.addEventListener('submit', function(e) {
+                    if (messageInput && messageInput.value.trim() === '') {
+                        e.preventDefault();
+                        messageInput.focus();
+                        return;
+                    }
+                    
+                    // Após envio, scroll será ajustado
+                    setTimeout(() => scrollToBottom(true), 100);
+                });
+            }
+
+            // Enter para enviar (sem Shift)
             if (messageInput) {
-                messageInput.focus();
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                        chatForm.submit();
+                    }
+                });
             }
-        });
 
-        // Focus quando a página fica visível
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && messageInput) {
-                messageInput.focus();
-            }
-        });
-
-        // Simular status de leitura (✓✓ azul quando lido)
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkIcons = document.querySelectorAll('.check-icon');
-            checkIcons.forEach(icon => {
-                // Simular mensagem lida após 2 segundos
-                setTimeout(() => {
-                    icon.style.color = 'var(--primary-light)';
-                }, 2000);
+            // Observer para novas mensagens
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        scrollToBottom(true);
+                    }
+                });
             });
-        });
-    </script>
-</body>
-</html>
+
+            observer.observe(mensagensDiv, {
+                childList: true,
+                subtree: true
+            });
+
+            // Auto-focus no input
+            window.addEventListener('load', function() {
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            });
+
+            // Focus quando a página fica visível
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden && messageInput) {
+                    messageInput.focus();
+                }
+            });
+
+            // Simular status de leitura (✓✓ azul quando lido)
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkIcons = document.querySelectorAll('.check-icon');
+                checkIcons.forEach(icon => {
+                    // Simular mensagem lida após 2 segundos
+                    setTimeout(() => {
+                        icon.style.color = 'var(--primary-light)';
+                    }, 2000);
+                });
+            });
+        </script>
+    {% endblock content %}
