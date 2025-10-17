@@ -25,8 +25,6 @@
     <main class="profile-container">
       {% if user.is_authenticated %}
 
-      <button id="editar_btn">editar</button>
-
       <section class="profile-header">
         <div class="profile-photo"></div>
         <h2>{{ user.username }}</h2>
@@ -44,12 +42,25 @@
       <!-- Seção Sobre -->
       <section class="about-section">
         <h3>Sobre</h3>
-        <p>
-          Profissional dedicado e curioso por tecnologia. Apaixonado por
-          aprender, criar e colaborar em projetos que fazem a diferença. Sempre
-          em busca de desafios para crescer pessoal e profissionalmente.
-        </p>
+
+        <div id="sobre-view">
+          <p id="sobre-text">{{ user.sobre_mim|default:"Ainda não há descrição." }}</p>
+          <button id="editar_btn">editar</button>
+
+        </div>
+
+        <form id="sobre-form" style="display:none;">
+          {% csrf_token %}
+          <textarea id="sobre-input" name="sobre_mim" rows="4">{{ user.sobre_mim }}</textarea>
+          <button type="submit">Salvar</button>
+          <button type="button" id="cancelar-sobre-btn">Cancelar</button>
+        </form>
       </section>
+
+{% load static %}
+<script src="{% static 'accounts/js/feed.js' %}"></script>
+
+
 
       <!-- Seção de Postagens -->
       <section class="feed-section">

@@ -40,6 +40,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=100, null=False, blank=False)
     foto = models.ImageField(upload_to="accounts/", null=True, blank=True)
     data_nascimento = models.DateField(null=False, blank=False)
+    sobre_mim = models.CharField(max_length=500, null=True, blank=True)
 
     objects = UserManager()  
 

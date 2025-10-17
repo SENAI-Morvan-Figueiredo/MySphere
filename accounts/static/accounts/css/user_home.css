@@ -5,7 +5,7 @@ body {
   padding: 0;
 }
 
-#editar_btn {
+/* #editar-sobre-btn {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -15,7 +15,7 @@ body {
   border: none;
   border-radius: 6px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
-}
+} */
 
 /* NAVBAR */
 .navbar {

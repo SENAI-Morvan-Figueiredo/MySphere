@@ -327,3 +327,65 @@
 //         }, 500);
 //     });
 // }
+
+console.log("✅ profile_edit.js carregado!");
+
+document.addEventListener("DOMContentLoaded", function () {
+  const editBtn = document.getElementById("editar_btn");
+  const aboutSection = document.querySelector(".about-section p");
+
+  if (!editBtn || !aboutSection) return;
+
+  let originalText = aboutSection.textContent;
+
+  // Modo edição
+  editBtn.addEventListener("click", function () {
+    if (aboutSection.contentEditable === "true") {
+      // Modo salvar
+      aboutSection.contentEditable = "false";
+      editBtn.textContent = "Editar";
+
+      const novoTexto = aboutSection.textContent.trim();
+
+      // Só envia se mudou
+      if (novoTexto !== originalText) {
+        fetch("/accounts/atualizar_sobre/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken(),
+          },
+          body: JSON.stringify({ sobre_mim: novoTexto }),
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Erro ao salvar");
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === "ok") {
+              originalText = novoTexto;
+              console.log("Campo 'Sobre' atualizado com sucesso!");
+            } else {
+              alert("Erro ao atualizar o campo Sobre.");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Erro ao conectar ao servidor.");
+          });
+      }
+    } else {
+      // Modo editar
+      aboutSection.contentEditable = "true";
+      aboutSection.focus();
+      editBtn.textContent = "Salvar";
+    }
+  });
+});
+
+function getCSRFToken() {
+  const cookieValue = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="));
+  return cookieValue ? cookieValue.split("=")[1] : "";
+}

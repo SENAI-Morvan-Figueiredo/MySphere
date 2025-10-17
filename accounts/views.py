@@ -8,7 +8,9 @@ from django.urls import reverse_lazy
 from django.views import View
 from feed.models import Post
 from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -45,6 +47,19 @@ def feed_view(request, username=None):
 
     return render(request, 'accounts/account_home.html', context)
 
+from django.http import JsonResponse
+
+@login_required
+@csrf_exempt
+def atualizar_sobre(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        novo_sobre = data.get("sobre_mim", "").strip()
+        user = request.user
+        user.sobre_mim = novo_sobre
+        user.save()
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "erro", "mensagem": "Método inválido"}, status=400)
 
 class Users(ListView):
     model = User
@@ -72,9 +87,4 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True     
     
     
-    
-# class editar(UpdateView):
-#     model = User
-#     fields = ['foto', 'data_nascimento']  # Campos que podem ser editados
-#     template_name = 'account_home.html'
-#     success_url = reverse_lazy('account_home')
+ROOT_URLCONF = 'MySphere.urls'
