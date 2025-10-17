@@ -1,200 +1,212 @@
 {% extends 'chat/chat_list.html' %}
 
-    {% block title %}Chat - {{ chat.user1.username }} e {{ chat.user2.username }}{% endblock %}
+{% block title %}Chat - {{ chat.user1.username }} e {{ chat.user2.username }}{% endblock %}
 
-    {% block content %}
-        <div class="whatsapp-container">
-            <div class="chat-container">
-                <!-- Header -->
-                <header class="chat-header">
-                    <div class="header-info">
-                        <div class="header-avatar">
-                            {{ chat.user1.username|first|upper }}{{ chat.user2.username|first|upper }}
-                        </div>
-                        <div class="header-details">
-                            <div class="header-name">
-                                {{ chat.user1.username }} e {{ chat.user2.username }}
-                            </div>
-                            <div class="header-status">online</div>
-                        </div>
-                    </div>
-                    <div class="header-actions">
-                        <button class="icon-btn" title="Pesquisar" aria-label="Pesquisar mensagens">
-                            🔍
-                        </button>
-                        <button class="icon-btn" title="Menu" aria-label="Menu">
-                            ⋮
-                        </button>
-                    </div>
-                </header>
-
-                <!-- Messages Area -->
-                <div class="mensagens" id="mensagens" role="log" aria-live="polite">
-                    {% if mensagens %}
-                        {% for msg in mensagens %}
-                            <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
-                                role="article"
-                                aria-label="Mensagem de {{ msg.remetente.username }}">
-                                <div class="mensagem-header">
-                                    <span class="mensagem-autor">{{ msg.remetente.username }}</span>
-                                </div>
-                                <div class="mensagem-conteudo">{{ msg.conteudo }}</div>
-                                <div class="mensagem-footer">
-                                    <span class="mensagem-hora">{{ msg.criado_em|date:"H:i" }}</span>
-                                    {% if msg.remetente == request.user %}
-                                        <span class="check-icon">✓✓</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="empty-messages">
-                            <div class="empty-messages-icon">💬</div>
-                            <p>Nenhuma mensagem ainda.<br>Envie uma mensagem para começar a conversa!</p>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
+{% block content %}
+<div class="chat-container">
+    <!-- Header -->
+    <header class="chat-header">
+        <div class="header-info">
+            <div class="header-avatar">
+                {{ chat.user1.username|first|upper }}{{ chat.user2.username|first|upper }}
+            </div>
+            <div class="header-details">
+                <div class="header-name">
+                    {{ chat.user1.username }} e {{ chat.user2.username }}
                 </div>
-
-                <!-- Footer / Input Area -->
-                <footer class="chat-footer">
-                    <div class="footer-actions">
-                        <button class="footer-btn" title="Anexar" aria-label="Anexar arquivo">
-                            📎
-                        </button>
-                    </div>
-                    
-                    <form method="post" id="chatForm" style="flex: 1; display: flex; gap: 10px; align-items: center;">
-                        {% csrf_token %}
-                        <div class="input-wrapper">
-                            <input 
-                                type="text"
-                                name="conteudo"
-                                class="chat-input"
-                                id="messageInput"
-                                placeholder="Escreva uma mensagem"
-                                autocomplete="off"
-                                maxlength="500"
-                                aria-label="Escreva uma mensagem"
-                            >
-                            <button type="button" class="emoji-btn" title="Emoji" aria-label="Adicionar emoji">
-                                😊
-                            </button>
-                        </div>
-                        <button type="submit" class="send-btn" aria-label="Enviar mensagem">
-                            ➤
-                        </button>
-                    </form>
-                </footer>
+                
             </div>
         </div>
+        <div class="header-actions">
+            <button class="icon-btn" title="Pesquisar" aria-label="Pesquisar mensagens">
+                🔍
+            </button>
+            <button class="icon-btn" title="Menu" aria-label="Menu">
+                ⋮
+            </button>
+        </div>
+    </header>
 
-        <script>
-            // Elementos
-            const mensagensDiv = document.getElementById('mensagens');
-            const messageInput = document.getElementById('messageInput');
-            const chatForm = document.getElementById('chatForm');
-            const typingIndicator = document.getElementById('typingIndicator');
+    <!-- Messages Area -->
+    <div class="mensagens" id="mensagens" role="log" aria-live="polite">
+        {% if mensagens %}
+            {% for msg in mensagens %}
+                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
+                    role="article"
+                    aria-label="Mensagem de {{ msg.remetente.username }}">
+                    <div class="mensagem-header">
+                        <span class="mensagem-autor">{{ msg.remetente.username }}</span>
+                    </div>
+                    <div class="mensagem-conteudo">{{ msg.conteudo }}</div>
+                    <div class="mensagem-footer">
+                        <span class="mensagem-hora">{{ msg.criado_em|date:"H:i" }}</span>
+                        {% if msg.remetente == request.user %}
+                            <span class="check-icon">✓✓</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-messages">
+                <div class="empty-messages-icon">💬</div>
+                <p>Nenhuma mensagem ainda.<br>Envie uma mensagem para começar a conversa!</p>
+            </div>
+        {% endif %}
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
 
-            // Scroll automático para o final
-            function scrollToBottom(smooth = false) {
+    <!-- Footer / Input Area -->
+    <footer class="chat-footer">
+
+        <form method="post" id="chatForm">
+            {% csrf_token %}
+            <div class="input-wrapper">
+                <input 
+                    type="text"
+                    name="conteudo"
+                    class="chat-input"
+                    id="messageInput"
+                    placeholder="Escreva uma mensagem"
+                    autocomplete="off"
+                    maxlength="500"
+                    aria-label="Escreva uma mensagem"
+                >
+                <button type="button" class="emoji-btn" title="Emoji" aria-label="Adicionar emoji">
+                    😊
+                </button>
+            </div>
+            <button type="submit" class="send-btn" aria-label="Enviar mensagem">
+                ➤
+            </button>
+        </form>
+    </footer>
+</div>
+
+<script>
+    // Elementos
+    const mensagensDiv = document.getElementById('mensagens');
+    const messageInput = document.getElementById('messageInput');
+    const chatForm = document.getElementById('chatForm');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    // Função para scroll automático para o final
+    function scrollToBottom(smooth = false) {
+        if (mensagensDiv) {
+            setTimeout(() => {
                 mensagensDiv.scrollTo({
                     top: mensagensDiv.scrollHeight,
                     behavior: smooth ? 'smooth' : 'auto'
                 });
-            }
+            }, 100);
+        }
+    }
 
-            // Scroll inicial
-            scrollToBottom();
+    // Scroll inicial ao carregar a página
+    window.addEventListener('load', function() {
+        scrollToBottom(false);
+        if (messageInput) {
+            messageInput.focus();
+        }
+    });
 
-            // Indicador de digitação (simulado)
-            let typingTimeout;
+    // Scroll ao carregar o DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom(false);
+    });
+
+    // Indicador de digitação
+    let typingTimeout;
+    
+    if (messageInput && typingIndicator) {
+        messageInput.addEventListener('input', function() {
+            clearTimeout(typingTimeout);
             
-            if (messageInput && typingIndicator) {
-                messageInput.addEventListener('input', function() {
-                    clearTimeout(typingTimeout);
-                    
-                    if (this.value.length > 0) {
-                        // Em produção, isso seria via WebSocket
-                        typingIndicator.classList.add('active');
-                        scrollToBottom(true);
-                        
-                        typingTimeout = setTimeout(() => {
-                            typingIndicator.classList.remove('active');
-                        }, 1000);
-                    }
-                });
+            if (this.value.length > 0) {
+                // Em produção, isso seria via WebSocket
+                typingIndicator.classList.add('active');
+                scrollToBottom(true);
+                
+                typingTimeout = setTimeout(() => {
+                    typingIndicator.classList.remove('active');
+                }, 1000);
+            } else {
+                typingIndicator.classList.remove('active');
             }
+        });
+    }
 
-            // Envio do formulário
-            if (chatForm) {
-                chatForm.addEventListener('submit', function(e) {
-                    if (messageInput && messageInput.value.trim() === '') {
-                        e.preventDefault();
-                        messageInput.focus();
-                        return;
-                    }
-                    
-                    // Após envio, scroll será ajustado
-                    setTimeout(() => scrollToBottom(true), 100);
-                });
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            if (messageInput && messageInput.value.trim() === '') {
+                e.preventDefault();
+                messageInput.focus();
+                return false;
             }
-
-            // Enter para enviar (sem Shift)
-            if (messageInput) {
-                messageInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-                        chatForm.submit();
-                    }
-                });
-            }
-
-            // Observer para novas mensagens
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.addedNodes.length) {
-                        scrollToBottom(true);
-                    }
-                });
-            });
-
-            observer.observe(mensagensDiv, {
-                childList: true,
-                subtree: true
-            });
-
-            // Auto-focus no input
-            window.addEventListener('load', function() {
+            
+            // Scroll após envio
+            setTimeout(() => {
+                scrollToBottom(true);
                 if (messageInput) {
+                    messageInput.value = '';
                     messageInput.focus();
                 }
-            });
+            }, 100);
+        });
+    }
 
-            // Focus quando a página fica visível
-            document.addEventListener('visibilitychange', function() {
-                if (!document.hidden && messageInput) {
-                    messageInput.focus();
+    // Enter para enviar (sem Shift)
+    if (messageInput) {
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (chatForm) {
+                    chatForm.submit();
+                }
+            }
+        });
+    }
+
+    // Observer para novas mensagens (scroll automático)
+    if (mensagensDiv) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    scrollToBottom(true);
                 }
             });
+        });
 
-            // Simular status de leitura (✓✓ azul quando lido)
-            document.addEventListener('DOMContentLoaded', function() {
-                const checkIcons = document.querySelectorAll('.check-icon');
-                checkIcons.forEach(icon => {
-                    // Simular mensagem lida após 2 segundos
-                    setTimeout(() => {
-                        icon.style.color = 'var(--primary-light)';
-                    }, 2000);
-                });
-            });
-        </script>
-    {% endblock content %}
+        observer.observe(mensagensDiv, {
+            childList: true,
+            subtree: false
+        });
+    }
+
+    // Focus quando a página fica visível
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && messageInput) {
+            messageInput.focus();
+        }
+    });
+
+
+    // Prevenir scroll indesejado ao focar no input (mobile)
+    if (messageInput) {
+        messageInput.addEventListener('focus', function(e) {
+            // Pequeno delay para garantir que o scroll está correto
+            setTimeout(() => {
+                if (mensagensDiv.scrollHeight > mensagensDiv.clientHeight) {
+                    scrollToBottom(false);
+                }
+            }, 300);
+        });
+    }
+</script>
+{% endblock content %}

@@ -5,79 +5,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Chats</title>
+    <title>{% block title %}Lista de Chats{% endblock %}</title>
     {% block css %}{% endblock %} 
     <link rel="stylesheet" href="{% static 'chat/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat_detail.css' %}">
     <script src="{% static 'chat/js/script.js' %}"></script>
-    
 </head>
 <body>
     <header class="header">
-            <div class="header-left">
-                <div class="logo">
-                    <h1>{{user.tenant.nome}}</h1>
-                </div>
+        <div class="header-left">
+            <div class="logo">
+                <h1>{{user.tenant.nome}}</h1>
             </div>
-            <div class="header-right">
-                <div class="user-info">
-                    {% if user.foto %}
-                        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
-                    {% else %}
-                        <div class="user-avatar-small default-avatar">{{ user.username|first|upper }}</div>
-                    {% endif %}
-                    <span>{{ user.username }}</span>
-                </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
+                {% else %}
+                    <div class="user-avatar-small default-avatar">{{ user.username|first|upper }}</div>
+                {% endif %}
+                <span>{{ user.username }}</span>
             </div>
+        </div>
     </header>
+
+    <!-- Mensagens do Django -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="containers">
         <div class="container-1">
             <div class="chat-menu">
                 <h1>Chat</h1>
                 <input type="text" placeholder="Pesquisar..." class="chat-barra" id="chatSearch">
-                <button class="add-btn">Novo Chat</button>
+                
+                <!-- Botão Novo Chat agora funcional -->
+                <a class="add-btn">+ Novo Chat</a>
+                
                 <hr>
             </div>
             <div class="chat-list">
                 {% if chats %}
-                {% for chat in chats %}
-                <a class="clique" href="{% url 'chat_detail' chat.id %}">
-                    <div class="chat-block">
-                        {% if chat.user2.foto %}
-                            <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
-                        {% else %}
-                            <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
-                        {% endif %}
-
-                        <div class="chat-info">
-                            <div class="chat-info-header">
+                    {% for chat in chats %}
+                        <a class="clique" href="{% url 'chat_detail' chat.id %}">
+                            <div class="chat-block">
                                 {% if chat.user1 == request.user %}
-                                    <strong>{{ chat.user2.username }}</strong>
+                                    {% if chat.user2.foto %}
+                                        <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
+                                    {% else %}
+                                        <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
+                                    {% endif %}
                                 {% else %}
-                                    <strong>{{ chat.user1.username }}</strong>
+                                    {% if chat.user1.foto %}
+                                        <img src="{{ chat.user1.foto.url }}" alt="{{ chat.user1.username }}">
+                                    {% else %}
+                                        <div class="default-avatar">{{ chat.user1.username|first|upper }}</div>
+                                    {% endif %}
                                 {% endif %}
-                                {% if chat.messages.last %}
-                                    <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
-                                {% endif %}
+
+                                <div class="chat-info">
+                                    <div class="chat-info-header">
+                                        {% if chat.user1 == request.user %}
+                                            <strong>{{ chat.user2.username }}</strong>
+                                        {% else %}
+                                            <strong>{{ chat.user1.username }}</strong>
+                                        {% endif %}
+                                        {% if chat.messages.last %}
+                                            <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if chat.messages.last %}
+                                        <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
+                                    {% else %}
+                                        <span class="chat-preview">Sem mensagens</span>
+                                    {% endif %}
+                                </div>
                             </div>
-                            {% if chat.messages.last %}
-                                <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
-                            {% else %}
-                                <span class="chat-preview">Sem mensagens</span>
-                            {% endif %}
-                        </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-chats">
+                        <p>Você não tem chats ainda.</p>
+                        <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+                            Clique em "Novo Chat" para começar!
+                        </p>
                     </div>
-                </a>
-                {% endfor %}
-            {% else %}
-                <p>Você não tem chats ainda.</p>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="container-2">
             {% block content %}
+                <!-- Mensagem padrão quando nenhum chat está selecionado -->
+                <div class="no-chat-selected">
+                    <div class="no-chat-icon">💬</div>
+                    <h2>Selecione um chat</h2>
+                    <p>Escolha uma conversa na lista ao lado ou inicie um novo chat</p>
+                </div>
             {% endblock content %}
         </div>
     </div>
+
+    <style>
+    /* Estilos para mensagens do Django */
+    .messages-container {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 400px;
+    }
+
+    .alert {
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideInRight 0.3s ease;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .alert-error {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Botão Novo Chat como link */
+    .add-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    /* Mensagem quando não há chats */
+    .no-chats {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #64748b;
+    }
+
+    .no-chats p {
+        margin: 0.5rem 0;
+    }
+
+    /* Área central quando nenhum chat está selecionado */
+    .no-chat-selected {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background: linear-gradient(135deg, #0b141a 0%, #1a2530 100%);
+        color: #e9edef;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .no-chat-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.3;
+    }
+
+    .no-chat-selected h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #e9edef;
+    }
+
+    .no-chat-selected p {
+        font-size: 1rem;
+        color: #8696a0;
+        max-width: 400px;
+    }
+
+    /* Script de pesquisa */
+    </style>
+
+    <script>
+    // Funcionalidade de pesquisa de chats
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('chatSearch');
+        const chatBlocks = document.querySelectorAll('.chat-block');
+
+        if (searchInput && chatBlocks.length > 0) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                chatBlocks.forEach(function(block) {
+                    const username = block.querySelector('strong').textContent.toLowerCase();
+                    const preview = block.querySelector('.chat-preview').textContent.toLowerCase();
+                    const parentLink = block.closest('.clique');
+
+                    if (username.includes(searchTerm) || preview.includes(searchTerm)) {
+                        parentLink.style.display = 'block';
+                    } else {
+                        parentLink.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Auto-hide mensagens após 5 segundos
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
+            }, 5000);
+        });
+    });
+
+    // Animação de saída
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    </script>
 </body>
 </html>
