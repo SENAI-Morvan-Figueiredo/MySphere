@@ -1,4 +1,6 @@
-/* ======== RESET ======== */
+/* ==============================
+   RESET & BASE
+============================== */
 * {
   margin: 0;
   padding: 0;
@@ -9,59 +11,194 @@
 body {
   background-color: #f6f8fb;
   color: #333;
+  line-height: 1.5;
 }
 
-/* ======== NAVBAR ======== */
-.navbar {
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+/* ==============================
+   HEADER
+============================== */
+.header {
+  background: #fff;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-
-/* ======== CONTAINER ======== */
-.container {
-  max-width: 1100px;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* ======== SEÇÕES ======== */
-section {
-  background: #fff;
-  padding: 1.5rem;
+.logo h1,
+.header-center h1 {
+  color: #2563eb;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.default-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* ==============================
+   SEÇÃO: PONTOS
+============================== */
+.pontuacao {
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  text-align: center;
 }
 
-h2 {
-  margin-bottom: 1rem;
+.pontuacao h2 {
   color: #222;
   border-bottom: 2px solid #007bff;
   display: inline-block;
   padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
 }
 
-/* ======== CARDS ======== */
-.card, .task-card {
+.card {
+  background-color: #f9fbff;
+  border: 1px dashed #007bff;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 400px;
+}
+
+.vazio {
+  color: #777;
+  font-style: italic;
+}
+
+/* ==============================
+   CONTEÚDO PRINCIPAL (TABS)
+============================== */
+.container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Tabs - barra de navegação */
+.tabs {
+  display: flex;
+  gap: 20px;
+  border-bottom: 2px solid #cde;
+  margin-bottom: 20px;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 8px 8px 0 0;
+  background-color: #e9effa;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  background-color: #dbe6fd;
+}
+
+.tab.active {
+  background-color: #fff;
+  border: 2px solid #cde;
+  border-bottom: none;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Conteúdo de cada aba */
+.tab-content {
+  display: none;
+  background-color: #fff;
+  border: 2px solid #cde;
+  padding: 20px;
+  border-radius: 0 8px 8px 8px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ==============================
+   SEÇÃO: TAREFAS
+============================== */
+.task-card {
   background-color: #f9fbff;
   border: 1px dashed #007bff;
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1rem;
+  transition: background 0.3s ease;
 }
 
 .task-card:hover {
   background-color: #eef4ff;
 }
 
-/* ======== STATUS ======== */
+.task-card p {
+  margin-bottom: 0.5rem;
+}
+
+.task-card button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.task-card button:hover {
+  background: #005dc1;
+}
+
+/* ==============================
+   SEÇÃO: RANKING
+============================== */
+#ranking {
+  min-height: 150px;
+}
+
+/* ==============================
+   STATUS DAS TAREFAS
+============================== */
 .status {
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
@@ -78,9 +215,30 @@ h2 {
   color: #b87400;
 }
 
-/* ======== TEXTO VAZIO ======== */
-.vazio {
-  color: #777;
-  font-style: italic;
-  margin-top: 0.5rem;
+/* ==============================
+   RESPONSIVIDADE
+============================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab {
+    border-radius: 8px;
+  }
+
+  .pontuacao {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .task-card,
+  .card {
+    max-width: 100%;
+  }
 }

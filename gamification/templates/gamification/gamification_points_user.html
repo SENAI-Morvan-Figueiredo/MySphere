@@ -7,24 +7,44 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <nav class="navbar"></nav>
-
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <h1>MySphere</h1>
+            </div>
+        </div>
+        <div class="header-center"><h1>Gamificação</h1></div>
+        <div class="header-right">
+            <div class="user-info">
+                {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
+                {% else %}
+                    <div class="user-avatar-small default-avatar">{{ user.username|slice:":1"|upper }}</div>
+                {% endif %}
+                <span>{{ user.username }}</span>
+            </div>
+        </div>
+    </header>
+    <section class="pontuacao">
+        <h2>Meus Pontos</h2>
+        {% if points %}
+            {% for point in points %}
+                <article class="card">
+                    <p><strong>Pontos:</strong> {{ point.pontos }}</p>
+                    <p><strong>Nível:</strong> {{ point.nivel }}</p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="vazio">Você ainda não possui pontos registrados.</p>
+        {% endif %}
+    </section>
+    <div class="tabs">
+        <div class="tab active" data-tab="tarefas">Tarefas</div>
+        <div class="tab" data-tab="ranking">ranking</div>
+    </div>
     <main class="container">
-        <section class="pontuacao">
-            <h2>Meus Pontos</h2>
-            {% if points %}
-                {% for point in points %}
-                    <article class="card">
-                        <p><strong>Pontos:</strong> {{ point.pontos }}</p>
-                        <p><strong>Nível:</strong> {{ point.nivel }}</p>
-                    </article>
-                {% endfor %}
-            {% else %}
-                <p class="vazio">Você ainda não possui pontos registrados.</p>
-            {% endif %}
-        </section>
-
-        <section class="tarefas">
+    
+        <section id="tarefas" class="tab-content active">
             <h2>Minhas Tarefas</h2>
             {% if user_tasks %}
                 {% for user_task in user_tasks %}
@@ -49,6 +69,12 @@
                 <p class="vazio">Você ainda não possui tarefas atribuídas.</p>
             {% endif %}
         </section>
+        <section id="ranking" class="tab-content">
+            <h1>ranking</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque doloribus repudiandae inventore dolorum excepturi esse deleniti. Sit eum molestias itaque optio quibusdam nostrum consequuntur molestiae rerum, adipisci provident sunt iste.</p>
+        </section>
     </main>
+
+<script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
