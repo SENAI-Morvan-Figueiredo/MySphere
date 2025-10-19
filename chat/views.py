@@ -3,6 +3,26 @@ from django.contrib.auth.decorators import login_required
 from .models import Chat, Message
 from .forms import MessageForm
 from django.db.models import Q, Max
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .forms import ChatForm
+
+@login_required
+@require_POST
+def criar_chat_ajax(request):
+    form = ChatForm(request.POST, user=request.user, tenant=request.user.tenant)
+    if form.is_valid():
+        chat = form.save()
+        return JsonResponse({
+            "success": True,
+            "chat": {
+                "id": chat.id,
+                "user2": chat.user2.username,
+                "email": chat.user2.email,
+            }
+        })
+    else:
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
 @login_required
 def chat_list(request):
