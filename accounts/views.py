@@ -50,6 +50,42 @@ def feed_view(request, username=None):
 
 
 
+
+@login_required
+def feed_view(request, username=None):
+    # Se for perfil de outro usuário
+    if username:
+        profile_user = get_object_or_404(User, username=username, tenant=request.user.tenant)
+    else:
+        # Se for o próprio perfil
+        profile_user = request.user
+
+    # Filtra os posts do usuário específico dentro do mesmo tenant
+    posts = (
+        Post.objects.filter(
+            tenant=profile_user.tenant,
+            user=profile_user
+        )
+        .select_related('user')
+        .prefetch_related('likes', 'comments', 'shares', 'hashtags')
+        .order_by('-criado_em')
+    )
+
+    # Marca se o usuário atual curtiu cada post
+    for post in posts:
+        post.user_has_liked = post.likes.filter(user=request.user).exists()
+
+    context = {
+        'posts': posts,
+        'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
+        'user': request.user,
+    }
+
+    return render(request, 'accounts/account_perfil.html', context)
+
+
+
+
 @login_required
 @csrf_exempt
 def atualizar_sobre(request):

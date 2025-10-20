@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('home/', views.feed_view, name='home'),
     path("atualizar_sobre/", views.atualizar_sobre, name="atualizar_sobre"),
+    path("perfil/", views.feed_view, name='perfil'),
 
 
 ]

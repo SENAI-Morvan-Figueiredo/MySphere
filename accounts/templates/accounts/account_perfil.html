@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel do Usuário</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/user_perfil.css' %}" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">My<span>Sphere</span></div>
+
+      {% if user.is_authenticated %}
+      <div class="user-info">
+        <div class="avatar">{{ user.username|first|upper }}</div>
+        <span class="username">{{ user.username }}</span>
+      </div>
+      {% endif %}
+    </nav>
+
+    <!-- Conteúdo principal -->
+
+    <main class="profile-container">
+      {% if user.is_authenticated %}
+
+      <section class="profile-header">
+        <div class="profile-photo"></div>
+        <h2>{{ user.username }}</h2>
+        <p class="user-email">{{ user.email }}</p>
+      </section>
+
+      <section class="profile-info">
+        {% if user.role %}
+        <p><strong>Função:</strong> {{ user.role }}</p>
+        {% endif %} {% if user.data_nascimento %}
+        <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
+        {% endif %}
+      </section>
+
+      <!-- Seção de Postagens -->
+      <section class="feed-section">
+        <h3>Postagens Recentes</h3>
+
+        <div class="feed-container">
+          {% for post in posts %}
+          <article class="post-card" data-post-id="{{ post.post_id }}">
+            <div class="post-header">
+              <div class="post-author">
+                {% if post.user.foto %}
+                <img
+                  src="{{ post.user.foto.url }}"
+                  alt="{{ post.user.username }}"
+                  class="user-avatar-small"
+                />
+                {% else %}
+                <div class="user-avatar-small default-avatar">
+                  {{ post.user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+                <div class="author-info">
+                  <h4>
+                    {{ post.user.get_full_name|default:post.user.username }}
+                  </h4>
+                  <p class="post-time">
+                    {{ post.criado_em|date:"d M 'p.m.' H:i" }}
+                  </p>
+                </div>
+              </div>
+              <button class="post-menu">⋮</button>
+            </div>
+
+            <div class="post-content">
+              <p>{{ post.conteudo_formatado|safe }}</p>
+            </div>
+
+            {% if post.imagem %}
+            <div class="post-media">
+              <img src="{{ post.imagem.url }}" alt="Post image" />
+            </div>
+            {% endif %} {% if post.video %}
+            <div class="post-media">
+              <video controls>
+                <source src="{{ post.video.url }}" type="video/mp4" />
+              </video>
+            </div>
+            {% endif %} {% if post.arquivo %}
+            <div class="post-file">
+              <a href="{{ post.arquivo.url }}" download class="file-link">
+                <span class="icon">📎</span> {{ post.arquivo.name|slice:"6:" }}
+              </a>
+            </div>
+            {% endif %}
+
+            <div class="post-stats">
+              <span class="post-likes"
+                >❤️
+                <span class="likes-count">{{ post.total_likes }}</span>
+                Like</span
+              >
+              <div class="post-interactions">
+                <span
+                  ><span class="comments-count">{{ post.total_comments }}</span>
+                  Comment</span
+                >
+                <span
+                  ><span class="shares-count">{{ post.total_shares }}</span>
+                  Share</span
+                >
+              </div>
+            </div>
+
+            <div class="post-actions-bar">
+              <button
+                class="action-btn like-btn {% if post.user_has_liked %}liked{% endif %}"
+                data-post-id="{{ post.post_id }}"
+              >
+                <span class="icon">❤️</span> Like
+              </button>
+              <button
+                class="action-btn comment-btn"
+                onclick="toggleCommentBox({{ post.post_id }})"
+              >
+                <span class="icon">💬</span> Comment
+              </button>
+              <button
+                class="action-btn share-btn"
+                data-post-id="{{ post.post_id }}"
+              >
+                <span class="icon">🔗</span> Share
+              </button>
+            </div>
+          </article>
+          {% empty %}
+          <div class="no-posts">
+            <p>Nenhum post ainda. Seja o primeiro a postar!</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Sair</button>
+      </form>
+
+      {% else %}
+      <div class="not-logged">
+        <h2>Você não está logado</h2>
+        <a href="{% url 'login' %}" class="login-link">Entrar</a>
+      </div>
+      {% endif %}
+    </main>
+  </body>
+</html>
