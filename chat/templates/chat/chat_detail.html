@@ -17,14 +17,6 @@
                 
             </div>
         </div>
-        <div class="header-actions">
-            <button class="icon-btn" title="Pesquisar" aria-label="Pesquisar mensagens">
-                🔍
-            </button>
-            <button class="icon-btn" title="Menu" aria-label="Menu">
-                ⋮
-            </button>
-        </div>
     </header>
 
     <!-- Messages Area -->
@@ -78,9 +70,6 @@
                     maxlength="500"
                     aria-label="Escreva uma mensagem"
                 >
-                <button type="button" class="emoji-btn" title="Emoji" aria-label="Adicionar emoji">
-                    😊
-                </button>
             </div>
             <button type="submit" class="send-btn" aria-label="Enviar mensagem">
                 ➤
@@ -121,26 +110,6 @@
         scrollToBottom(false);
     });
 
-    // Indicador de digitação
-    let typingTimeout;
-    
-    if (messageInput && typingIndicator) {
-        messageInput.addEventListener('input', function() {
-            clearTimeout(typingTimeout);
-            
-            if (this.value.length > 0) {
-                // Em produção, isso seria via WebSocket
-                typingIndicator.classList.add('active');
-                scrollToBottom(true);
-                
-                typingTimeout = setTimeout(() => {
-                    typingIndicator.classList.remove('active');
-                }, 1000);
-            } else {
-                typingIndicator.classList.remove('active');
-            }
-        });
-    }
 
     if (chatForm) {
         chatForm.addEventListener('submit', function(e) {
@@ -150,42 +119,19 @@
                 return false;
             }
             
-            // Scroll após envio
-            setTimeout(() => {
-                scrollToBottom(true);
-                if (messageInput) {
-                    messageInput.value = '';
-                    messageInput.focus();
-                }
-            }, 100);
+
         });
     }
 
     // Enter para enviar (sem Shift)
-    if (messageInput) {
-        messageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (chatForm) {
-                    chatForm.submit();
-                }
-            }
-        });
-    }
 
     // Observer para novas mensagens (scroll automático)
-    if (mensagensDiv) {
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.addedNodes.length) {
-                    scrollToBottom(true);
-                }
-            });
-        });
-
-        observer.observe(mensagensDiv, {
-            childList: true,
-            subtree: false
+    if (chatForm) {
+        chatForm.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.requestSubmit();
+            }
         });
     }
 
