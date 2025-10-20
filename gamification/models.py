@@ -45,3 +45,12 @@ class Points(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.pontos} pontos, ({self.nivel})"
+    
+    def atualizar_nivel(self):
+        if self.pontos >= 1000:
+            self.nivel = 'Avançado'
+        elif self.pontos >= 500:
+            self.nivel = 'Intermediário'
+        else:
+            self.nivel = 'Iniciante'
+        self.save(update_fields=['nivel'])

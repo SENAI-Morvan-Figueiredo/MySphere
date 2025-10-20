@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import TaskListView, UserTaskListView, PointsListView # LIST 
-from .views import GameHomeView, concluir_tarefa
+from .views import GameHomeView, concluir_tarefa, game_ranking
 from .views import TaskCreateView, UserTaskCreateView # CREATE
 from .views import TaskUpdateView, UserTaskUpdateView # EDIT
 from .views import TaskDeleteView, UserTaskDeleteView # DELETE

@@ -7,6 +7,8 @@ from .mixins import TenantAccessMixin, OnlyIsStaff
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db.models import F, Window
+from django.db.models.functions import RowNumber
 
 # VIEWS - LIST
 
@@ -39,7 +41,26 @@ class GameHomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context['user_tasks'] = User_Task.objects.filter(user=self.request.user)
+
+        tenant_id = getattr(user, 'tenant_id', None)
+
+        if tenant_id:
+            ranking = Points.objects.filter(
+                tenant_id=tenant_id
+            ).annotate(
+                posicao=Window(
+                    expression=RowNumber(),
+                    order_by=F('pontos').desc()
+                )
+            ).order_by('-pontos')
+
+            top5 = ranking[:5]
+            user_line = ranking.filter(user=user).first()
+            context['ranking'] = top5
+            context['user_line'] = user_line
+
+        context['user_tasks'] = User_Task.objects.filter(user=user)
+
         return context
 
 @require_POST
@@ -49,9 +70,43 @@ def concluir_tarefa(request, task_id):
 
     if not user_task.concluido:
         user_task.concluido = True
-        user_task.save() 
-
+        user_task.save()
+        
+    pontos_user = Points.objects.get(user=request.user)
+    pontos_user.save()
+    pontos_user.atualizar_nivel()
+    
     return redirect('game_home')
+
+# VIEW PARA CRIAR O RANKING GAMIFICATION
+
+@login_required
+def game_ranking(request, tenant_id=None):
+   
+    tenant_id = tenant_id or getattr(request.user, 'tenant_id', None)
+
+    if not tenant_id:
+        return render(request, "gamification/error.html", {"mensagem": "Tenant não identificado."})
+
+    ranking = Points.objects.filter(
+        tenant_id=tenant_id
+    ).annotate(
+        posicao=Window(
+            expression=RowNumber(),
+            order_by=F('pontos').desc()
+        )
+    ).order_by('-pontos')
+
+    top5 = ranking[:5]
+
+    user_line = ranking.filter(user=request.user).first()
+
+    return render(request, "gamification/gamification_points_user.html", {
+        "top5": top5,
+        "user_line": user_line,
+        "tenant_id": tenant_id,
+    })
+
 
 # VIEWS - CREATE
 
