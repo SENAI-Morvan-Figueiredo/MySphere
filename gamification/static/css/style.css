@@ -117,6 +117,8 @@ body {
 /* Tabs - barra de navegação */
 .tabs {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 20px;
   border-bottom: 2px solid #cde;
   margin-bottom: 20px;
