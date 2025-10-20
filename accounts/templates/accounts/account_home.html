@@ -39,28 +39,28 @@
         {% endif %}
       </section>
 
-      <!-- Seção Sobre -->
-      <section class="about-section">
+      <!-- Seção de sobre__________________________________________________________ -->
+      <div id="sobre-container">
         <h3>Sobre</h3>
+        <p id="sobre-texto">
+          {{ user.sobre_mim|default:"Ainda não há descrição." }}
+        </p>
 
-        <div id="sobre-view">
-          <p id="sobre-text">{{ user.sobre_mim|default:"Ainda não há descrição." }}</p>
-          <button id="editar_btn">editar</button>
+        <textarea id="sobre-textarea" style="display: none"></textarea>
 
-        </div>
+        <button id="editar-sobre">editar</button>
+        <button id="salvar-sobre" style="display: none">salvar</button>
+      </div>
 
-        <form id="sobre-form" style="display:none;">
-          {% csrf_token %}
-          <textarea id="sobre-input" name="sobre_mim" rows="4">{{ user.sobre_mim }}</textarea>
-          <button type="submit">Salvar</button>
-          <button type="button" id="cancelar-sobre-btn">Cancelar</button>
-        </form>
-      </section>
+      {% load static %}
+      <script>
+        // Variáveis globais injetadas pelo Django
+        const atualizarSobreURL = "{% url 'atualizar_sobre' %}"; // Usaremos este!
+        const csrfToken = "{{ csrf_token }}"; // Usaremos este!
+      </script>
 
-{% load static %}
-<script src="{% static 'accounts/js/feed.js' %}"></script>
-
-
+      <script src="{% static 'accounts/js/feed.js' %}"></script>
+      <!--____________________________________________________________________________________-->
 
       <!-- Seção de Postagens -->
       <section class="feed-section">

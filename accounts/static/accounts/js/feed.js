@@ -21,7 +21,7 @@
 //     button.addEventListener('click', function(e) {
 //         e.preventDefault();
 //         const postId = this.dataset.postId;
-        
+
 //         fetch(`/post/${postId}/like/`, {
 //             method: 'POST',
 //             headers: {
@@ -34,7 +34,7 @@
 //             const postCard = document.querySelector(`[data-post-id="${postId}"]`);
 //             const likesCount = postCard.querySelector('.likes-count');
 //             likesCount.textContent = data.total_likes;
-            
+
 //             if (data.liked) {
 //                 this.classList.add('liked');
 //             } else {
@@ -50,7 +50,7 @@
 //     button.addEventListener('click', function(e) {
 //         e.preventDefault();
 //         const postId = this.dataset.postId;
-        
+
 //         fetch(`/post/${postId}/share/`, {
 //             method: 'POST',
 //             headers: {
@@ -63,7 +63,7 @@
 //             const postCard = document.querySelector(`[data-post-id="${postId}"]`);
 //             const sharesCount = postCard.querySelector('.shares-count');
 //             sharesCount.textContent = data.total_shares;
-            
+
 //             alert('Post compartilhado com sucesso!');
 //         })
 //         .catch(error => console.error('Error:', error));
@@ -76,9 +76,9 @@
 //         e.preventDefault();
 //         const postId = this.dataset.postId;
 //         const conteudo = this.querySelector('input[name="conteudo"]').value;
-        
+
 //         if (!conteudo.trim()) return;
-        
+
 //         fetch(`/post/${postId}/comment/`, {
 //             method: 'POST',
 //             headers: {
@@ -104,11 +104,11 @@
 //                     </div>
 //                 `;
 //                 commentsList.appendChild(newComment);
-                
+
 //                 const postCard = document.querySelector(`[data-post-id="${postId}"]`);
 //                 const commentsCount = postCard.querySelector('.comments-count');
 //                 commentsCount.textContent = data.total_comments;
-                
+
 //                 this.querySelector('input[name="conteudo"]').value = '';
 //             }
 //         })
@@ -130,10 +130,10 @@
 // document.getElementById('imagem-upload')?.addEventListener('change', function(e) {
 //     const file = e.target.files[0];
 //     const previewDiv = document.getElementById('media-preview');
-    
+
 //     if (file) {
 //         const reader = new FileReader();
-        
+
 //         reader.onload = function(event) {
 //             if (file.type.startsWith('image/')) {
 //                 previewDiv.innerHTML = `
@@ -154,7 +154,7 @@
 //             }
 //             previewDiv.style.display = 'block';
 //         };
-        
+
 //         reader.readAsDataURL(file);
 //     }
 // });
@@ -163,7 +163,7 @@
 // document.getElementById('arquivo-upload')?.addEventListener('change', function(e) {
 //     const file = e.target.files[0];
 //     const previewDiv = document.getElementById('media-preview');
-    
+
 //     if (file) {
 //         previewDiv.innerHTML = `
 //             <div class="preview-container file-preview">
@@ -181,11 +181,11 @@
 //     const previewDiv = document.getElementById('media-preview');
 //     const inputId = type === 'arquivo' ? 'arquivo-upload' : 'imagem-upload';
 //     const inputElement = document.getElementById(inputId);
-    
+
 //     if (inputElement) {
 //         inputElement.value = '';
 //     }
-    
+
 //     previewDiv.innerHTML = '';
 //     previewDiv.style.display = 'none';
 // }
@@ -217,12 +217,12 @@
 // function showAutocompleteSuggestions(textarea, suggestions, type) {
 //     const div = createAutocompleteDiv();
 //     div.innerHTML = '';
-    
+
 //     if (suggestions.length === 0) {
 //         div.style.display = 'none';
 //         return;
 //     }
-    
+
 //     suggestions.forEach(item => {
 //         const suggestionItem = document.createElement('div');
 //         suggestionItem.style.cssText = `
@@ -232,7 +232,7 @@
 //         `;
 //         suggestionItem.onmouseover = () => suggestionItem.style.background = '#f0f0f0';
 //         suggestionItem.onmouseout = () => suggestionItem.style.background = 'white';
-        
+
 //         if (type === 'mention') {
 //             suggestionItem.innerHTML = `<strong>@${item.username}</strong><br><small>${item.name || ''}</small>`;
 //             suggestionItem.onclick = () => insertSuggestion(textarea, `@${item.username} `);
@@ -240,10 +240,10 @@
 //             suggestionItem.innerHTML = `<strong>#${item.tag}</strong><br><small>${item.count || 0} posts</small>`;
 //             suggestionItem.onclick = () => insertSuggestion(textarea, `#${item.tag} `);
 //         }
-        
+
 //         div.appendChild(suggestionItem);
 //     });
-    
+
 //     const rect = textarea.getBoundingClientRect();
 //     div.style.top = `${rect.bottom + window.scrollY}px`;
 //     div.style.left = `${rect.left + window.scrollX}px`;
@@ -253,17 +253,17 @@
 // function insertSuggestion(textarea, text) {
 //     const value = textarea.value;
 //     const cursorPos = textarea.selectionStart;
-    
+
 //     let start = cursorPos - 1;
 //     while (start >= 0 && value[start] !== ' ' && value[start] !== '\n') {
 //         start--;
 //     }
 //     start++;
-    
+
 //     textarea.value = value.substring(0, start) + text + value.substring(cursorPos);
 //     textarea.focus();
 //     textarea.setSelectionRange(start + text.length, start + text.length);
-    
+
 //     const div = createAutocompleteDiv();
 //     div.style.display = 'none';
 // }
@@ -272,14 +272,14 @@
 // document.querySelector('textarea[name="conteudo"]')?.addEventListener('input', function(e) {
 //     const text = e.target.value;
 //     const cursorPos = e.target.selectionStart;
-    
+
 //     let currentWord = '';
 //     let start = cursorPos - 1;
 //     while (start >= 0 && text[start] !== ' ' && text[start] !== '\n') {
 //         currentWord = text[start] + currentWord;
 //         start--;
 //     }
-    
+
 //     if (currentWord.startsWith('@')) {
 //         const query = currentWord.substring(1);
 //         if (query.length >= 1) {
@@ -318,9 +318,9 @@
 //     searchInput.addEventListener('input', function(e) {
 //         clearTimeout(searchTimeout);
 //         const query = e.target.value.trim();
-        
+
 //         if (query.length < 2) return;
-        
+
 //         searchTimeout = setTimeout(() => {
 //             // A busca será feita através do form submit normal
 //             console.log('Buscando:', query);
@@ -328,64 +328,148 @@
 //     });
 // }
 
-console.log("✅ profile_edit.js carregado!");
+// console.log("✅ profile_edit.js carregado!");
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   const editBtn = document.getElementById("editar_btn");
+//   const aboutSection = document.querySelector(".about-section p");
+
+//   if (!editBtn || !aboutSection) return;
+
+//   let originalText = aboutSection.textContent;
+
+//   // Modo edição
+//   editBtn.addEventListener("click", function () {
+//     if (aboutSection.contentEditable === "true") {
+//       // Modo salvar
+//       aboutSection.contentEditable = "false";
+//       editBtn.textContent = "Editar";
+
+//       const novoTexto = aboutSection.textContent.trim();
+
+//       // Só envia se mudou
+//       if (novoTexto !== originalText) {
+//         fetch("/accounts/atualizar_sobre/", {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             "X-CSRFToken": getCSRFToken(),
+//           },
+//           body: JSON.stringify({ sobre_mim: novoTexto }),
+//         })
+//           .then((response) => {
+//             if (!response.ok) throw new Error("Erro ao salvar");
+//             return response.json();
+//           })
+//           .then((data) => {
+//             if (data.status === "ok") {
+//               originalText = novoTexto;
+//               console.log("Campo 'Sobre' atualizado com sucesso!");
+//             } else {
+//               alert("Erro ao atualizar o campo Sobre.");
+//             }
+//           })
+//           .catch((err) => {
+//             console.error(err);
+//             alert("Erro ao conectar ao servidor.");
+//           });
+//       }
+//     } else {
+//       // Modo editar
+//       aboutSection.contentEditable = "true";
+//       aboutSection.focus();
+//       editBtn.textContent = "Salvar";
+//     }
+//   });
+// });
+
+// function getCSRFToken() {
+//   const cookieValue = document.cookie
+//     .split("; ")
+//     .find((row) => row.startsWith("csrftoken="));
+//   return cookieValue ? cookieValue.split("=")[1] : "";
+// }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const editBtn = document.getElementById("editar_btn");
-  const aboutSection = document.querySelector(".about-section p");
+  const btnEditar = document.getElementById("editar-sobre");
+  const btnSalvar = document.getElementById("salvar-sobre");
+  const texto = document.getElementById("sobre-texto");
+  const textarea = document.getElementById("sobre-textarea");
 
-  if (!editBtn || !aboutSection) return;
+  // 1. Verificação inicial (boa prática)
+  if (
+    typeof atualizarSobreURL === "undefined" ||
+    typeof csrfToken === "undefined"
+  ) {
+    console.error(
+      "Variáveis globais do Django (URL ou CSRF Token) não estão definidas. Verifique o HTML."
+    );
+    // Não retornar se a intenção é que a edição local funcione mesmo sem AJAX.
+  }
 
-  let originalText = aboutSection.textContent;
+  if (!btnEditar || !btnSalvar || !texto || !textarea) {
+    console.error("Algum dos elementos não foi encontrado no DOM.");
+    return;
+  }
 
-  // Modo edição
-  editBtn.addEventListener("click", function () {
-    if (aboutSection.contentEditable === "true") {
-      // Modo salvar
-      aboutSection.contentEditable = "false";
-      editBtn.textContent = "Editar";
-
-      const novoTexto = aboutSection.textContent.trim();
-
-      // Só envia se mudou
-      if (novoTexto !== originalText) {
-        fetch("/accounts/atualizar_sobre/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCSRFToken(),
-          },
-          body: JSON.stringify({ sobre_mim: novoTexto }),
-        })
-          .then((response) => {
-            if (!response.ok) throw new Error("Erro ao salvar");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === "ok") {
-              originalText = novoTexto;
-              console.log("Campo 'Sobre' atualizado com sucesso!");
-            } else {
-              alert("Erro ao atualizar o campo Sobre.");
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            alert("Erro ao conectar ao servidor.");
-          });
-      }
-    } else {
-      // Modo editar
-      aboutSection.contentEditable = "true";
-      aboutSection.focus();
-      editBtn.textContent = "Salvar";
-    }
+  // Modo de edição
+  btnEditar.addEventListener("click", function () {
+    textarea.value = texto.textContent.trim();
+    texto.style.display = "none";
+    textarea.style.display = "block";
+    btnSalvar.style.display = "inline-block";
+    btnEditar.style.display = "none";
   });
-});
 
-function getCSRFToken() {
-  const cookieValue = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrftoken="));
-  return cookieValue ? cookieValue.split("=")[1] : "";
-}
+  // Salvar nova descrição (AJAX CORRIGIDO)
+  btnSalvar.addEventListener("click", function () {
+    const novoSobre = textarea.value.trim();
+
+    // **CORREÇÃO AQUI:** Usando a variável global `atualizarSobreURL`
+    fetch(atualizarSobreURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // **CORREÇÃO AQUI:** Usando a variável global `csrfToken`
+        "X-CSRFToken": csrfToken,
+      },
+      body: JSON.stringify({ sobre_mim: novoSobre }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // O erro 404 ou 403 (CSRF) viria daqui.
+          throw new Error(
+            "Erro na resposta do servidor (Status: " + response.status + ")"
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Resposta do servidor:", data);
+
+        if (data.success) {
+          // Atualiza o texto com o valor retornado do Django
+          texto.textContent = data.novo_sobre || "Ainda não há descrição.";
+
+          // Volta ao modo de visualização
+          texto.style.display = "block";
+          textarea.style.display = "none";
+          btnEditar.style.display = "inline-block";
+          btnSalvar.style.display = "none";
+        } else {
+          alert("Erro ao salvar a descrição. Tente novamente.");
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar requisição:", error);
+        alert(
+          "Ocorreu um erro ao salvar a descrição. Verifique o console para mais detalhes."
+        );
+      });
+  });
+
+  // NOTA: A função getCookie() NÃO É MAIS NECESSÁRIA e pode ser removida!
+  /*
+    function getCookie(name) { ... }
+    */
+});
