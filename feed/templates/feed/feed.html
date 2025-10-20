@@ -77,8 +77,8 @@
                     <a href="#" class="menu-item">
                         <span class="icon">🗓️</span> Eventos
                     </a>
-                    <a href="#" class="menu-item">
-                        <span class="icon">📞</span> Call
+                    <a href="{% url 'chat' %}" class="menu-item">
+                        <span class="icon">💬</span> Chat
                     </a>
                 </nav>
 
@@ -239,37 +239,58 @@
             <aside class="sidebar-right">
                 <div class="messages-section">
                     <div class="section-header">
-                        <h3>Messages</h3>
-                        <button class="icon-btn">✏️</button>
-                    </div>
-                    <div class="tabs">
-                        <button class="tab">Primary</button>
-                        <button class="tab">General</button>
-                        <button class="tab active">Requests(4)</button>
+                        <h3>Mensagens</h3>
+                        
                     </div>
                     <div class="messages-list">
-                        <div class="message-item">
-                            <div class="user-avatar-small default-avatar">R</div>
-                            <span>Roger Korsgaard</span>
-                        </div>
-                        <div class="message-item">
-                            <div class="user-avatar-small default-avatar">T</div>
-                            <span>Terry Torff</span>
-                        </div>
-                        <div class="message-item">
-                            <div class="user-avatar-small default-avatar">A</div>
-                            <span>Angel Bergson</span>
-                        </div>
-                        <div class="message-item">
-                            <div class="user-avatar-small default-avatar">E</div>
-                            <span>Emerson Gouse</span>
-                        </div>
-                        <div class="message-item">
-                            <div class="user-avatar-small default-avatar">C</div>
-                            <span>Corey Baptista</span>
-                        </div>
+                        {% if chats %}
+                            {% for chat in chats %}
+                                <a class="clique" href="{% url 'chat_detail' chat.id %}">
+                                    <div class="mensagem-item">
+                                        {% if chat.user1 == request.user %}
+                                            {% if chat.user2.foto %}
+                                                <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
+                                            {% else %}
+                                                <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if chat.user1.foto %}
+                                                <img src="{{ chat.user1.foto.url }}" alt="{{ chat.user1.username }}">
+                                            {% else %}
+                                                <div class="default-avatar">{{ chat.user1.username|first|upper }}</div>
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <div class="chat-info">
+                                            <div class="chat-info-header">
+                                                {% if chat.user1 == request.user %}
+                                                    <strong>{{ chat.user2.username }}</strong>
+                                                {% else %}
+                                                    <strong>{{ chat.user1.username }}</strong>
+                                                {% endif %}
+                                                {% if chat.messages.last %}
+                                                    <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
+                                                {% endif %}
+                                            </div>
+                                            {% if chat.messages.last %}
+                                                <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
+                                            {% else %}
+                                                <span class="chat-preview">Sem mensagens</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="no-chats">
+                                <p>Você não tem chats ainda.</p>
+                                <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+                                    Clique em "Novo Chat" para começar!
+                                </p>
+                            </div>
+                        {% endif %}  
                     </div>
-                    <a href="#" class="view-all">View All</a>
+                    <a href="{% url 'chat' %}" class="view-all">View All</a>
                 </div>
 
                 <div class="events-section">

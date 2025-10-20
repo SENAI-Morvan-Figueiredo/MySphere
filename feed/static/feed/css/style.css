@@ -531,13 +531,13 @@ body {
     color: #2563eb;
 }
 
-.messages-list, .events-list {
+ .events-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.message-item, .event-item {
+.event-item {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -546,7 +546,49 @@ body {
     border-radius: 8px;
     transition: background 0.2s;
 }
+.messages-list {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+.clique {
+    cursor: pointer;
+    text-decoration: none;
+}
 
+.mensagem-item {
+    background-color: #fff;
+    border: #0044ff75 1px solid;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.mensagem-item:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.003);
+}
+
+/* Avatar */
+.mensagem-item img,
+.mensagem-item .default-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
 .message-item:hover, .event-item:hover {
     background: #f0f2f5;
 }
@@ -822,4 +864,38 @@ body {
 
 .mention:hover {
     text-decoration: underline;
+}
+
+/* Texto */
+.chat-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.chat-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-info strong {
+    font-size: 1rem;
+    color: #111827;
+    font-weight: 600;
+}
+
+.chat-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.chat-preview {
+    font-size: 0.9rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
 }

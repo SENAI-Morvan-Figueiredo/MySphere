@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.db.models import Q
+from django.db.models import Q, Max
 from .models import Post, Comment, Like, Share, Hashtag
 from accounts.models import User
+from chat.models import Chat
 
 @login_required
 def feed_view(request):
@@ -13,8 +14,15 @@ def feed_view(request):
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
     
+    chats = Chat.objects.filter(
+        Q(user1=request.user) | Q(user2=request.user)
+    ).annotate(
+        ultima_msg=Max('messages__criado_em')
+    ).order_by('-ultima_msg')
+
     context = {
         'posts': posts,
+        'chats': chats,
         'user': request.user,
     }
     return render(request, 'feed/feed.html', context)
