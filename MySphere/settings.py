@@ -103,7 +103,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'MySphere.wsgi.application'
-ASGI_APPLICATION = 'mysphere.asgi.application'
+ASGI_APPLICATION = 'MySphere.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {

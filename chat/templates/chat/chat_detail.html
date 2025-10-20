@@ -1,121 +1,158 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
-        }
+{% extends 'chat/chat_list.html' %}
 
-        .chat-container {
-            max-width: 700px;
-            margin: 50px auto;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 20px;
-        }
+{% block title %}Chat - {{ chat.user1.username }} e {{ chat.user2.username }}{% endblock %}
 
-        .chat-header {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-
-        .mensagens {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding-right: 10px;
-        }
-
-        .mensagem {
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 15px;
-            max-width: 70%;
-            clear: both;
-        }
-
-        .mensagem.remetente {
-            background-color: #d1e7dd;
-            float: right;
-            text-align: right;
-        }
-
-        .mensagem.destinatario {
-            background-color: #f8d7da;
-            float: left;
-            text-align: left;
-        }
-
-        .chat-form {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-form input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            outline: none;
-        }
-
-        .chat-form button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            background-color: #0d6efd;
-            color: white;
-            cursor: pointer;
-        }
-
-        .chat-form button:hover {
-            background-color: #0b5ed7;
-        }
-
-        /* Scrollbar estilizado */
-        .mensagens::-webkit-scrollbar {
-            width: 6px;
-        }
-        .mensagens::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-            border-radius: 3px;
-        }
-    </style>
-</head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">
-            Chat entre {{ chat.user1.username }} e {{ chat.user2.username }}
-        </div>
-
-        <div class="mensagens" id="mensagens">
-            {% for msg in mensagens %}
-                <div id="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}">
-                    <strong>{{ msg.remetente.username }}:</strong> {{ msg.conteudo }}
+{% block content %}
+<div class="chat-container">
+    <!-- Header -->
+    <header class="chat-header">
+        <div class="header-info">
+            <div class="header-avatar">
+                {{ chat.user1.username|first|upper }}{{ chat.user2.username|first|upper }}
+            </div>
+            <div class="header-details">
+                <div class="header-name">
+                    {{ chat.user1.username }} e {{ chat.user2.username }}
                 </div>
-            {% empty %}
-                <p>Nenhuma mensagem ainda.</p>
-            {% endfor %}
+                
+            </div>
         </div>
+    </header>
 
-        <form method="post" class="chat-form">
-            {% csrf_token %}
-            {{ form.conteudo }}
-            <button type="submit">Enviar</button>
-        </form>
+    <!-- Messages Area -->
+    <div class="mensagens" id="mensagens" role="log" aria-live="polite">
+        {% if mensagens %}
+            {% for msg in mensagens %}
+                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
+                    role="article"
+                    aria-label="Mensagem de {{ msg.remetente.username }}">
+                    <div class="mensagem-header">
+                        <span class="mensagem-autor">{{ msg.remetente.username }}</span>
+                    </div>
+                    <div class="mensagem-conteudo">{{ msg.conteudo }}</div>
+                    <div class="mensagem-footer">
+                        <span class="mensagem-hora">{{ msg.criado_em|date:"H:i" }}</span>
+                        {% if msg.remetente == request.user %}
+                            <span class="check-icon">✓✓</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-messages">
+                <div class="empty-messages-icon">💬</div>
+                <p>Nenhuma mensagem ainda.<br>Envie uma mensagem para começar a conversa!</p>
+            </div>
+        {% endif %}
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Mantém o scroll sempre no final
-        const mensagensDiv = document.getElementById('mensagens');
-        mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
-    </script>
-</body>
-</html>
+    <!-- Footer / Input Area -->
+    <footer class="chat-footer">
+
+        <form method="post" id="chatForm">
+            {% csrf_token %}
+            <div class="input-wrapper">
+                <input 
+                    type="text"
+                    name="conteudo"
+                    class="chat-input"
+                    id="messageInput"
+                    placeholder="Escreva uma mensagem"
+                    autocomplete="off"
+                    maxlength="500"
+                    aria-label="Escreva uma mensagem"
+                >
+            </div>
+            <button type="submit" class="send-btn" aria-label="Enviar mensagem">
+                ➤
+            </button>
+        </form>
+    </footer>
+</div>
+
+<script>
+    // Elementos
+    const mensagensDiv = document.getElementById('mensagens');
+    const messageInput = document.getElementById('messageInput');
+    const chatForm = document.getElementById('chatForm');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    // Função para scroll automático para o final
+    function scrollToBottom(smooth = false) {
+        if (mensagensDiv) {
+            setTimeout(() => {
+                mensagensDiv.scrollTo({
+                    top: mensagensDiv.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
+            }, 100);
+        }
+    }
+
+    // Scroll inicial ao carregar a página
+    window.addEventListener('load', function() {
+        scrollToBottom(false);
+        if (messageInput) {
+            messageInput.focus();
+        }
+    });
+
+    // Scroll ao carregar o DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom(false);
+    });
+
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            if (messageInput && messageInput.value.trim() === '') {
+                e.preventDefault();
+                messageInput.focus();
+                return false;
+            }
+            
+
+        });
+    }
+
+    // Enter para enviar (sem Shift)
+
+    // Observer para novas mensagens (scroll automático)
+    if (chatForm) {
+        chatForm.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.requestSubmit();
+            }
+        });
+    }
+
+    // Focus quando a página fica visível
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && messageInput) {
+            messageInput.focus();
+        }
+    });
+
+
+    // Prevenir scroll indesejado ao focar no input (mobile)
+    if (messageInput) {
+        messageInput.addEventListener('focus', function(e) {
+            // Pequeno delay para garantir que o scroll está correto
+            setTimeout(() => {
+                if (mensagensDiv.scrollHeight > mensagensDiv.clientHeight) {
+                    scrollToBottom(false);
+                }
+            }, 300);
+        });
+    }
+</script>
+{% endblock content %}
