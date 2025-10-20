@@ -244,3 +244,38 @@ body {
     max-width: 100%;
   }
 }
+
+/* ==============================
+   RANKING
+============================== */
+
+table {
+  margin: 20px auto;
+  border-collapse: collapse;
+  width: 80%;
+  background: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  border: solid 1px rgb(228, 228, 228);
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr.highlight {
+  background-color: #d4edda;
+  font-weight: bold;
+}
