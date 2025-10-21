@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from feed.models import Post, Comment, Like, Share
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
@@ -12,6 +13,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 
@@ -52,13 +54,10 @@ def feed_view(request, username=None):
 
 
 @login_required
-def feed_view(request, username=None):
+def feed_perfil_view(request, pk):
     # Se for perfil de outro usuário
-    if username:
-        profile_user = get_object_or_404(User, username=username, tenant=request.user.tenant)
-    else:
-        # Se for o próprio perfil
-        profile_user = request.user
+    
+    profile_user = get_object_or_404(User, id=pk)
 
     # Filtra os posts do usuário específico dentro do mesmo tenant
     posts = (
@@ -78,7 +77,6 @@ def feed_view(request, username=None):
     context = {
         'posts': posts,
         'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
-        'user': request.user,
     }
 
     return render(request, 'accounts/account_perfil.html', context)
@@ -130,3 +128,141 @@ class UserLoginView(LoginView):
     
     
 ROOT_URLCONF = 'MySphere.urls'
+
+
+
+@login_required
+@require_POST
+def like_post_home(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    
+    like, created = Like.objects.get_or_create(
+        post=post,
+        user=request.user,
+        tenant=request.user.tenant
+    )
+    
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    
+    return JsonResponse({
+        'liked': liked,
+        'total_likes': post.total_likes()
+    })
+
+@login_required
+@require_POST
+def comment_post_home(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    conteudo = request.POST.get('conteudo', '').strip()
+    
+    if conteudo:
+        comment = Comment.objects.create(
+            tenant=request.user.tenant,
+            post=post,
+            user=request.user,
+            conteudo=conteudo
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'comment': {
+                'user': comment.user.username,
+                'conteudo': comment.conteudo,
+                'criado_em': comment.criado_em.strftime('%d/%m/%Y %H:%M')
+            },
+            'total_comments': post.total_comments()
+        })
+    
+    return JsonResponse({'success': False}, status=400)
+#
+@login_required
+@require_POST
+def share_post_home(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    
+    Share.objects.create(
+        post=post,
+        user=request.user,
+        tenant=request.user.tenant
+    )
+    
+    return JsonResponse({
+        'success': True,
+        'total_shares': post.total_shares()
+    })
+
+
+
+#_________________________________________________________________________________________________________________
+
+
+
+@login_required
+@require_POST
+def like_post_perfil(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    
+    like, created = Like.objects.get_or_create(
+        post=post,
+        user=request.user,
+        tenant=request.user.tenant
+    )
+    
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    
+    return JsonResponse({
+        'liked': liked,
+        'total_likes': post.total_likes()
+    })
+
+@login_required
+@require_POST
+def comment_post_perfil(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    conteudo = request.POST.get('conteudo', '').strip()
+    
+    if conteudo:
+        comment = Comment.objects.create(
+            tenant=request.user.tenant,
+            post=post,
+            user=request.user,
+            conteudo=conteudo
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'comment': {
+                'user': comment.user.username,
+                'conteudo': comment.conteudo,
+                'criado_em': comment.criado_em.strftime('%d/%m/%Y %H:%M')
+            },
+            'total_comments': post.total_comments()
+        })
+    
+    return JsonResponse({'success': False}, status=400)
+
+@login_required
+@require_POST
+def share_post_perfil(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, tenant=request.user.tenant)
+    
+    Share.objects.create(
+        post=post,
+        user=request.user,
+        tenant=request.user.tenant
+    )
+    
+    return JsonResponse({
+        'success': True,
+        'total_shares': post.total_shares()
+    })
+#_________________________________________________________________________________________________________________
+

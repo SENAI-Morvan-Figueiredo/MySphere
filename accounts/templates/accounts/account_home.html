@@ -154,6 +154,50 @@
                 <span class="icon">🔗</span> Share
               </button>
             </div>
+
+          <div class="comments-list">
+            {% for comment in post.comments.all %}
+            <div class="comment">
+              <div class="comment-author">
+                {% if comment.user.foto %}
+                <img
+                  src="{{ comment.user.foto.url }}"
+                  alt="{{ comment.user.username }}"
+                  class="user-avatar-tiny"
+                />
+                {% else %}
+                <div class="user-avatar-tiny default-avatar">
+                  {{ comment.user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="comment-content">
+                <h5>{{ comment.user.username }}</h5>
+                <p>{{ comment.conteudo }}</p>
+                <span class="comment-time"
+                  >{{ comment.criado_em|date:"d/m/Y H:i" }}</span
+                >
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <form class="comment-form" data-post-id="{{ post.post_id }}">
+            {% csrf_token %}
+            <input
+              type="text"
+              name="conteudo"
+              placeholder="Write a comment..."
+            />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+
+        <div
+          class="comments-section"
+          id="comments-{{ post.post_id }}"
+          style="display: none"
+        >
           </article>
           {% empty %}
           <div class="no-posts">

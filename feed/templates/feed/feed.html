@@ -217,11 +217,12 @@
 
 
  {% comment %} ____________filtro de perfil_________________________________________________  {% endcomment %}
-               {%if post.user == request.user%} 
+               {%if post.user == request.user%}
+              
                 <div class="author-info">
-                  <a href="{% url 'home' %}"
+                  <a id="link_home" href="{% url 'home' %}"
                     ><h4>
-                      {{ post.user.get_full_name|default:post.user.username }}
+                      {{ post.user.get_full_name|default:post.user.username }} 
                     </h4>
                   </a>
                 
@@ -229,9 +230,9 @@
 
                 {%else%}
                 <div class="author-info">
-                  <a href="{% url 'perfil' %}"
+                  <a id="link_perfil" href="{% url 'perfil' post.user.pk %}"
                     ><h4>
-                      {{ post.user.get_full_name|default:post.user.username }}
+                      {{ post.user.get_full_name|default:post.user.username }} 
                     </h4>
                   </a>
                   {% endif %}

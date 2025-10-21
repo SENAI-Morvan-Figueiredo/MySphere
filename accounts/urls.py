@@ -11,7 +11,13 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('home/', views.feed_view, name='home'),
     path("atualizar_sobre/", views.atualizar_sobre, name="atualizar_sobre"),
-    path("perfil/", views.feed_view, name='perfil'),
+    path("perfil/<int:pk>/", views.feed_perfil_view, name='perfil'),
+    path('perfil/<int:post_id>/like/<int:pk>/', views.like_post_perfil, name='like_post'),
+    path('perfil/<int:post_id>/comment/<int:pk>/', views.comment_post_perfil, name='comment_post'),
+    path('perfil/<int:post_id>/share/<int:pk>/', views.share_post_perfil, name='share_post'),
+    path('home/<int:post_id>/like/', views.like_post_home, name='like_post'),
+    path('home/<int:post_id>/comment/', views.comment_post_home, name='comment_post'),
+    path('home/<int:post_id>/share/', views.share_post_home, name='share_post'),
 
 
 ]

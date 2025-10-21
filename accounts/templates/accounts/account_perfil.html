@@ -12,31 +12,27 @@
     <nav class="navbar">
       <div class="logo">My<span>Sphere</span></div>
 
-      {% if user.is_authenticated %}
       <div class="user-info">
-        <div class="avatar">{{ user.username|first|upper }}</div>
-        <span class="username">{{ user.username }}</span>
+        <div class="avatar">{{ profile_user.username|first|upper }}</div>
+        <span class="username">{{ profile_user.username }}</span>
       </div>
-      {% endif %}
     </nav>
 
     <!-- Conteúdo principal -->
 
     <main class="profile-container">
-      {% if user.is_authenticated %}
-
       <section class="profile-header">
         <div class="profile-photo"></div>
-        <h2>{{ user.username }}</h2>
-        <p class="user-email">{{ user.email }}</p>
+        <h2>{{ profile_user.username }}</h2>
+        <p class="user-email">{{ profile_user.email }}</p>
       </section>
 
       <section class="profile-info">
-        {% if user.role %}
-        <p><strong>Função:</strong> {{ user.role }}</p>
-        {% endif %} {% if user.data_nascimento %}
-        <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
-        {% endif %}
+        <p><strong>Função:</strong> {{ profile_user.role }}</p>
+
+        <p>
+          <strong>Data de Nascimento:</strong> {{ profile_user.data_nascimento}}
+        </p>
       </section>
 
       <!-- Seção de Postagens -->
@@ -93,7 +89,7 @@
             </div>
             {% endif %}
 
-            <div class="post-stats">
+            <div class="post-status">
               <span class="post-likes"
                 >❤️
                 <span class="likes-count">{{ post.total_likes }}</span>
@@ -132,9 +128,55 @@
               </button>
             </div>
           </article>
+
+          <div class="comments-list">
+            {% for comment in post.comments.all %}
+            <div class="comment">
+              <div class="comment-author">
+                {% if comment.user.foto %}
+                <img
+                  src="{{ comment.user.foto.url }}"
+                  alt="{{ comment.user.username }}"
+                  class="user-avatar-tiny"
+                />
+                {% else %}
+                <div class="user-avatar-tiny default-avatar">
+                  {{ comment.user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="comment-content">
+                <h5>{{ comment.user.username }}</h5>
+                <p>{{ comment.conteudo }}</p>
+                <span class="comment-time"
+                  >{{ comment.criado_em|date:"d/m/Y H:i" }}</span
+                >
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <form class="comment-form" data-post-id="{{ post.post_id }}">
+            {% csrf_token %}
+            <input
+              type="text"
+              name="conteudo"
+              placeholder="Write a comment..."
+            />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+
+        <div
+          class="comments-section"
+          id="comments-{{ post.post_id }}"
+          style="display: none"
+        >
+          <script src="{% static 'accounts/js/feed_perfil.js' %}"></script>
+
           {% empty %}
           <div class="no-posts">
-            <p>Nenhum post ainda. Seja o primeiro a postar!</p>
+            <p>Nenhum post ainda.</p>
           </div>
           {% endfor %}
         </div>
@@ -144,13 +186,6 @@
         {% csrf_token %}
         <button type="submit" class="logout-btn">Sair</button>
       </form>
-
-      {% else %}
-      <div class="not-logged">
-        <h2>Você não está logado</h2>
-        <a href="{% url 'login' %}" class="login-link">Entrar</a>
-      </div>
-      {% endif %}
     </main>
   </body>
 </html>
