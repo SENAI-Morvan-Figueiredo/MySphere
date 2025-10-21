@@ -15,7 +15,7 @@
     <header class="header">
         <div class="header-left">
             <div class="logo">
-                <h1>{{user.tenant.nome}}</h1>
+                <a href="{% url 'feed:feed' %}"><h1>{{user.tenant.nome}}</h1></a>
             </div>
         </div>
         <div class="header-right">

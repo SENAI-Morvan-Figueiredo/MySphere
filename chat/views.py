@@ -71,3 +71,30 @@ def chat_detail(request, chat_id):
         "chats": chats,
     }
     return render(request, "chat/chat_detail.html", context)
+
+
+
+def atualizar_chats(request):
+    chats = Chat.objects.filter(
+        Q(user1=request.user) | Q(user2=request.user)
+    ).annotate(
+        ultima_msg=Max('messages__criado_em')
+    ).order_by("-ultima_msg")
+
+    chat_list = []
+    for chat in chats:
+        if chat.user1 == request.user:
+            user2 = chat.user2
+        else:
+            user2 = chat.user1
+
+        last_message = chat.messages.last()
+        chat_list.append({
+            'id': chat.id,
+            'username': user2.username,
+            'foto_url': user2.foto.url if user2.foto else None,
+            'last_message': last_message.conteudo if last_message else '',
+            'last_message_time': last_message.criado_em.strftime("%H:%M") if last_message else None,
+        })
+
+    return JsonResponse({'chats': chat_list})

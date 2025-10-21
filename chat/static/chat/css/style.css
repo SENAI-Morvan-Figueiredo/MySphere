@@ -35,10 +35,16 @@ body {
     gap: 20px;
 }
 
+.logo a {
+    cursor: pointer;
+    text-decoration: none;
+
+}
 .logo h1 {
     color: #2563eb;
     font-size: 24px;
     font-weight: 700;
+    text-decoration: none;
 }
 
 .search-bar input {

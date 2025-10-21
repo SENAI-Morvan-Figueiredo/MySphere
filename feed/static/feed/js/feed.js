@@ -327,3 +327,33 @@ if (searchInput) {
         }, 500);
     });
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatContainer = document.getElementById("chat-list-container");
+    if (!chatContainer) return;
+
+    function atualizarChats() {
+        fetch(chatContainer.dataset.url)
+            .then(response => {
+                if (!response.ok) throw new Error("Erro na resposta");
+                return response.text();
+            })
+            .then(html => {
+                // Atualiza o conteúdo
+                chatContainer.innerHTML = html;
+
+                // Efeito suave de atualização
+                chatContainer.style.opacity = "0.3";
+                setTimeout(() => {
+                    chatContainer.style.transition = "opacity 0.5s";
+                    chatContainer.style.opacity = "1";
+                }, 100);
+            })
+            .catch(err => console.error("Erro ao atualizar chats:", err));
+    }
+
+    // Atualiza a cada 5 segundos
+    setInterval(atualizarChats, 1000);
+});
+

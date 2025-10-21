@@ -12,4 +12,5 @@ urlpatterns = [
     path('hashtag/<str:tag>/', views.hashtag_view, name='hashtag'),
     path('search/', views.search_view, name='search'),
     path('autocomplete/', views.autocomplete_view, name='autocomplete'),
+    path('atualizar_chats/', views.atualizar_chats, name='atualizar_chats'),
 ]

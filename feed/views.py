@@ -6,6 +6,8 @@ from django.db.models import Q, Max
 from .models import Post, Comment, Like, Share, Hashtag
 from accounts.models import User
 from chat.models import Chat
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 
 @login_required
 def feed_view(request):
@@ -15,10 +17,11 @@ def feed_view(request):
         post.user_has_liked = post.likes.filter(user=request.user).exists()
     
     chats = Chat.objects.filter(
-        Q(user1=request.user) | Q(user2=request.user)
+        Q(user1=request.user) | Q(user2=request.user),
+        messages__isnull=False
     ).annotate(
         ultima_msg=Max('messages__criado_em')
-    ).order_by('-ultima_msg')
+    ).order_by('-ultima_msg')[:5]
 
     context = {
         'posts': posts,
@@ -26,6 +29,17 @@ def feed_view(request):
         'user': request.user,
     }
     return render(request, 'feed/feed.html', context)
+
+@login_required
+def atualizar_chats(request):
+    chats = Chat.objects.filter(
+        Q(user1=request.user) | Q(user2=request.user)
+    ).annotate(
+        ultima_msg=Max('messages__criado_em')
+    ).order_by('-ultima_msg')[:5]
+
+    html = render_to_string('feed/atualizar_chats.html', {'chats': chats, 'request': request})
+    return HttpResponse(html)
 
 @login_required
 @require_POST

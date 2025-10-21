@@ -1,0 +1,46 @@
+{% if chats %}
+    {% for chat in chats %}
+        <a class="clique" href="{% url 'chat_detail' chat.id %}">
+            <div class="mensagem-item">
+                {% if chat.user1 == request.user %}
+                    {% if chat.user2.foto %}
+                        <img src="{{ chat.user2.foto.url }}" alt="{{ chat.user2.username }}">
+                    {% else %}
+                        <div class="default-avatar">{{ chat.user2.username|first|upper }}</div>
+                    {% endif %}
+                {% else %}
+                    {% if chat.user1.foto %}
+                        <img src="{{ chat.user1.foto.url }}" alt="{{ chat.user1.username }}">
+                    {% else %}
+                        <div class="default-avatar">{{ chat.user1.username|first|upper }}</div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="chat-info">
+                    <div class="chat-info-header">
+                        {% if chat.user1 == request.user %}
+                            <strong>{{ chat.user2.username }}</strong>
+                        {% else %}
+                            <strong>{{ chat.user1.username }}</strong>
+                        {% endif %}
+                        {% if chat.messages.last %}
+                            <span class="chat-time">{{ chat.messages.last.criado_em|date:"H:i" }}</span>
+                        {% endif %}
+                    </div>
+                    {% if chat.messages.last %}
+                        <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
+                    {% else %}
+                        <span class="chat-preview">Sem mensagens</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+{% else %}
+    <div class="no-chats">
+        <p>Você não tem chats ainda.</p>
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+            Clique em "Novo Chat" para começar!
+        </p>
+    </div>
+{% endif %}
