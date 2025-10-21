@@ -1,47 +1,52 @@
-<!doctype html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <title>Tasks</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lista de Tasks — MySphere</title>
+  <link rel="stylesheet" href="{% static 'css/gamification_tasks_list.css' %}">
 </head>
 <body>
-  <h1>Lista de Tasks</h1>
+  <main class="wrap">
+    <header class="page-header">
+      <div class="title-block">
+        <h1>Lista de Tasks</h1>
+        <p class="subtitle">Tarefas disponíveis no sistema de gamificação</p>
+      </div>
+      <div class="actions">
+        <a href="{% url 'task_create' %}" class="btn btn-primary">Criar Nova Task</a>
+        <a href="{% url 'user_task_list' %}" class="btn btn-ghost">Ver Tasks de Usuário</a>
+        <a href="{% url 'points_list' %}" class="btn btn-ghost">Ver Pontos</a>
+      </div>
+    </header>
 
-  <p><a href="{% url 'task_create' %}">Criar nova Task</a></p>
-
-  <table border="1" cellpadding="5">
-    <thead>
-      <tr>
-        <th>Título</th>
-        <th>Descrição</th>
-        <th>Pontos</th>
-        <th>Criado por</th>
-        <th>Criado em</th>
-
-      </tr>
-    </thead>
-    <tbody>
-      {% for task in tasks %}
-      <tr>
-        <td>{{ task.titulo }}</td>
-        <td>{{ task.descricao|default:"—" }}</td>
-        <td>{{ task.pontos }}</td>
-        <td>{{ task.criado_por.username }}</td>
-        <td>{{ task.criado_em }}</td>
-        <td>
-          <a href="{% url 'task_edit' task.pk %}">Editar</a> 
-          <form action="{% url 'task_delete' task.pk %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Apagar</button>
-          </form>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="6">Nenhuma task encontrada.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <section class="card">
+      <div class="table-wrap">
+        <table class="tasks-table" aria-label="Lista de tasks do sistema">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Descrição</th>
+              <th>Pontos</th>
+              <th>Criada em</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+            <tr>
+              <td>{{ task.titulo }}</td>
+              <td>{{ task.descricao|truncatechars:80 }}</td>
+              <td class="center">{{ task.pontos }}</td>
+              <td class="center">{{ task.criada_em }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="empty">Nenhuma Task cadastrada.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

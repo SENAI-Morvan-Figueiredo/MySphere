@@ -14,7 +14,7 @@ urlpatterns = [
     path('usertask/novo/', UserTaskCreateView.as_view(), name='user_task_create'),  # STAFF
     path('usertask/<int:pk>/edit/', UserTaskUpdateView.as_view(), name='user_task_edit'),  # STAFF
     path('usertask/<int:pk>/delete/', UserTaskDeleteView.as_view(), name='user_task_delete'),  # STAFF
-    path('points/lista/', PointsListView.as_view(), name='point_list'), # STAFF
+    path('points/lista/', PointsListView.as_view(), name='points_list'), # STAFF
     path('', GameHomeView.as_view(), name='game_home'), # USER
     path('usertask/<int:task_id>/concluir/', concluir_tarefa, name='concluir_tarefa'), # USER
 ]
