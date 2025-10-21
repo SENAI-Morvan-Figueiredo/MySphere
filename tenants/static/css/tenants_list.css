@@ -1,0 +1,211 @@
+:root {
+  --bg: #F5F7FB;
+  --card-bg: #FFFFFF;
+  --primary: #4C6FFF;
+  --text: #1F2937;
+  --muted: #6B7280;
+  --soft-shadow: 0 6px 18px rgba(33, 41, 61, 0.06);
+  --radius: 12px;
+  --gap: 20px;
+  --border: #E6E9F2;
+  --table-hover: rgba(76, 111, 255, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout principal */
+.wrap {
+  max-width: 1100px;
+  margin: 36px auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Cabeçalho da página */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title-block h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all .18s ease;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: var(--soft-shadow);
+}
+.btn-primary:hover {
+  background: #3e5ae5;
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(76, 111, 255, 0.15);
+}
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--soft-shadow);
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--soft-shadow);
+  border: 1px solid var(--border);
+}
+
+/* Tabela */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+.tasks-table thead th {
+  text-align: left;
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(245,247,251,0.6), rgba(245,247,251,0.2));
+}
+
+.tasks-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px dashed rgba(230, 233, 242, 0.6);
+  font-size: 0.98rem;
+  vertical-align: middle;
+}
+
+/* Linhas hover */
+.tasks-table tbody tr:hover {
+  background: var(--table-hover);
+}
+
+/* Colunas centralizadas */
+.center {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Ações dentro da tabela */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Estado vazio */
+.empty {
+  text-align: center;
+  padding: 28px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Logo */
+.tasks-table img {
+  border: 1px solid var(--border);
+  object-fit: cover;
+  background: #fff;
+}
+
+/* Paleta de cores - se quiser estilizar como tags */
+.tasks-table td:nth-child(5) {
+  font-family: monospace;
+  color: var(--muted);
+}
+
+/* Texto secundário */
+.muted {
+  color: var(--muted);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .wrap {
+    padding: 18px;
+  }
+
+  .title-block h1 {
+    font-size: 1.45rem;
+  }
+
+  .tasks-table {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 560px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .tasks-table thead th,
+  .tasks-table tbody td {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+}

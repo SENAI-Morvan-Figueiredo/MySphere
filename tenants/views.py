@@ -58,6 +58,12 @@ class TenantListUsersView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def get_queryset(self):
         tenant_id = self.kwargs["pk"]
         return User.objects.filter(tenant_id=tenant_id)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tenant_id = self.kwargs["pk"]
+        context['tenant'] = Tenant.objects.get(pk=tenant_id)
+        return context
 
 # CLASS PARA CRIAR UM USUARIO QUANDO VC ESTA DENTRO DE UM TENANT
 class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
