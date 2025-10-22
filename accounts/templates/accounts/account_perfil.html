@@ -6,7 +6,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel do Usuário</title>
-  <link rel="stylesheet" href="{% static 'accounts/css/user_home.css' %}" />
+  <link rel="stylesheet" href="{% static 'accounts/css/user_perfil.css' %}" />
 </head>
 
 <body>
@@ -29,15 +29,14 @@
     {% endif %}
   </nav>
 
+
   <!-- Conteúdo principal -->
 
   <main class="profile-container">
-    {% if user.is_authenticated %}
-
     <section class="profile-header">
       <div class="foto-de-perfil">
         {% if profile_user.foto %}
-        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-photo" />
+        <img src="{{ profile_user.foto.url }}" alt="{{ profile_user.username }}" class="profile-photo" />
         {% else %}
         <div class="profile-avatar default-avatar-large">
           {{ profile_user.username|slice:":1"|upper }}
@@ -49,35 +48,12 @@
     </section>
 
     <section class="profile-info">
-      {% if user.role %}
-      <p><strong>Função:</strong> {{ user.role }}</p>
-      {% endif %} {% if user.data_nascimento %}
-      <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
-      {% endif %}
-    </section>
+      <p><strong>Função:</strong> {{ profile_user.role }}</p>
 
-    <!-- Seção de sobre__________________________________________________________ -->
-    <div id="sobre-container">
-      <h3>Sobre</h3>
-      <p id="sobre-texto">
-        {{ user.sobre_mim|default:"Ainda não há descrição." }}
+      <p>
+        <strong>Data de Nascimento:</strong> {{ profile_user.data_nascimento}}
       </p>
-
-      <textarea id="sobre-textarea" style="display: none"></textarea>
-
-      <button id="editar-sobre">editar</button>
-      <button id="salvar-sobre" style="display: none">salvar</button>
-    </div>
-
-    {% load static %}
-    <script>
-      // Variáveis globais injetadas pelo Django
-      const atualizarSobreURL = "{% url 'atualizar_sobre' %}"; // Usaremos este!
-      const csrfToken = "{{ csrf_token }}"; // Usaremos este!
-    </script>
-
-    <script src="{% static 'accounts/js/feed.js' %}"></script>
-    <!--____________________________________________________________________________________-->
+    </section>
 
     <!-- Seção de Postagens -->
     <section class="feed-section">
@@ -129,7 +105,7 @@
           </div>
           {% endif %}
 
-          <div class="post-stats">
+          <div class="post-status">
             <span class="post-likes">❤️
               <span class="likes-count">{{ post.total_likes }}</span>
               Like</span>
@@ -153,36 +129,37 @@
               <span class="icon">🔗</span> Share
             </button>
           </div>
+        </article>
 
-          <div class="comments-list">
-            {% for comment in post.comments.all %}
-            <div class="comment">
-              <div class="comment-author">
-                {% if comment.user.foto %}
-                <img src="{{ comment.user.foto.url }}" alt="{{ comment.user.username }}" class="user-avatar-tiny" />
-                {% else %}
-                <div class="user-avatar-tiny default-avatar">
-                  {{ comment.user.username|slice:":1"|upper }}
-                </div>
-                {% endif %}
+        <div class="comments-list">
+          {% for comment in post.comments.all %}
+          <div class="comment">
+            <div class="comment-author">
+              {% if comment.user.foto %}
+              <img src="{{ comment.user.foto.url }}" alt="{{ comment.user.username }}" class="user-avatar-tiny" />
+              {% else %}
+              <div class="user-avatar-tiny default-avatar">
+                {{ comment.user.username|slice:":1"|upper }}
               </div>
-              <div class="comment-content">
-                <h5>{{ comment.user.username }}</h5>
-                <p>{{ comment.conteudo }}</p>
-                <span class="comment-time">{{ comment.criado_em|date:"d/m/Y H:i" }}</span>
-              </div>
+              {% endif %}
             </div>
-            {% endfor %}
+            <div class="comment-content">
+              <h5>{{ comment.user.username }}</h5>
+              <p>{{ comment.conteudo }}</p>
+              <span class="comment-time">{{ comment.criado_em|date:"d/m/Y H:i" }}</span>
+            </div>
           </div>
-
+          {% endfor %}
+        </div>
 
       </div>
 
       <div class="comments-section" id="comments-{{ post.post_id }}" style="display: none">
-        </article>
+        <script src="{% static 'accounts/js/feed_perfil.js' %}"></script>
+
         {% empty %}
         <div class="no-posts">
-          <p>Nenhum post ainda. Seja o primeiro a postar!</p>
+          <p>Nenhum post ainda.</p>
         </div>
         {% endfor %}
       </div>
@@ -192,13 +169,6 @@
       {% csrf_token %}
       <button type="submit" class="logout-btn">Sair</button>
     </form>
-
-    {% else %}
-    <div class="not-logged">
-      <h2>Você não está logado</h2>
-      <a href="{% url 'login' %}" class="login-link">Entrar</a>
-    </div>
-    {% endif %}
   </main>
 </body>
 
