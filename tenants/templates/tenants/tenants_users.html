@@ -1,29 +1,37 @@
-<html>
-  <!DOCTYPE html>
-  <html lang="pt-br">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Lista de Tenants</title>
-    </head>
-    <body>
-      <h1>Lista de Tenants</h1>
-      
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Usuários do Tenant</title>
+  <link rel="stylesheet" href="{% static 'css/tenants_users.css' %}">
+</head>
+<body>
+  <div class="container">
+  <header class="page-header">
+    <h1>Usuários do Tenant: <span>{{ tenant.nome }}</span></h1>
 
-      <table border="1" cellspacing="0" cellpadding="5">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>nome</th>
-            <th>email</th>
-            <th>role</th>
-            <th>data nascimento</th>
-            <th>adicionado em</th>
-            <th>SUPERUSER</th>
-            <th>STAFF</th>
-            <th>tenant_id</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div class="btns">
+      <a href="{% url 'tenant_list' %}" class="btn btn-ghost">← Voltar</a>
+      <a href="{% url 'tenant_users_create' tenant.pk %}" class="btn btn-primary">+ Usuário</a>
+    </div>
+  </header>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Função</th>
+          <th>Data de Nascimento</th>
+          <th>Adicionado em</th>
+          <th>Staff</th>
+          <th>Tenant ID</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for user in users %}
           <tr>
             <td>{{ user.pk }}</td>
@@ -32,17 +40,16 @@
             <td>{{ user.role }}</td>
             <td>{{ user.data_nascimento }}</td>
             <td>{{ user.date_joined }}</td>
-            <td>{{ user.is_superuser }}</td>
             <td>{{ user.is_staff }}</td>
             <td>{{ user.tenant_id }}</td>
-        {% empty %}
-            <tr>
-                <td colspan="9">Nenhum User cadastrado nesse Tenent</td>
-            </tr>
-        {% endfor %}
           </tr>
-        </tbody>
-      </table>
-    </body>
-  </html>
+        {% empty %}
+          <tr>
+            <td colspan="9" class="empty">Nenhum usuário cadastrado neste Tenant</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
 </html>

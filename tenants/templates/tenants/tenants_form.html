@@ -1,21 +1,21 @@
+{% load static %}
 <html>
-<!-- tenants/tenants_form.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Criar Tenant</title>
+    <link rel="stylesheet" href="{% static 'css/tenants_form.css' %}">
 </head>
 <body>
-    <h1>Criar Tenant</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
+  <div class="form-wrap">
+    <h1>{% if form.instance.pk %}Editar Tenant{% else %}Criar Tenant{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Salvar</button>
     </form>
-
-    <a href="{% url 'tenant_list' %}">ver</a>
-
+    <a href="{% url 'tenant_list' %}">Ver lista de tenants</a>
+  </div>
 </body>
 </html>

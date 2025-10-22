@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Criar Usuário</title>
+  <link rel="stylesheet" href="{% static 'css/tenants_user_form.css' %}">
+</head>
+<body>
+  <div class="form-wrap">
+    <h1>Criar Usuário</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Salvar</button>
+    </form>
+    <a href="{% url 'tenant_list' %}">← Voltar à lista de tenants</a>
+  </div>
+</body>
+</html>

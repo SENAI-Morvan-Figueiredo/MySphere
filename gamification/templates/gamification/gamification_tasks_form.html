@@ -1,21 +1,31 @@
-<html>
-<!-- gamification/gamification_tasks_form.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Criar Task</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Criar Task — MySphere</title>
+  <link rel="stylesheet" href="{% static 'css/gamification_tasks_form.css' %}">
 </head>
 <body>
-    <h1>Criar Task</h1>
+  <main class="wrap">
+    <header class="page-header">
+      <div class="title-block">
+        <h1>Criar Task</h1>
+        <p class="subtitle">Defina uma nova tarefa para o sistema de gamificação</p>
+      </div>
+      <a href="{% url 'task_list' %}" class="btn btn-ghost">Voltar à lista</a>
+    </header>
 
-    <form method="post">
+    <section class="card">
+      <form method="post" class="task-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Salvar</button>
-    </form>
-
-    <a href="{% url 'task_list' %}">ver tasks</a>
-
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </section>
+  </main>
 </body>
 </html>
