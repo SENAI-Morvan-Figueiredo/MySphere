@@ -69,7 +69,7 @@ class TenantListUsersView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = User
     form_class = UserFormTenant
-    template_name = "tenants/tenants_form.html"
+    template_name = "tenants/tenants_user_form.html"
     
     def test_func(self):
         user = self.request.user

@@ -22,7 +22,7 @@ class UserFormTenant(forms.ModelForm): # add user via staff
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'data_nascimento', 'role', 'foto']
+        fields = ['username', 'email', 'password', 'data_nascimento', 'role', 'foto', 'is_staff']
 
     def save(self, commit=True):
         user = super().save(commit=False)
