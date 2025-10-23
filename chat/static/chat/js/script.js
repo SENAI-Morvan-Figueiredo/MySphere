@@ -1,3 +1,68 @@
+function truncateText(text, maxLength = 30) {
+    if (!text) return "";
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+}
+
+
+
+async function atualizarChats() {
+    try {
+        const response = await fetch(atualizarChatsUrl);
+        const data = await response.json();
+
+        const chatList = document.querySelector('.chat-list');
+        chatList.innerHTML = ''; // limpa a lista
+
+        if (data.chats.length === 0) {
+            chatList.innerHTML = `
+                <div class="no-chats">
+                    <p>Você não tem chats ainda.</p>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+                        Clique em "Novo Chat" para começar!
+                    </p>
+                </div>
+            `;
+        } else {
+            data.chats.forEach(chat => {
+                const img = chat.foto_url
+                    ? `<img src="${chat.foto_url}" alt="${chat.username}">`
+                    : `<div class="default-avatar">${chat.username[0].toUpperCase()}</div>`;
+
+                const lastMsg = chat.last_message ? truncateText(chat.last_message, 20) : 'Sem mensagens';
+
+                const lastTime = chat.last_message_time ? `<span class="chat-time">${chat.last_message_time}</span>` : '';
+
+                const chatBlock = document.createElement('a');
+                const unreadBadge = chat.unread_count > 0
+                    ? `<span class="unread-badge">${chat.unread_count}</span>`
+                    : '';
+                chatBlock.classList.add('clique');
+                chatBlock.href = `/chat/${chat.id}/`;
+                chatBlock.innerHTML = `
+                    <div class="chat-block new">
+                        ${img}
+                        <div class="chat-info">
+                            <div class="chat-info-header">
+                                <strong>${chat.username}</strong>
+                                <div class="chat-meta">
+                                    <span class="chat-time">${lastTime}</span>
+                                    ${unreadBadge}
+                                </div>
+                            </div>
+                            <span class="chat-preview">${lastMsg}</span>
+                        </div>
+                    </div>
+                `;
+
+                chatList.appendChild(chatBlock);
+            });
+        }
+    } catch (err) {
+        console.error('Erro ao atualizar chats:', err);
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("chatSearch");
     if (searchInput) {
@@ -11,13 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatForm = document.getElementById('chatForm');
     const formMessage = document.getElementById('formMessage');
 
-    // Abrir modal
+    // 🔹 Abrir modal
     addBtn.addEventListener('click', () => {
         newChatBox.classList.add('show');
         overlay.classList.add('show');
     });
 
-    // Fechar modal
+    // 🔹 Fechar modal
     const closeModal = () => {
         newChatBox.classList.remove('show');
         overlay.classList.remove('show');
@@ -27,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
 
-    // Envio do form via AJAX
+    // 🔹 Envio do formulário via AJAX (criar novo chat)
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(chatForm);
@@ -45,9 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
             formMessage.textContent = "Chat criado com sucesso!";
             chatForm.reset();
 
-            // Fecha o modal
+            // Fecha o modal suavemente
             setTimeout(closeModal, 800);
 
+            // Atualiza a lista automaticamente após 1 segundo
+            setTimeout(atualizarChats, 1000);
         } else {
             formMessage.style.color = "red";
             const errors = Object.values(data.errors).flat().join(" ");
@@ -55,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Auto-hide mensagens após 5 segundos
+    // 🔹 Auto-hide mensagens do Django após 5s
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(function(alert) {
         setTimeout(function() {
@@ -66,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 5000);
     });
 
-    // Animação de saída
+    // 🔹 Define a animação de saída
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideOutRight {
@@ -82,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.head.appendChild(style);
 
-    // Chamada inicial para carregar os chats e aplicar a pesquisa
+    // 🔹 Carrega os chats ao iniciar a página
     atualizarChats();
 });
 
@@ -101,10 +168,13 @@ function applySearchFunctionality() {
 
             const match = nameNorm.startsWith(termNorm) || nameNorm.split(" ").some(p => p.startsWith(termNorm));
 
-            // Certifica-se de esconder o elemento 'a.clique' pai, não apenas o 'div.chat-block'
             const parentLink = block.closest(".clique");
             if (parentLink) {
-                parentLink.style.display = match || !searchTerm ? "flex" : "none";
+                if (match || !searchTerm) {
+                    parentLink.classList.remove("hidden-chat");
+                } else {
+                    parentLink.classList.add("hidden-chat");
+                }
             }
         });
     }
