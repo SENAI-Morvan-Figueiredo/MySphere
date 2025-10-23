@@ -4,13 +4,135 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
+/* Comments Section */
+.comments-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e4e6eb;
+}
+
+.comments-list {
+  margin-bottom: 12px;
+}
+
+.comment {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.comment-content {
+  background: #f0f2f5;
+  padding: 8px 12px;
+  border-radius: 16px;
+  flex: 1;
+}
+
+.comment-content h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.comment-content p {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #65676b;
+  margin-top: 4px;
+  display: block;
+}
+
+.comment-form {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-form input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e4e6eb;
+  border-radius: 20px;
+  outline: none;
+  background: #f0f2f5;
+}
+
+.comment-form button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+.user-avatar-tiny {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .profile-photo {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 12px;
+}
+
+.foto-de-perfil{
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  font-size: 150%;
+}
+.default-avatar{
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.default-avatar-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+
+.post-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* #editar-sobre-btn {
@@ -24,9 +146,10 @@ body {
   border-radius: 6px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
 } */
+
 .post-interactions {
   display: flex;
-  gap: 12px;
+  justify-content: flex-end;
 }
 
 .post-likes{
@@ -101,67 +224,6 @@ body {
 
 .logo span {
   color: #3b82f6;
-}
-
-
-
-.user-avatar-small {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.profile-photo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-
-.foto-de-perfil{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.post-interactions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.post-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-
-.default-avatar,
-.default-avatar-large {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.user-avatar-small {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .user-info {
@@ -239,6 +301,7 @@ body {
   display: block;
   margin: 10px auto;
   object-fit: contain; /* faz caber sem cortar */
+  align-items: center;
 }
 .user-email {
   color: #777;
