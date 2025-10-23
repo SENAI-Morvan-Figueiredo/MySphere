@@ -245,7 +245,8 @@ body {
 .chat-info-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    position: relative;
 }
 
 .chat-info strong {
@@ -381,6 +382,9 @@ body {
   transition: all 0.3s ease;
   opacity: 0;
 }
+.hidden-chat {
+    display: none !important;
+}
 
 .new-chat-box.show {
   display: block;
@@ -388,7 +392,7 @@ body {
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Campos e botões */
+
 .new-chat-box input {
   width: 100%;
   padding: 10px;
@@ -413,7 +417,7 @@ body {
   background: #357ab8;
 }
 
-/* Botão de fechar */
+
 .close-btn {
   position: absolute;
   top: 10px;
@@ -430,7 +434,6 @@ body {
   color: #333;
 }
 
-/* Mensagem de erro ou sucesso */
 #formMessage {
   margin-top: 10px;
   font-size: 14px;
@@ -452,9 +455,41 @@ body {
 }
 
 
+.chat-meta {
+    position: relative;
+    min-width: 45px;
+    text-align: right;
+}
 
-/* Estilos para mensagens do Django */
-    .messages-container {
+
+.chat-time {
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 3px;
+}
+
+
+.unread-badge {
+    position: absolute;
+    right: 0;
+    top: 1.35rem;
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 0 4px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.messages-container {
         position: fixed;
         top: 80px;
         right: 20px;
