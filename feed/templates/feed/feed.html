@@ -29,6 +29,9 @@
           </form>
         </div>
         <div class="header-right">
+          {% if user.is_staff %}
+            <a href="{% url 'home_staff' %}">Staff</a>
+          {% endif %}
           <div class="user-info">
             {% if user.foto %}
             <img
