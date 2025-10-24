@@ -363,3 +363,51 @@
             });
 
 })();
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnEditar = document.getElementById("editar-sobre");
+  const btnSalvar = document.getElementById("salvar-sobre");
+  const textoSobre = document.getElementById("sobre-texto");
+  const textarea = document.getElementById("sobre-textarea");
+
+  if (!btnEditar || !btnSalvar || !textoSobre || !textarea) {
+    console.warn("Elementos do 'Sobre' não foram encontrados no DOM.");
+    return;
+  }
+
+  btnEditar.addEventListener("click", () => {
+    textarea.value = textoSobre.textContent.trim();
+    textoSobre.style.display = "none";
+    textarea.style.display = "block";
+    btnEditar.style.display = "none";
+    btnSalvar.style.display = "inline-block";
+  });
+
+  btnSalvar.addEventListener("click", async () => {
+    const novoTexto = textarea.value.trim();
+    try {
+      const response = await fetch(atualizarSobreURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({ sobre_mim: novoTexto }),
+      });
+
+      if (response.ok) {
+        textoSobre.textContent = novoTexto || "Ainda não há descrição.";
+      } else {
+        console.error("Erro ao atualizar o texto.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+
+    textoSobre.style.display = "block";
+    textarea.style.display = "none";
+    btnEditar.style.display = "inline-block";
+    btnSalvar.style.display = "none";
+  });
+});

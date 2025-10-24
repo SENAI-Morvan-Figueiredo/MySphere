@@ -84,6 +84,7 @@ def feed_perfil_view(request, pk):
 
 
 
+
 @login_required
 @csrf_exempt
 def atualizar_sobre(request):
@@ -98,7 +99,6 @@ def atualizar_sobre(request):
         return JsonResponse({"success": True, "novo_sobre": user.sobre_mim})
 
     return JsonResponse({"success": False}, status=400)
-
 
 
 class Users(ListView):
