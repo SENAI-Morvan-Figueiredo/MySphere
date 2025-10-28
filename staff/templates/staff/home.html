@@ -1,12 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>TESTE DO STAFF</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas praesentium minima itaque! Culpa quidem voluptate tempora praesentium id, quos obcaecati. Dolore eligendi temporibus ex maxime, explicabo fugit rerum corporis id.</p>
-</body>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Admin Social - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#13a4ec",
+              background: "#f7f8fa",
+              card: "#ffffff",
+              "text-primary": "#1e293b",
+              "text-secondary": "#64748b",
+              "border-color": "#e2e8f0",
+            },
+            fontFamily: {
+              display: ["Be Vietnam Pro", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "0.75rem",
+              xl: "1rem",
+              full: "9999px",
+            },
+            boxShadow: {
+              sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+              md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+      .group:hover .group-hover\:fill-1 { font-variation-settings: "FILL" 1; }
+    </style>
+  </head>
+  <body class="font-display bg-background text-text-primary">
+    <div class="flex min-h-screen w-full" x-data="{ sidebarOpen: true }">
+      <aside :class="{'-ml-64': !sidebarOpen}" class="flex-shrink-0 h-screen w-64 flex-col bg-card p-4 border-r border-border-color sticky top-0 transform transition-all duration-300 ease-in-out z-30">
+        <div class="flex flex-col justify-between h-full">
+          <div class="flex flex-col gap-8">
+            <div class="flex items-center gap-3 px-2">
+              <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Company Logo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA_oHK6taWoyjCYLUv_LCTror8ki7_0tFWXKOLiqAmAi0J02bVrHM6D-UrE_9fcM8QMaTDnBMBKnDeyRU2R2N8yaC_05eCrG353TLSBQrrGQXxY1lQs7BgnIeUnXDE9cNFi4CTBKl4elVSQsx5c7SQsRmy30NSrt1Cmh0Cp8wx4WhreGRsSGAM8wSTLN-uO1jY_IPFhGauq2gHfn4Armjzv57TOeW9UUve8XbJyuZHXMldfvQjuCYWWG3_LpvQz8iOWwvWi3btRinKo');"></div>
+              <div class="flex flex-col"><h1 class="text-text-primary text-base font-bold leading-normal">Admin Social</h1></div>
+            </div>
+            <nav class="flex flex-col gap-2">
+              <a class="group flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white font-semibold" href="#"><span class="material-symbols-outlined material-symbols-outlined-fill">dashboard</span><p class="text-sm leading-normal">Dashboard</p></a>
+              <a class="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-gray-100 hover:text-text-primary font-medium transition-colors" href="#"><span class="material-symbols-outlined group-hover:fill-1 transition-all">group</span><p class="text-sm leading-normal">Usuários</p></a>
+              <a class="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-gray-100 hover:text-text-primary font-medium transition-colors" href="#"><span class="material-symbols-outlined group-hover:fill-1 transition-all">feed</span><p class="text-sm leading-normal">Conteúdo</p></a>
+              <a class="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-gray-100 hover:text-text-primary font-medium transition-colors" href="#"><span class="material-symbols-outlined group-hover:fill-1 transition-all">settings</span><p class="text-sm leading-normal">Configurações</p></a>
+            </nav>
+          </div>
+          <div class="flex flex-col gap-1 border-t border-border-color pt-4">
+            <a class="group flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-gray-100 hover:text-text-primary font-medium transition-colors" href="#"><span class="material-symbols-outlined group-hover:fill-1 transition-all">logout</span><p class="text-sm leading-normal">Sair</p></a>
+          </div>
+        </div>
+      </aside>
+      <main class="flex-1 transition-all duration-300 ease-in-out">
+        <header class="sticky top-0 z-20 flex items-center justify-between gap-4 p-4 border-b border-border-color bg-card">
+          <div class="flex items-center gap-4">
+            <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-full text-text-secondary hover:bg-gray-200"><span class="material-symbols-outlined">menu</span></button>
+            <div class="flex flex-col gap-1"><h1 class="text-text-primary text-2xl font-bold leading-tight tracking-tight">Bem-vindo de volta, Admin!</h1><p class="text-text-secondary text-base font-normal leading-normal">Aqui está uma visão geral da sua plataforma.</p></div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex-1 max-w-sm hidden md:block">
+              <label class="flex flex-col w-full">
+                <div class="relative flex w-full flex-1 items-center">
+                  <span class="material-symbols-outlined text-xl text-text-secondary absolute left-3">search</span>
+                  <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-text-primary focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-background h-10 placeholder:text-text-secondary pl-10 text-sm font-normal leading-normal" placeholder="Buscar usuários, posts..." value="" />
+                </div>
+              </label>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="p-2 rounded-full text-text-secondary hover:bg-gray-200"><span class="material-symbols-outlined">notifications</span></button>
+              <button class="p-2 rounded-full text-text-secondary hover:bg-gray-200 md:hidden"><span class="material-symbols-outlined">search</span></button>
+              <div class="flex items-center gap-2 p-1 rounded-full text-text-secondary">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDiXpZ5TIA3L6iqSALuAwD7s0hR6SVLTljuKLlpqIOxk2GEnfv5s9DxDL6o_vDsv-zy-sCi-0kT8MZEZ84sKANSU9l18QcH2L8XlpSW2bhkJQCpexeZjXM6HBa02WSJgHr410nV1jFtIDYC9MxB0SyzZOlCVlWCcU2tIwbIrUGrkKrLdsNnlvq1qG4FbEjW5PLo2eHFk9BPD_onwynfKULBtJ_dn5X_0IZg_XXOkb2N8pb0fc9sTuaVdZmq25XW66RPAq-jEtBOODsL');"></div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div class="p-6 md:p-8 space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="flex items-start justify-between gap-4 rounded-xl p-6 bg-card border border-border-color shadow-sm"><div class="flex flex-col gap-1"><p class="text-text-secondary text-base font-medium leading-normal">Total de Usuários</p><p class="text-text-primary tracking-tight text-3xl font-bold leading-tight">1,234</p><p class="text-green-500 text-sm font-medium leading-normal">+2.5%</p></div><div class="p-3 rounded-lg bg-primary/10 text-primary"><span class="material-symbols-outlined">group</span></div></div>
+            <div class="flex items-start justify-between gap-4 rounded-xl p-6 bg-card border border-border-color shadow-sm"><div class="flex flex-col gap-1"><p class="text-text-secondary text-base font-medium leading-normal">Posts Hoje</p><p class="text-text-primary tracking-tight text-3xl font-bold leading-tight">189</p><p class="text-red-500 text-sm font-medium leading-normal">-5%</p></div><div class="p-3 rounded-lg bg-primary/10 text-primary"><span class="material-symbols-outlined">feed</span></div></div>
+            <div class="flex items-start justify-between gap-4 rounded-xl p-6 bg-card border border-border-color shadow-sm"><div class="flex flex-col gap-1"><p class="text-text-secondary text-base font-medium leading-normal">Ações de Moderação</p><p class="text-text-primary tracking-tight text-3xl font-bold leading-tight">42</p><p class="text-yellow-500 text-sm font-medium leading-normal">+8 nas últimas 24h</p></div><div class="p-3 rounded-lg bg-primary/10 text-primary"><span class="material-symbols-outlined">gavel</span></div></div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 flex flex-col gap-4 p-6 rounded-xl bg-card border border-border-color shadow-sm">
+              <h3 class="text-text-primary text-lg font-bold">Atividade Recente de Moderação</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-text-secondary">
+                  <thead class="text-xs text-text-secondary uppercase bg-gray-50"><tr><th class="px-6 py-3 font-medium rounded-l-lg">Staff</th><th class="px-6 py-3 font-medium">Ação</th><th class="px-6 py-3 font-medium text-right rounded-r-lg">Data</th></tr></thead>
+                  <tbody>
+                    <tr class="bg-card border-b border-border-color"><td class="px-6 py-4 font-medium text-text-primary whitespace-nowrap">Admin1</td><td class="px-6 py-4">Baniu o usuário "Spammer01" por spam.</td><td class="px-6 py-4 text-right">2 minutos atrás</td></tr>
+                    <tr class="bg-card border-b border-border-color"><td class="px-6 py-4 font-medium text-text-primary whitespace-nowrap">Mod2</td><td class="px-6 py-4">Removeu postagem por violar as regras.</td><td class="px-6 py-4 text-right">15 minutos atrás</td></tr>
+                    <tr class="bg-card border-b border-border-color"><td class="px-6 py-4 font-medium text-text-primary whitespace-nowrap">Admin2</td><td class="px-6 py-4">Aprovou 5 postagens pendentes.</td><td class="px-6 py-4 text-right">1 hora atrás</td></tr>
+                    <tr class="bg-card"><td class="px-6 py-4 font-medium text-text-primary whitespace-nowrap">Mod1</td><td class="px-6 py-4">Silenciou o usuário "TrollUser" por 24h.</td><td class="px-6 py-4 text-right">3 horas atrás</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4 p-6 rounded-xl bg-card border border-border-color shadow-sm">
+              <h3 class="text-text-primary text-lg font-bold">Ações Rápidas</h3>
+              <div class="flex flex-col gap-3">
+                <a class="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors" href="#"><span class="material-symbols-outlined text-primary">group_add</span><span class="text-text-primary font-medium">Adicionar Usuário</span></a>
+                <a class="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors" href="#"><span class="material-symbols-outlined text-primary">gavel</span><span class="text-text-primary font-medium">Gerenciar Denúncias</span></a>
+                <a class="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors" href="#"><span class="material-symbols-outlined text-primary">monitoring</span><span class="text-text-primary font-medium">Ver Relatórios</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+  </body>
 </html>
