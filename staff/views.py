@@ -6,3 +6,6 @@ def error_403_view(request, exception=None):
 
 class HomePageView(TemplateView):
     template_name = 'staff/home.html'
+
+class DashboardPageView(TemplateView):
+    template_name = 'staff/dashboard.html'
