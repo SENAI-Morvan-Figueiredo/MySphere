@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/staff.css' %}" />
+    {% block extra_css %}
+    {% endblock %}
   </head>
   <body>
     <div class="main-wrapper" x-data="{ sidebarOpen: true }">
@@ -23,7 +25,7 @@
             </div>
             <nav class="flex-col gap-2">
               <a class="nav-item group" href="{% url 'dashboard_staff' %}"><span class="material-symbols-outlined material-symbols-outlined-fill">dashboard</span><p class="text-sm leading-normal">Dashboard</p></a>
-              <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">group</span><p class="text-sm leading-normal">Usuários</p></a>
+              <a class="nav-item group" href="{% url 'users_staff' %}"><span class="material-symbols-outlined group-hover-fill-1 transition-all">group</span><p class="text-sm leading-normal">Usuários</p></a>
               <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">trophy</span><p class="text-sm leading-normal">Gamificação</p></a>
               <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">business</span><p class="text-sm leading-normal">Empresa</p></a>
             </nav>

@@ -1,0 +1,133 @@
+{% extends 'staff/home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/users.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="main-content">
+  <div>
+    <div>
+      <div>
+        <h1>Gerenciamento de Usuários</h1>
+        <p>Adicione, edite e gerencie usuários e suas permissões.</p>
+      </div>
+    </div>
+    <div>
+      <div class="container-card">
+        <div class="form-column">
+          <div class="form-card">
+            <h2>Cadastrar Novo Usuário</h2>
+            <form>
+              <div>
+                <label for="fullName">Nome Completo</label>
+                <input id="fullName" placeholder="Ex: Ana Oliveira" type="text" />
+              </div>
+              <div>
+                <label for="email">Endereço de Email</label>
+                <input id="email" placeholder="Ex: ana.o@email.com" type="email" />
+              </div>
+              <div>
+                <label for="password">Senha</label>
+                <div class="password-group">
+                  <input id="password" placeholder="••••••••" type="password" />
+                  <button type="button">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label for="role">Função no Sistema</label>
+                <select id="role">
+                  <option>Membro</option>
+                  <option>Moderador</option>
+                  <option>Admin</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button class="submit-button" type="submit">
+                  <span>Salvar Usuário</span>
+                </button>
+                <button class="reset-button" type="reset">
+                  <span>Cancelar</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="table-column">
+          <div class="table-card">
+            <h2>Todos os Usuários</h2>
+
+            <!-- <div>
+              <label>
+                <div>
+                  <div>
+                    <span class="material-symbols-outlined">search</span>
+                  </div>
+                  <input placeholder="Buscar por nome ou email..." />
+                </div>
+              </label>
+            </div> -->
+
+            <div class="table-wrapper">
+              <div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Função</th>
+                      <th scope="col">Data de Ingresso</th>
+                      <!-- <th scope="col">Status</th> -->
+                      <th scope="col">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for user in users %}
+                    <tr>
+                      <td>
+                        <div class="perfil-user">
+                          {% if user.foto %}
+                          <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                          {% else %}
+                          <div class="profile-avatar default-avatar-large">
+                            {{ user.username|slice:":1"|upper }}
+                          </div>
+                          {% endif %}
+                          <div>{{ user.username }}</div>
+                        </div>
+                      </td>
+                      <td>{{ user.role }}</td>
+                      <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                      <!-- <td>
+                        {% if user.ativo %}
+                        <span class="active-status">Ativo</span>
+                        {% else %}
+                        <span class="inactive-status">Inativo</span>
+                        {% endif %}
+                      </td>  -->
+                      <td>
+                        <div>
+                          <button><span class="material-symbols-outlined">edit</span></button>
+                          <button><span class="material-symbols-outlined">delete</span></button>
+                        </div>
+                      </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}
