@@ -77,7 +77,6 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return user.is_superuser or (user.is_staff and user.tenant_id == int(tenant_id))
     
     def form_valid(self, form):
-    
         tenant_id = self.kwargs['pk']    
         self.object = form.save(commit=False) 
         self.object.tenant_id = tenant_id

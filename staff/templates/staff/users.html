@@ -20,41 +20,11 @@
         <div class="form-column">
           <div class="form-card">
             <h2>Cadastrar Novo Usuário</h2>
-            <form>
-              <div>
-                <label for="fullName">Nome Completo</label>
-                <input id="fullName" placeholder="Ex: Ana Oliveira" type="text" />
-              </div>
-              <div>
-                <label for="email">Endereço de Email</label>
-                <input id="email" placeholder="Ex: ana.o@email.com" type="email" />
-              </div>
-              <div>
-                <label for="password">Senha</label>
-                <div class="password-group">
-                  <input id="password" placeholder="••••••••" type="password" />
-                  <button type="button">
-                    <span class="material-symbols-outlined">visibility</span>
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label for="role">Função no Sistema</label>
-                <select id="role">
-                  <option>Membro</option>
-                  <option>Moderador</option>
-                  <option>Admin</option>
-                </select>
-              </div>
-              <div class="form-actions">
-                <button class="submit-button" type="submit">
-                  <span>Salvar Usuário</span>
-                </button>
-                <button class="reset-button" type="reset">
-                  <span>Cancelar</span>
-                </button>
-              </div>
-            </form>
+              <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit">Salvar Usuário</button>
+              </form>
           </div>
         </div>
         <div class="table-column">
@@ -78,13 +48,14 @@
                   <thead>
                     <tr>
                       <th scope="col">Nome</th>
+                      <th scope="col">Email</th>
                       <th scope="col">Função</th>
                       <th scope="col">Data de Ingresso</th>
                       <!-- <th scope="col">Status</th> -->
                       <th scope="col">Ações</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="table-users">
                     {% for user in users %}
                     <tr>
                       <td>
@@ -99,6 +70,7 @@
                           <div>{{ user.username }}</div>
                         </div>
                       </td>
+                      <td>{{ user.email }}</td>
                       <td>{{ user.role }}</td>
                       <td>{{ user.date_joined|date:"d/m/Y" }}</td>
                       <!-- <td>
