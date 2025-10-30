@@ -6,100 +6,101 @@
 {% endblock %}
 
 {% block content %}
-
-<main class="main-content">
-  <div>
+<div class="container-all">
+  <main class="main-content">
     <div>
       <div>
-        <h1>Gerenciamento de Usuários</h1>
-        <p>Adicione, edite e gerencie usuários e suas permissões.</p>
-      </div>
-    </div>
-    <div>
-      <div class="container-card">
-        <div class="form-column">
-          <div class="form-card">
-            <h2>Cadastrar Novo Usuário</h2>
-              <form method="POST" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {{ form.as_p }}
-                  <button type="submit">Salvar Usuário</button>
-              </form>
-          </div>
+        <div>
+          <h1>Gerenciamento de Usuários</h1>
+          <p>Adicione, edite e gerencie usuários e suas permissões.</p>
         </div>
-        <div class="table-column">
-          <div class="table-card">
-            <h2>Todos os Usuários</h2>
+      </div>
+      <div>
+        <div class="container-card">
+          <div class="form-column">
+            <div class="form-card">
+              <h2>Cadastrar Novo Usuário</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Salvar Usuário</button>
+                </form>
+            </div>
+          </div>
+          <div class="table-column">
+            <div class="table-card">
+              <h2>Todos os Usuários</h2>
 
-            <!-- <div>
-              <label>
-                <div>
+              <!-- <div>
+                <label>
                   <div>
-                    <span class="material-symbols-outlined">search</span>
+                    <div>
+                      <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input placeholder="Buscar por nome ou email..." />
                   </div>
-                  <input placeholder="Buscar por nome ou email..." />
-                </div>
-              </label>
-            </div> -->
+                </label>
+              </div> -->
 
-            <div class="table-wrapper">
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col">Nome</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Função</th>
-                      <th scope="col">Data de Ingresso</th>
-                      <!-- <th scope="col">Status</th> -->
-                      <th scope="col">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody id="table-users">
-                    {% for user in users %}
-                    <tr>
-                      <td>
-                        <div class="perfil-user">
-                          {% if user.foto %}
-                          <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
-                          {% else %}
-                          <div class="profile-avatar default-avatar-large">
-                            {{ user.username|slice:":1"|upper }}
+              <div class="table-wrapper">
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Função</th>
+                        <th scope="col">Data de Ingresso</th>
+                        <!-- <th scope="col">Status</th> -->
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-users">
+                      {% for user in users %}
+                      <tr>
+                        <td>
+                          <div class="perfil-user">
+                            {% if user.foto %}
+                            <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                            {% else %}
+                            <div class="profile-avatar default-avatar-large">
+                              {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                            <div>{{ user.username }}</div>
                           </div>
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                        <!-- <td>
+                          {% if user.ativo %}
+                          <span class="active-status">Ativo</span>
+                          {% else %}
+                          <span class="inactive-status">Inativo</span>
                           {% endif %}
-                          <div>{{ user.username }}</div>
-                        </div>
-                      </td>
-                      <td>{{ user.email }}</td>
-                      <td>{{ user.role }}</td>
-                      <td>{{ user.date_joined|date:"d/m/Y" }}</td>
-                      <!-- <td>
-                        {% if user.ativo %}
-                        <span class="active-status">Ativo</span>
-                        {% else %}
-                        <span class="inactive-status">Inativo</span>
-                        {% endif %}
-                      </td>  -->
-                      <td>
-                        <div>
-                          <button><span class="material-symbols-outlined">edit</span></button>
-                          <button><span class="material-symbols-outlined">delete</span></button>
-                        </div>
-                      </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                      <td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                        </td>  -->
+                        <td>
+                          <div>
+                            <button><span class="material-symbols-outlined">edit</span></button>
+                            <button><span class="material-symbols-outlined">delete</span></button>
+                          </div>
+                        </td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
+</div>
 {% endblock content %}

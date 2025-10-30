@@ -4,7 +4,8 @@ from accounts.models import User
 class FormAddUsersStaff(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'data_nascimento', 'role', 'foto']
+        fields = ['username', 'email', 'data_nascimento', 'role', 'foto']
+        help_texts = {'username': ''}
 
     def save(self, commit=True):
         user = super().save(commit=False)

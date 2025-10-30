@@ -30,9 +30,9 @@
               <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">business</span><p class="text-sm leading-normal">Empresa</p></a>
             </nav>
           </div>
-          <div class="flex-col gap-1 border-t border-border-color pt-4">
+          <!-- <div class="flex-col gap-1 border-t border-border-color pt-4">
             <a class="footer-link group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">logout</span><p class="text-sm leading-normal">Sair</p></a>
-          </div>
+          </div> -->
         </div>
       </aside>
       <!-- FIM DO HAMBURGUER -->
@@ -64,10 +64,10 @@
           </div>
         </header>
         <!-- FIM DO HEADER -->
-        
-        {% block content %}
-
-        {% endblock content %}
+        <div class="dashboard-content-container"> 
+          {% block content %}
+          {% endblock content %}
+        </div>
         
       </main>
     </div>
