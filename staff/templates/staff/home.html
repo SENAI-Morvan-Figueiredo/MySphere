@@ -1,76 +1,95 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Home Staff</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/staff.css' %}" />
-    {% block extra_css %}
+    {% block extra_css %} 
     {% endblock %}
-  </head>
-  <body>
-    <div class="main-wrapper" x-data="{ sidebarOpen: true }">
-      <!-- INICIO DO HAMBURGUER -->
-      <aside :class="{'-ml-64': !sidebarOpen}" class="sidebar">
-        <div class="flex flex-col justify-between h-full">
-          <div class="flex-col gap-8">
-            <div class="flex items-center gap-3 px-2">
-              <div class="" data-alt="Empresa Logo"><!-- <img src="{% static 'accounts/images/mysphere-bg.png' %}" alt=""> --></div> <!-- AJEITAR AINDA A IMAGEM DA EMPRESA -->
-              <div class="flex-col"><h1 class="text-text-primary text-base font-bold leading-bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10normal">{{ user.tenant.nome }}</h1></div>
-            </div>
-            <nav class="flex-col gap-2">
-              <a class="nav-item group" href="{% url 'dashboard_staff' %}"><span class="material-symbols-outlined material-symbols-outlined-fill">dashboard</span><p class="text-sm leading-normal">Dashboard</p></a>
-              <a class="nav-item group" href="{% url 'users_staff' %}"><span class="material-symbols-outlined group-hover-fill-1 transition-all">group</span><p class="text-sm leading-normal">Usuários</p></a>
-              <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">trophy</span><p class="text-sm leading-normal">Gamificação</p></a>
-              <a class="nav-item group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">business</span><p class="text-sm leading-normal">Empresa</p></a>
-            </nav>
-          </div>
-          <!-- <div class="flex-col gap-1 border-t border-border-color pt-4">
-            <a class="footer-link group" href="#"><span class="material-symbols-outlined group-hover-fill-1 transition-all">logout</span><p class="text-sm leading-normal">Sair</p></a>
-          </div> -->
-        </div>
-      </aside>
-      <!-- FIM DO HAMBURGUER -->
+</head>
 
-      <main class="main-content-area">        
-        <!-- INICIO DO HEADER -->
-        <header class="main-header">
-          <div class="flex items-center gap-4">
-            <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-full text-text-secondary hover-bg-gray-200"><span class="material-symbols-outlined">menu</span></button>
-            <div class="flex-col gap-1">
-              <h1 class="text-text-primary text-2xl font-bold leading-tight tracking-tight">Olá, Staff {{ request.user.username }}!</h1>
-              <p class="text-text-secondary text-base font-normal leading-normal">O que deseja fazer hoje.</p></div>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="search-input-container hidden md-block">
-              <label class="flex-col w-full">
-                <div class="relative flex w-full flex-1 items-center">
-                  <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-text-primary focus-outline-0 focus-ring-2 focus-ring-primary-50 border-none bg-background h-10 placeholder-text-text-secondary pl-10 text-sm font-normal leading-normal" placeholder="Buscar usuários, posts..." value="" />
+<body>
+    <div class="main-wrapper" x-data="{ sidebarOpen: true }">
+        <!-- INICIO DO HAMBURGUER -->
+        <aside :class="{'-ml-64': !sidebarOpen}" class="sidebar">
+            <div class="sidebar-inner">
+                <div class="logo-section">
+                    <div class="logo-info">
+                        <div class="logo-image">
+                            <!-- <img src="{% static 'accounts/images/mysphere-bg.png' %}" alt=""> -->
+                        </div>
+                        <!-- AJEITAR AINDA A IMAGEM DA EMPRESA -->
+                        <div class="logo-text">
+                            <h1>{{ user.tenant.nome }}</h1>
+                        </div>
+                    </div>
+                    <nav>
+                        <a class="nav-item" href="{% url 'dashboard_staff' %}">
+                            <span class="material-symbols-outlined material-symbols-outlined-fill">dashboard</span>
+                            <p>Dashboard</p>
+                        </a>
+                        <a class="nav-item group" href="{% url 'users_staff' %}">
+                            <span class="material-symbols-outlined group-hover-fill-1">group</span>
+                            <p>Usuários</p>
+                        </a>
+                        <a class="nav-item group" href="#">
+                            <span class="material-symbols-outlined group-hover-fill-1">trophy</span>
+                            <p>Gamificação</p>
+                        </a>
+                        <a class="nav-item group" href="#">
+                            <span class="material-symbols-outlined group-hover-fill-1">business</span>
+                            <p>Empresa</p>
+                        </a>
+                    </nav>
                 </div>
-              </label>
+                <div class="footer-section">
+                    <a class="footer-link group" href="#">
+                        <span class="material-symbols-outlined group-hover-fill-1">logout</span>
+                        <p>Sair</p>
+                    </a>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button class="p-2 rounded-full text-text-secondary hover-bg-gray-200 md-hidden"><span class="material-symbols-outlined">search</span></button>
-              <!-- <div class="flex items-center gap-2 p-1 rounded-full text-text-secondary">
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDiXpZ5TIA3L6iqSALuAwD7s0hR6SVLTljuKLlpqIOxk2GEnfv5s9DxDL6o_vDsv-zy-sCi-0kT8MZEZ84sKANSU9l18QcH2L8XlpSW2bhkJQCpexeZjXM6HBa02WSJgHr410nV1jFtIDYC9MxB0SyzZOlCVlWCcU2tIwbIrUGrkKrLdsNnlvq1qG4FbEjW5PLo2eHFk9BPD_onwynfKULBtJ_dn5X_0IZg_XXOkb2N8pb0fc9sTuaVdZmq25XW66RPAq-jEtBOODsL');"></div>
-              </div> --> 
-              <!-- AJEITAR IMAGEM DO USER NÃO SEI SE SERÁ AQUI -->
+        </aside>
+        <!-- FIM DO HAMBURGUER -->
+
+        <main class="main-content-area">
+            <!-- INICIO DO HEADER -->
+            <header class="main-header">
+                <div class="titulo-navbar">
+                    <button @click="sidebarOpen = !sidebarOpen" class="btn-hamburguer"><span class="material-symbols-outlined">menu</span></button>
+                    <div>
+                        <h1>Olá, Staff {{request.user.username }}!</h1>
+                        <p>O que deseja fazer hoje.</p>
+                    </div>
+                </div>
+                <div class="header-right-section">
+                    <div class="search-input-container">
+                        <label>
+                            <div>
+                                <input placeholder="Buscar usuários, posts..." value="" />
+                                <button class="search-icon"><span class="material-symbols-outlined">search</span></button>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </header>
+            <!-- FIM DO HEADER -->
+            <div class="dashboard-content-container">
+              {% block content %}
+              {% endblock content %}
             </div>
-          </div>
-        </header>
-        <!-- FIM DO HEADER -->
-        <div class="dashboard-content-container"> 
-          {% block content %}
-          {% endblock content %}
-        </div>
-        
-      </main>
+
+        </main>
     </div>
     <script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
-  </body>
+</body>
+
 </html>

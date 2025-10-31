@@ -95,8 +95,8 @@
     border: 1px solid var(--color-zinc-200);
     background-color: var(--color-white);
     padding: 1.0rem;
-    /* width: 25vw;
-    height: 55vh; */
+    width: 25vw;
+    height: 55vh;
 }
 
 .form-card h2 {
@@ -230,6 +230,7 @@
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: 50vw;
+    height: 55vh;
 }
 
 .table-card h2 {
@@ -241,7 +242,7 @@
 .table-wrapper {
     overflow-x: auto;
     overflow-y: auto;
-    height: 58vh;
+
     position: relative; 
 }
 
