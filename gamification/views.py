@@ -14,7 +14,7 @@ from django.db.models.functions import RowNumber
 
 class TaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
     model = Task
-    template_name = 'gamification/gamification_tasks_list.html'
+    template_name = 'staff/staff_gamification.html'
     context_object_name = 'tasks'
 
 class UserTaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
@@ -77,36 +77,6 @@ def concluir_tarefa(request, task_id):
     pontos_user.atualizar_nivel()
     
     return redirect('game_home')
-
-# VIEW PARA CRIAR O RANKING GAMIFICATION
-
-@login_required
-def game_ranking(request, tenant_id=None):
-   
-    tenant_id = tenant_id or getattr(request.user, 'tenant_id', None)
-
-    if not tenant_id:
-        return render(request, "gamification/error.html", {"mensagem": "Tenant não identificado."})
-
-    ranking = Points.objects.filter(
-        tenant_id=tenant_id
-    ).annotate(
-        posicao=Window(
-            expression=RowNumber(),
-            order_by=F('pontos').desc()
-        )
-    ).order_by('-pontos')
-
-    top5 = ranking[:5]
-
-    user_line = ranking.filter(user=request.user).first()
-
-    return render(request, "gamification/gamification_points_user.html", {
-        "top5": top5,
-        "user_line": user_line,
-        "tenant_id": tenant_id,
-    })
-
 
 # VIEWS - CREATE
 

@@ -1,0 +1,48 @@
+{% extends 'staff/staff_home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_gamification.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-all">
+    <main class="main-content">
+        <div>
+            <div class="title-page">
+                <h1>Gestão de Gamificação</h1>
+                <p>Administre tarefas, pontos e o ranking de usuários.</p>
+            </div>
+            <section class="card">
+                <div class="table-wrap">
+                    <table class="tasks-table" aria-label="Lista de tasks do sistema">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Descrição</th>
+                                <th>Pontos</th>
+                                <th>Criada em</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.titulo }}</td>
+                                <td>{{ task.descricao|truncatechars:80 }}</td>
+                                <td class="center">{{ task.pontos }}</td>
+                                <td class="center">{{ task.criada_em }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty">Nenhuma Task cadastrada.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+</div>
+</main>
+</div>
+{% endblock content %}

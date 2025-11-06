@@ -8,10 +8,10 @@ def error_403_view(request, exception=None):
     return render(request, 'staff/403.html', status=403)
 
 class HomePageView(TemplateView):
-    template_name = 'staff/home.html'
+    template_name = 'staff/staff_home.html'
 
 class DashboardPageView(TemplateView):
-    template_name = 'staff/dashboard.html'
+    template_name = 'staff/staff_dashboard.html'
     
 # class UsersPageView(ListView):
 #     model = User
@@ -36,7 +36,7 @@ class DashboardPageView(TemplateView):
 #         return super().form_valid(form) 
 
 class UsersPageView(TemplateView):
-    template_name = "staff/users.html"
+    template_name = "staff/staff_users.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
