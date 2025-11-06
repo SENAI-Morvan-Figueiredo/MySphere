@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'feed',
     'gamification',
     'eventos',
+
 ]
 
 AUTH_USER_MODEL = "accounts.User"

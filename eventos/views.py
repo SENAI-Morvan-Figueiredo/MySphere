@@ -11,21 +11,37 @@ def listar_eventos(request):
         'pode_gerenciar': pode_gerenciar
     })
 
+from django.contrib import messages
+from datetime import datetime
+
 @login_required
 def criar_evento(request):
     if not request.user.groups.filter(name="Organizadores").exists() and not request.user.is_staff:
         return redirect('listar_eventos')
 
     if request.method == 'POST':
+        inicio = datetime.fromisoformat(request.POST['inicio'])
+        fim = datetime.fromisoformat(request.POST['fim'])
+
+        # 🚫 validação: o fim não pode ser antes do início
+        if fim < inicio:
+            messages.error(request, "A data de término não pode ser anterior à data de início.")
+            return render(request, 'eventos/formulario.html', {'acao': 'criar'})
+
         Evento.objects.create(
             titulo=request.POST['titulo'],
             descricao=request.POST.get('descricao', ''),
-            inicio=request.POST['inicio'],
-            fim=request.POST['fim'],
-            criado_por=request.user
+            inicio=inicio,
+            fim=fim,
+            criado_por=request.user,
+            tenant=request.user.tenant
         )
+        messages.success(request, "Evento criado com sucesso!")
         return redirect('listar_eventos')
+    
+
     return render(request, 'eventos/formulario.html', {'acao': 'criar'})
+
 
 @login_required
 def editar_evento(request, evento_id):
