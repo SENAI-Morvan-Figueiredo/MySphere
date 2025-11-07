@@ -17,10 +17,11 @@ class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        tenant = self.request.user.tenant
 
         context['tasks'] = Task.objects.all()
         context['user_tasks'] = User_Task.objects.all()
-        context['points'] = Points.objects.all()
+        context['points'] = Points.objects.filter(tenant=tenant)
 
         return context
 

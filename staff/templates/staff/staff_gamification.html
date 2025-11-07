@@ -99,27 +99,27 @@
       <!-- PONTOS DOS USUARIOS -->
       <section id="pontos" class="tab-content">
         <div class="table-wrap">
-          <table class="points-table" aria-label="Tabela de pontos de usuários">
+          <table class="tasks-table" claaria-label="Tabela de pontos de usuários">
             <thead>
               <tr>
                 <th>Usuário</th>
-                <th class="center">Pontos</th>
-                <th class="center">Nível</th>
-                <th class="center">Última atualização</th>
-                <th class="center">Tenant</th>
+                <th>Pontos</th>
+                <th>Nível</th>
+                <th>Última atualização</th>
+                <th>Tenant</th>
               </tr>
             </thead>
             <tbody>
               {% for p in points %}
               <tr>
-                <td class="user-cell">
-                  <div class="user-name">{{ p.user.username }}</div>
-                  <div class="user-secondary muted">ID: {{ p.user.id }}</div>
+                <td>
+                  <div>{{ p.user.username }}</div>
+                  <div>ID: {{ p.user.id }}</div>
                 </td>
-                <td class="center points-value">{{ p.pontos }}</td>
-                <td class="center">{{ p.nivel }}</td>
-                <td class="center">{{ p.ultima_atualizacao }}</td>
-                <td class="center">{{ p.tenant }}</td>
+                <td>{{ p.pontos }}</td>
+                <td>{{ p.nivel }}</td>
+                <td>{{ p.ultima_atualizacao }}</td>
+                <td>{{ p.tenant }}</td>
               </tr>
               {% empty %}
               <tr>
