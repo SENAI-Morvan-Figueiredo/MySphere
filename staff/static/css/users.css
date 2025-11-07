@@ -38,9 +38,7 @@
    PÁGINA DE USUÁRIOS
    ======================================================================== */
 
-body {
-  overflow: hidden;
-}
+
 
 .title-page {
     display: flex;

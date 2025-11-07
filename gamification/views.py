@@ -12,20 +12,17 @@ from django.db.models.functions import RowNumber
 
 # VIEWS - LIST
 
-class TaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
-    model = Task
+class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, TemplateView):
     template_name = 'staff/staff_gamification.html'
-    context_object_name = 'tasks'
 
-class UserTaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
-    model = User_Task
-    template_name = 'gamification/gamification_users_tasks_list.html'
-    context_object_name = 'user_tasks'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-class PointsListView(OnlyIsStaff, TenantAccessMixin, ListView):
-    model = Points
-    template_name = 'gamification/gamification_points_list.html'
-    context_object_name = 'points'
+        context['tasks'] = Task.objects.all()
+        context['user_tasks'] = User_Task.objects.all()
+        context['points'] = Points.objects.all()
+
+        return context
 
 # VIEW QUE RENDERIZA PONTOS E TASKS DO USER
 
