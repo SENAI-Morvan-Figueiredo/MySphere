@@ -12,7 +12,7 @@
   <body class="bg-light">
     <div class="container mt-5">
       <h2 class="mb-4 text-center">Eventos</h2>
-
+        
       {% if pode_gerenciar %}
       <div class="text-end mb-3">
         <a href="{% url 'criar_evento' %}" class="btn btn-primary"
@@ -21,6 +21,7 @@
       </div>
       {% endif %}
 
+      
       <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark text-center">
           <tr>
@@ -31,7 +32,7 @@
             <th>Criado por</th>
             <th>Tenant</th>
             {% if pode_gerenciar %}
-            <th>Descrição</th>
+            <th>ações</th>
             {% endif %}
           </tr>
         </thead>
@@ -46,18 +47,17 @@
             <td>{{ evento.tenant }}</td>
             {% if pode_gerenciar %}
             <td class="text-center">
-              <a
-                href="{% url 'editar_evento' evento.id %}"
-                class="btn btn-sm btn-warning"
-                >Editar</a
-              >
-              <a
-                href="{% url 'excluir_evento' evento.id %}"
-                class="btn btn-sm btn-danger"
-                onclick="return confirm('Tem certeza que deseja excluir este evento?');"
-              >
-                Excluir
-              </a>
+
+              <a href="{% url 'editar_evento' evento.id %}" class="btn btn-warning btn-sm">Editar</a>
+
+              <form action="{% url 'excluir_evento' evento.id %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger" 
+          onclick="return confirm('Tem certeza que deseja excluir este evento?');">
+    Excluir
+  </button>
+</form>
+
             </td>
             {% endif %}
           </tr>

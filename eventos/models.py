@@ -10,5 +10,5 @@ class Evento(models.Model):
     criado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="tenant_evento")
 
-    def __str__(self):
-        return self.titulo
+def __str__(self):
+    return self.titulo
