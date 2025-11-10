@@ -1,31 +1,28 @@
+{% extends 'staff/staff_home.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Atribuir Task a Usuário — MySphere</title>
-  <link rel="stylesheet" href="{% static 'css/gamification_users_tasks_form.css' %}">
-</head>
-<body>
-  <main class="wrap">
-    <header class="page-header">
-      <div class="title-block">
-        <h1>Atribuir Task a Usuário</h1>
-        <p class="subtitle">Vincule uma tarefa a um usuário do sistema</p>
-      </div>
-      <a href="{% url 'user_task_list' %}" class="btn btn-ghost">Voltar à lista</a>
-    </header>
+{% comment %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/gamification_users_tasks_form.css' %}">
+{% endblock %}
+{% endcomment %}
+{% block content %}
 
-    <section class="card">
-      <form method="post" class="user-task-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-      </form>
-    </section>
-  </main>
-</body>
-</html>
+<main class="wrap">
+  <header class="page-header">
+    <div class="title-block">
+      <h1>Atribuir Task a Usuário</h1>
+      <p class="subtitle">Vincule uma tarefa a um usuário do sistema</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <form method="post" class="user-task-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock content %}

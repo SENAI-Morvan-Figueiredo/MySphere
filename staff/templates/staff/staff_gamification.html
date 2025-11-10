@@ -1,6 +1,9 @@
-{% extends 'staff/staff_home.html' %} {% load static %} {% block extra_css %}
+{% extends 'staff/staff_home.html' %} 
+{% load static %} 
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/staff_gamification.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %} 
+{% block content %}
 <div class="container-all">
   <main class="main-content">
     <div>
@@ -16,6 +19,12 @@
 
       <!-- INICIO DAS TASKS -->
       <section id="tarefas" class="tab-content active">
+      <div class="btn-container">
+        <a href="{% url 'task_create' %}" class="btn-form">
+            <i class="fa-solid fa-plus"></i>
+            Criar Nova Tarefa
+        </a>
+      </div>  
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks do sistema">
             <thead>
@@ -46,6 +55,12 @@
       <!-- FIM DAS TASKS -->
       <!-- ATRIBUIÇÃO DE USERS -->
       <section id="tarefas_user" class="tab-content">
+      <div class="btn-container">
+        <a href="{% url 'task_create' %}" class="btn-form">
+            <i class="fa-solid fa-plus"></i>
+            Atribuir Tarefa
+        </a>
+      </div>  
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks de usuários">
             <thead>

@@ -82,13 +82,13 @@ class TaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = "gamification/gamification_tasks_form.html"
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
     
 class UserTaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
     model = User_Task
     form_class = UserTaskForm
     template_name = "gamification/gamification_users_tasks_form.html"
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')
 
     def form_valid(self, form):
         form.instance.atribuido_por = self.request.user 
@@ -100,20 +100,20 @@ class TaskUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'gamification/gamification_tasks_form.html'
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
 
 class UserTaskUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
     model = User_Task
     form_class = UserTaskForm
     template_name = 'gamification/gamification_users_tasks_form.html'
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')
 
 # VIEWS - DELETE 
 
 class TaskDeleteView(OnlyIsStaff, DeleteView):
     model = Task
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
 
 class UserTaskDeleteView(OnlyIsStaff, DeleteView):
     model = User_Task
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')
