@@ -6,23 +6,21 @@ from django.db.models import Q, Max
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .forms import ChatForm
+from cryptography.fernet import Fernet
+from django.conf import settings
+
+fernet = Fernet(settings.FERNET_KEY.encode())
 
 @login_required
 @require_POST
 def criar_chat_ajax(request):
-    form = ChatForm(request.POST, user=request.user, tenant=request.user.tenant)
+    form = MessageForm(request.POST, request.FILES)
     if form.is_valid():
-        chat = form.save()
-        return JsonResponse({
-            "success": True,
-            "chat": {
-                "id": chat.id,
-                "user2": chat.user2.username,
-                "email": chat.user2.email,
-            }
-        })
-    else:
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        msg = form.save(commit=False)
+        msg.remetente = request.user
+        msg.chat = Chat
+        msg.save()
+        return redirect("chat_detail", chat_id=Chat.id)
 
 @login_required
 def chat_list(request):
@@ -40,26 +38,25 @@ def chat_list(request):
 def chat_detail(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
 
-    # Segurança — impede abrir chat que não pertence ao usuário
+    # Impede acesso indevido
     if request.user not in [chat.user1, chat.user2]:
         return redirect("chat_list")
-    
-    chat.messages.exclude(remetente=request.user).filter(lido=False).update(lido=True)
 
+    chat.messages.exclude(remetente=request.user).filter(lido=False).update(lido=True)
     mensagens = chat.messages.order_by("criado_em")
 
     if request.method == "POST":
-        form = MessageForm(request.POST)
+        form = MessageForm(request.POST, request.FILES)
         if form.is_valid():
-            msg = form.save(commit=False)
-            msg.chat = chat
-            msg.remetente = request.user
+            msg = form.save(commit=False, remetente=request.user, chat=chat)
+
+            # 🔹 Verifica se há imagem, vídeo ou arquiv
+
             msg.save()
             return redirect("chat_detail", chat_id=chat.id)
     else:
         form = MessageForm()
 
-    # 🔹 Buscar todos os chats sem duplicar (igual acima)
     chats = Chat.objects.filter(
         Q(user1=request.user) | Q(user2=request.user)
     ).annotate(

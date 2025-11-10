@@ -7,27 +7,35 @@ from cryptography.fernet import Fernet
 
 fernet = Fernet(settings.FERNET_KEY.encode())
 
+from django import forms
+from .models import Message
+
 class MessageForm(forms.ModelForm):
     conteudo = forms.CharField(
         label="Mensagem",
+        required=False,
         widget=forms.TextInput(attrs={"placeholder": "Digite sua mensagem..."})
     )
 
     class Meta:
         model = Message
-        fields = []  # não usamos campos diretos do modelo, apenas o 'conteudo' virtual
+        fields = ["conteudo", "imagem", "video", "arquivo"]
 
     def save(self, commit=True, remetente=None, chat=None):
-        msg_text = self.cleaned_data['conteudo']
-        instance = Message(
-            remetente=remetente,
-            chat=chat,
-            conteudo_encrypted=fernet.encrypt(msg_text.encode())
-        )
+        instance = super().save(commit=False)
+        if remetente:
+            instance.remetente = remetente
+        if chat:
+            instance.chat = chat
+
+        # Criptografa o texto
+        if self.cleaned_data.get("conteudo"):
+            instance.conteudo = self.cleaned_data["conteudo"]
+
         if commit:
             instance.save()
         return instance
-    
+
 class ChatForm(forms.Form):
     email = forms.EmailField(
         label="E-mail do usuário",

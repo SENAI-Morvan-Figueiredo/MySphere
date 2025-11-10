@@ -3,6 +3,8 @@ from tenants.models import Tenant
 from accounts.models import User
 from django.conf import settings
 from cryptography.fernet import Fernet
+import io
+from django.core.files.base import ContentFile
 
 fernet = Fernet(settings.FERNET_KEY.encode())
 
@@ -35,6 +37,9 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     remetente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_sent")
     conteudo_encrypted = models.BinaryField()
+    imagem = models.ImageField(upload_to="posts/", null=True, blank=True)
+    video = models.FileField(upload_to="videos/", null=True, blank=True)
+    arquivo = models.FileField(upload_to="files/", null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
     lido = models.BooleanField(default=False)
 
@@ -51,3 +56,31 @@ class Message(models.Model):
     def conteudo(self, value):
         fernet = Fernet(settings.FERNET_KEY.encode())
         self.conteudo_encrypted = fernet.encrypt(value.encode())
+     # === Criptografia de arquivos ===
+    def save(self, *args, **kwargs):
+
+        if self.imagem and not self.imagem.name.endswith(".enc"):
+            original_data = self.imagem.read()
+            encrypted_data = fernet.encrypt(original_data)
+            self.imagem.save(self.imagem.name + ".enc", ContentFile(encrypted_data), save=False)
+
+        if self.video and not self.video.name.endswith(".enc"):
+            original_data = self.video.read()
+            encrypted_data = fernet.encrypt(original_data)
+            self.video.save(self.video.name + ".enc", ContentFile(encrypted_data), save=False)
+
+        # Criptografa arquivo
+        if self.arquivo and not self.arquivo.name.endswith(".enc"):
+            original_data = self.arquivo.read()
+            encrypted_data = fernet.encrypt(original_data)
+            self.arquivo.save(self.arquivo.name + ".enc", ContentFile(encrypted_data), save=False)
+
+        super().save(*args, **kwargs)
+
+    # === Descriptografia ao acessar o arquivo ===
+    def get_decrypted_file(self, file_field):
+        if not file_field:
+            return None
+        encrypted_data = file_field.read()
+        decrypted_data = fernet.decrypt(encrypted_data)
+        return io.BytesIO(decrypted_data)
