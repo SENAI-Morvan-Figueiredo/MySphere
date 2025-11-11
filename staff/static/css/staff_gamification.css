@@ -39,6 +39,13 @@
 /* ========================================================================
    TÍTULO E INTRODUÇÃO
    ======================================================================== */
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .title-page {
   margin-bottom: 1.5rem;
 }
@@ -70,7 +77,8 @@
    TABELA DE TAREFAS
    ======================================================================== */
 .table-wrap {
-  overflow-x: auto;
+  overflow-y: auto;
+  height: 55.5vh;
   background-color: var(--color-white);
   border-radius: 0 var(--rounded-lg) var(--rounded-lg) var(--rounded-lg);
 }
@@ -184,7 +192,6 @@
 .btn-container {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
 }
 
 
@@ -211,3 +218,32 @@
   box-shadow: 0px 3px 9px rgba(98, 75, 255, 0.35);
   transform: translateY(-1px);
 }
+
+/* ==========================
+   USERS
+========================== */
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.default-avatar,
+.default-avatar-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.perfil-user {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+

@@ -7,24 +7,26 @@
 <div class="container-all">
   <main class="main-content">
     <div>
-      <div class="title-page">
-        <h1>Gestão de Gamificação</h1>
-        <p>Administre tarefas, pontos e o ranking de usuários.</p>
-      </div>
+      <div class="cabecalho">
+        <div class="title-page">
+          <h1>Gestão de Gamificação</h1>
+          <p>Administre tarefas, pontos e o ranking de usuários.</p>
+        </div>
+        <div class="btn-container">
+          <a href="{% url 'task_create' %}" class="btn-form">
+              <i class="fa-solid fa-plus"></i>
+              Nova Tarefa
+          </a>
+        </div> 
+      </div> 
       <div class="tabs">
         <div class="tab active" data-tab="tarefas">Tarefas</div>
-        <div class="tab" data-tab="tarefas_user">Atribuição de Tarefas</div>
+        <div class="tab" data-tab="tarefas_user">Atribuição</div>
         <div class="tab" data-tab="pontos">Pontos</div>
       </div>
 
       <!-- INICIO DAS TASKS -->
-      <section id="tarefas" class="tab-content active">
-      <div class="btn-container">
-        <a href="{% url 'task_create' %}" class="btn-form">
-            <i class="fa-solid fa-plus"></i>
-            Criar Nova Tarefa
-        </a>
-      </div>  
+      <section id="tarefas" class="tab-content active"> 
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks do sistema">
             <thead>
@@ -55,12 +57,6 @@
       <!-- FIM DAS TASKS -->
       <!-- ATRIBUIÇÃO DE USERS -->
       <section id="tarefas_user" class="tab-content">
-      <div class="btn-container">
-        <a href="{% url 'task_create' %}" class="btn-form">
-            <i class="fa-solid fa-plus"></i>
-            Atribuir Tarefa
-        </a>
-      </div>  
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks de usuários">
             <thead>
