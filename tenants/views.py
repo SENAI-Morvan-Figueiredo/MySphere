@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Tenant
 from accounts.models import User
@@ -86,3 +86,16 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_success_url(self):
         tenant_id = self.kwargs["pk"]
         return reverse_lazy('tenant_users', kwargs={'pk': tenant_id})
+
+# CLASS PARA TELA DE STAFF
+
+# class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+#     model = Tenant
+#     template_name = 'staff/staff_tenant.html'
+#     context_object_name = 'tenants'
+
+#     def get_queryset(self):
+#         return Tenant.objects.filter(id=self.request.user.tenant.id)
+
+class StaffTenantView(TemplateView):
+    template_name = 'staff/staff_tenant.html'

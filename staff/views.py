@@ -3,14 +3,15 @@ from django.views.generic import TemplateView, ListView, CreateView
 from accounts.models import User
 from .forms import FormAddUsersStaff
 from django.urls import reverse_lazy
+from .mixins import StaffRequiredMixin
 
 def error_403_view(request, exception=None):
     return render(request, 'staff/403.html', status=403)
 
-class HomePageView(TemplateView):
+class HomePageView(StaffRequiredMixin, TemplateView):
     template_name = 'staff/staff_home.html'
 
-class DashboardPageView(TemplateView):
+class DashboardPageView(StaffRequiredMixin, TemplateView):
     template_name = 'staff/staff_dashboard.html'
     
 # class UsersPageView(ListView):
@@ -35,7 +36,7 @@ class DashboardPageView(TemplateView):
 #         self.object.save()
 #         return super().form_valid(form) 
 
-class UsersPageView(TemplateView):
+class UsersPageView(StaffRequiredMixin, TemplateView):
     template_name = "staff/staff_users.html"
 
     def get_context_data(self, **kwargs):

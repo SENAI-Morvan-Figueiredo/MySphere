@@ -1,0 +1,44 @@
+{% extends 'staff/staff_home.html' %} 
+{% load static %} 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_tenant.css' %}" />
+{% endblock %} 
+{% block content %}
+<div class="container">
+  <!-- Título principal -->
+  <div>
+    <h1>Aparência</h1>
+    <p>Personalize o tema e as cores do seu tenant.</p>
+  </div>
+
+  <!-- Seção: Esquema de Cores -->
+  <div class="section">
+    <h2>Esquema de Cores</h2>
+    <p>Escolha a cor principal para a interface do seu tenant.</p>
+
+    <div class="color-preview">
+      <label for="colorPrimary">Cor Primária</label>
+      <input type="color" id="colorPrimary" value="#13a4ec" />
+    </div>
+
+    <p>Pré-visualização:</p>
+    <div class="preview-boxes">
+      <div style="background-color: #13a4ec"></div>
+      <div style="background-color: #0d8ed6"></div>
+      <div style="background-color: #8fd5f8"></div>
+    </div>
+  </div>
+
+  <!-- Seção: Logotipo do Tenant -->
+  <div class="section">
+    <h2>Logotipo do Tenant</h2>
+    <p>Faça o upload do logotipo da sua organização.</p>
+
+    <div class="logo-upload">
+      <span class="material-symbols-outlined">photo_camera</span>
+      <button type="button">Carregar Logotipo</button>
+    </div>
+    <p>PNG, JPG, SVG até 2MB.</p>
+  </div>
+
+{% endblock content %}
