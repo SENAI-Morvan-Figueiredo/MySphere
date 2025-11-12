@@ -89,13 +89,13 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 # CLASS PARA TELA DE STAFF
 
-# class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-#     model = Tenant
-#     template_name = 'staff/staff_tenant.html'
-#     context_object_name = 'tenants'
-
-#     def get_queryset(self):
-#         return Tenant.objects.filter(id=self.request.user.tenant.id)
-
-class StaffTenantView(TemplateView):
+class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Tenant
     template_name = 'staff/staff_tenant.html'
+    context_object_name = 'tenants'
+    
+    def get_queryset(self):
+        return Tenant.objects.filter(pk=self.request.user.tenant.pk)
+
+    def test_func(self):
+        return self.request.user.is_staff 

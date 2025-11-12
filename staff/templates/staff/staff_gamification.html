@@ -12,12 +12,14 @@
           <h1>Gestão de Gamificação</h1>
           <p>Administre tarefas, pontos e o ranking de usuários.</p>
         </div>
-        <div class="btn-container">
+      <div class="btn-container"
+          data-url-task="{% url 'task_create' %}"
+          data-url-user-task="{% url 'user_task_create' %}">
           <a href="{% url 'task_create' %}" class="btn-form">
               <i class="fa-solid fa-plus"></i>
               Nova Tarefa
           </a>
-        </div> 
+      </div>
       </div> 
       <div class="tabs">
         <div class="tab active" data-tab="tarefas">Tarefas</div>
@@ -34,6 +36,7 @@
                 <th>Título</th>
                 <th>Descrição</th>
                 <th>Pontos</th>
+                <th>Criado por</th>
                 <th>Criada em</th>
               </tr>
             </thead>
@@ -43,6 +46,7 @@
                 <td>{{ task.titulo }}</td>
                 <td>{{ task.descricao|truncatechars:80 }}</td>
                 <td>{{ task.pontos }}</td>
+                <td>{{ task.criado_por.username }}</td>
                 <td>{{ task.criado_em |date:"d/m/Y" }}</td>
               </tr>
               {% empty %}
@@ -147,5 +151,5 @@
     </div>
   </main>
 </div>
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/gamification.js' %}"></script>
 {% endblock content %}
