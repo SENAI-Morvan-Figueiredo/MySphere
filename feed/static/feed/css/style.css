@@ -501,6 +501,7 @@ body {
   padding: 16px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   margin-bottom: 16px;
+  width: 450px;
 }
 
 .section-header {
@@ -562,50 +563,51 @@ body {
   transition: background 0.2s;
 }
 .messages-list {
-    overflow-y: auto;
-    flex: 1;
-    padding-right: 5px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 5px;
 }
 .clique {
-    cursor: pointer;
-    text-decoration: none;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .mensagem-item {
-    background-color: #fff;
-    border: #0044ff75 1px solid;
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  background-color: #fff;
+  border: #0044ff75 1px solid;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .mensagem-item:hover {
-    background-color: #f3f4f6;
-    transform: scale(1.003);
+  background-color: #f3f4f6;
+  transform: scale(1.003);
 }
 
 /* Avatar */
 .mensagem-item img,
 .mensagem-item .default-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 }
-.message-item:hover, .event-item:hover {
-    background: #f0f2f5;
+.message-item:hover,
+.event-item:hover {
+  background: #f0f2f5;
 }
 
 .event-icon {
@@ -885,34 +887,124 @@ body {
 
 /* Texto */
 .chat-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 
 .chat-info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-info strong {
-    font-size: 1rem;
-    color: #111827;
-    font-weight: 600;
+  font-size: 1rem;
+  color: #111827;
+  font-weight: 600;
 }
 
 .chat-time {
-    font-size: 0.75rem;
-    color: #9ca3af;
+  font-size: 0.75rem;
+  color: #9ca3af;
 }
 
 .chat-preview {
-    font-size: 0.9rem;
-    color: #6b7280;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-top: 2px;
+  font-size: 0.9rem;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* Escopo: apenas elementos dentro de .eventos-card */
+.eventos-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  font-family: "Inter", system-ui, sans-serif;
+  width: 450px;
+}
+
+/* Cabeçalho */
+.eventos-card .eventos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.eventos-card .eventos-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #222;
+}
+
+.eventos-card .evento-novo {
+  color: #3366ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.eventos-card .evento-novo:hover {
+  text-decoration: underline;
+}
+
+/* Tabela */
+.eventos-card .eventos-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: #1c1e21;
+}
+
+.eventos-card .eventos-tabela th,
+.eventos-card .eventos-tabela td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.eventos-card .eventos-tabela th {
+  font-weight: 600;
+  color: #555;
+  background-color: #f8f9fa;
+}
+
+.eventos-card .eventos-tabela tr:hover {
+  background-color: #f2f4f8;
+}
+
+/* Coluna de ações */
+.eventos-card .acoes {
+  text-align: center;
+}
+
+.eventos-card .acao-editar,
+.eventos-card .acao-excluir {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px;
+}
+
+.eventos-card .acao-editar:hover {
+  color: #ff9900;
+}
+
+.eventos-card .acao-excluir:hover {
+  color: #d33;
+}
+
+/* Linha de "nenhum evento" */
+.eventos-card .nenhum-evento {
+  text-align: center;
+  color: #888;
+  padding: 12px;
 }

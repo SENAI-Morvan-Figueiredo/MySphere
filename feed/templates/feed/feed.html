@@ -408,40 +408,57 @@
                     <a href="{% url 'chat' %}" class="view-all">Ver todas</a>
                 </div>
 
-          <div class="events-section">
-            <div class="section-header">
-              <h3>Events</h3>
-              <button class="icon-btn">⋮</button>
-            </div>
-            <div class="events-list">
-              <div class="event-item">
-                <span class="event-icon">📅</span>
-                <div class="event-info">
-                  <h5>10 Events Invites</h5>
-                </div>
-              </div>
-              <div class="event-item">
-                <span class="event-icon">💼</span>
-                <div class="event-info">
-                  <h5>Design System Collaboration</h5>
-                  <p>Thu - Maroon Hall, YK</p>
-                </div>
-              </div>
-              <div class="event-item">
-                <span class="event-icon">💻</span>
-                <div class="event-info">
-                  <h5>Web Dev 2.0 Meetup</h5>
-                  <p>Yoshkar-Ola, Russia</p>
-                </div>
-              </div>
-              <div class="event-item">
-                <span class="event-icon">🎂</span>
-                <div class="event-info">
-                  <h5>Prada's Invitation Birthday</h5>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="eventos-card">
+  <div class="eventos-header">
+    <h3>📅 Eventos</h3>
+    {% if pode_gerenciar %}
+    <a href="{% url 'criar_evento' %}" class="evento-novo">+ Novo</a>
+    {% endif %}
+  </div>
+
+  <div class="eventos-tabela-container">
+    <table class="eventos-tabela">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Criado por</th>
+          {% if pode_gerenciar %}
+          <th>Ações</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for evento in eventos %}
+        <tr>
+          <td>{{ evento.titulo }}</td>
+          <td>{{ evento.inicio|date:"d/m/Y H:i" }}</td>
+          <td>{{ evento.fim|date:"d/m/Y H:i" }}</td>
+          <td>{{ evento.criado_por.username }}</td>
+          {% if pode_gerenciar %}
+          <td class="acoes">
+            <a href="{% url 'editar_evento' evento.id %}" class="acao-editar" title="Editar evento">✏️</a>
+            <form action="{% url 'excluir_evento' evento.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="acao-excluir" title="Excluir evento"
+                      onclick="return confirm('Tem certeza que deseja excluir este evento?');">🗑️</button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="nenhum-evento">Nenhum evento encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
         </aside>
       </div>
     </div>

@@ -18,10 +18,12 @@ def listar_eventos(request):
 @login_required
 def criar_evento(request):
     if request.method == 'POST':
+
         titulo = request.POST.get('titulo')
         descricao = request.POST.get('descricao')
         inicio_str = request.POST.get('inicio')
         fim_str = request.POST.get('fim')
+        foto = request.FILES.get('foto')  
 
         try:
             inicio = datetime.fromisoformat(inicio_str)
@@ -43,6 +45,7 @@ def criar_evento(request):
             descricao=descricao,
             inicio=inicio,
             fim=fim,
+            foto=foto,
             criado_por=request.user,
             tenant=request.user.tenant  # assume que vem do usuário
         )

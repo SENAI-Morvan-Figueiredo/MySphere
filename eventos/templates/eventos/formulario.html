@@ -20,17 +20,15 @@
             {% endif %}
           </h2>
 
-          {% if messages %}
-  {% for message in messages %}
-    <div 
-      class="alert 
-      {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}" 
-      role="alert">
-      {{ message }}
-    </div>
-  {% endfor %}
-{% endif %}
-          <form method="POST">
+          {% if messages %} {% for message in messages %}
+          <div
+            class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+            role="alert"
+          >
+            {{ message }}
+          </div>
+          {% endfor %} {% endif %}
+          <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-3">
@@ -62,6 +60,7 @@
                   value="{{ evento.inicio|date:'Y-m-d\\TH:i' }}"
                 />
               </div>
+
               <div class="col">
                 <label for="fim" class="form-label">Fim</label>
                 <input
@@ -71,6 +70,27 @@
                   class="form-control"
                   value="{{ evento.fim|date:'Y-m-d\\TH:i' }}"
                 />
+              </div>
+
+              <div class="col">
+                <label for="foto" class="form-label">Imagem do evento</label>
+                <input
+                  type="file"
+                  name="foto"
+                  id="foto"
+                  class="form-control"
+                  accept="image/*"
+                />
+                /> {% if evento.foto %}
+                <div class="mt-2 text-center">
+                  <img
+                    src="{{ evento.foto.url }}"
+                    alt="Imagem do evento"
+                    class="img-thumbnail"
+                    style="max-height: 120px; border-radius: 8px"
+                  />
+                </div>
+                {% endif %}
               </div>
             </div>
 

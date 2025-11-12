@@ -9,6 +9,7 @@ class Evento(models.Model):
     fim = models.DateTimeField()
     criado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="tenant_evento")
+    foto = models.ImageField(upload_to="eventos/", null=True, blank=True)
 
 def __str__(self):
     return self.titulo

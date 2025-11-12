@@ -12,7 +12,7 @@
   <body class="bg-light">
     <div class="container mt-5">
       <h2 class="mb-4 text-center">Eventos</h2>
-        
+
       {% if pode_gerenciar %}
       <div class="text-end mb-3">
         <a href="{% url 'criar_evento' %}" class="btn btn-primary"
@@ -21,10 +21,10 @@
       </div>
       {% endif %}
 
-      
       <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark text-center">
           <tr>
+            <th>imagem</th>
             <th>Título</th>
             <th>Descrição</th>
             <th>Início</th>
@@ -39,6 +39,18 @@
         <tbody>
           {% for evento in eventos %}
           <tr>
+            {% if evento.foto %}
+            <td>
+              <img src="{{ evento.foto.url }}" class="event-photo" />
+              {% comment %} {% else %}
+              <div class="profile-avatar default-avatar-large">
+                {{ profile_user.username|slice:":1"|upper }}
+              </div>
+              {% endif %} {% endcomment %}
+            </td>
+            {% else %}
+            <td>não tem imagem</td>
+            {% endif %}
             <td class="fw-semibold">{{ evento.titulo }}</td>
             <td>{{ evento.descricao|default:"(sem descrição)" }}</td>
             <td>{{ evento.inicio|date:"d/m/Y H:i" }}</td>
@@ -47,17 +59,26 @@
             <td>{{ evento.tenant }}</td>
             {% if pode_gerenciar %}
             <td class="text-center">
+              <a
+                href="{% url 'editar_evento' evento.id %}"
+                class="btn btn-warning btn-sm"
+                >Editar</a
+              >
 
-              <a href="{% url 'editar_evento' evento.id %}" class="btn btn-warning btn-sm">Editar</a>
-
-              <form action="{% url 'excluir_evento' evento.id %}" method="post" style="display:inline;">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger" 
-          onclick="return confirm('Tem certeza que deseja excluir este evento?');">
-    Excluir
-  </button>
-</form>
-
+              <form
+                action="{% url 'excluir_evento' evento.id %}"
+                method="post"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn btn-danger"
+                  onclick="return confirm('Tem certeza que deseja excluir este evento?');"
+                >
+                  Excluir
+                </button>
+              </form>
             </td>
             {% endif %}
           </tr>
