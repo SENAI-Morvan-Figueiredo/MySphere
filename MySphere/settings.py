@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'tenants',
     'feed',
     'gamification',
-    'staff',    
+    'staff', 
+    'colorfield',
 ]
 
 AUTH_USER_MODEL = "accounts.User"

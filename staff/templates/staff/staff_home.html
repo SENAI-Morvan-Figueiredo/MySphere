@@ -25,9 +25,13 @@
                 <div class="logo-section">
                     <div class="logo-info">
                         <div class="logo-image">
-                            <!-- <img src="{% static 'accounts/images/mysphere-bg.png' %}" alt=""> -->
+                            <!-- {% if tenant.logo_url %}
+                                <img src="{{ tenant.logo_url.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
+                            {% else %}
+                                <p>Nenhum logotipo definido.</p>
+                            {% endif %} -->
                         </div>
-                        <!-- AJEITAR AINDA A IMAGEM DA EMPRESA -->
+                        
                         <div class="logo-text">
                             <h1>{{ user.tenant.nome }}</h1>
                         </div>

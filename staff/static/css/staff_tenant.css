@@ -10,6 +10,12 @@ body {
   flex-direction: column;
 }
 
+.tenant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .tenant-header h1 {
   font-size: 2rem;
   font-weight: 900;
@@ -21,6 +27,44 @@ body {
   color: #6b7280;
   font-size: 1rem;
   margin-bottom: 32px;
+}
+
+/* --- Botões Form e Cancelar --- */
+.btn-edit,
+.btn-cancel, 
+.btn-save {
+  display: inline-block; 
+  padding: 10px 15px;
+  margin-left: 10px; 
+  text-decoration: none; 
+  border-radius: 5px; 
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease; 
+  text-align: center;
+}
+
+.btn-edit, .btn-save {
+  background-color: #007bff; 
+  color: #ffffff; 
+  border: 1px solid #007bff;
+}
+
+.btn-edit:hover, .btn-save:hover {
+  background-color: #0056b3; 
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background-color: #f8f9fa; 
+  color: #343a40; 
+  border: 1px solid #ced4da; 
+}
+
+.btn-cancel:hover {
+  background-color: #e2e6ea; 
+  transform: translateY(-1px); 
 }
 
 /* Cards gerais */
@@ -70,13 +114,9 @@ body {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.95rem;
+  height: 1.25rem;
 }
 
-.logo-tenant {
-  max-width: 200px;
-  height: auto;
-  width: 100%;
-}
 
 .input-with-prefix {
   display: flex;
@@ -110,14 +150,15 @@ body {
 }
 
 .logo-preview {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
-  background-color: #f3f4f6;
+  width: 300px;
+  height: 150px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center; 
+  overflow: hidden;
+  border: 1px solid #eee; 
 }
+
 
 .logo-preview .material-symbols-outlined {
   color: #9ca3af;
@@ -221,4 +262,47 @@ body {
 
 .btn-primary:hover {
   background-color: #0d8ed6;
+}
+
+/* LINHA DE LOGOTIPO E CORES   */
+
+.tenant-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.tenant-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  padding: 1rem;
+}
+
+.tenant-card-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.logo-tenant {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.color-box {
+  width: 80px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+@media (max-width: 900px) {
+  .tenant-row {
+    grid-template-columns: 1fr;
+  }
 }
