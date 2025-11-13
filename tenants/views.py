@@ -3,7 +3,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, T
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Tenant
 from accounts.models import User
-from .forms import TenantForm
+from .forms import TenantForm#, TenantStaffForm
 from accounts.forms import UserFormTenant
 from django.urls import reverse_lazy
 
@@ -99,3 +99,14 @@ class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_staff 
+
+class StaffTenantUpdateView(UpdateView):
+    model = Tenant
+    form_class = TenantForm
+    template_name = 'staff/staff_tenant_form.html'
+    success_url = reverse_lazy('tenant_staff') 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tenants'] = [self.object]
+        return context

@@ -4,13 +4,14 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/staff_tenant.css' %}" />
 {% endblock %}
-
 {% block content %}
 {% for tenant in tenants %}
+
 <div class="tenant-wrapper">
   <div class="tenant-header">
     <h1>Configurações do {{ tenant.nome }}</h1>
     <p>Gerencie as informações gerais e a identidade visual do seu tenant.</p>
+    <a href="{% url 'tenant_staff_form' tenant.pk %}">Editar</a>
   </div>
 
   <div class="tenant-sections">
@@ -24,11 +25,13 @@
       <div class="tenant-card-body">
         <div class="form-group">
           <label for="tenant-name">Nome do Tenant</label>
-          <input type="text" id="tenant-name" />
+          <!-- <input type="text" id="tenant-name" /> -->
+          <p id="tenant-name">{{ tenant.nome }}</p>
         </div>
         <div class="form-group">
           <label for="tenant-domain">Domínio do Tenant</label>
-            <input type="text" id="tenant-domain" />
+            <!-- <input type="text" id="tenant-domain" /> -->
+            <p id="tenant-domain">{{ tenant.dominio }}</p>
         </div>
       </div>
     </div>
@@ -42,12 +45,12 @@
       <div class="tenant-card-body">
         <div class="logo-upload-section">
           <div class="logo-preview">
-            <span class="material-symbols-outlined">photo_camera</span>
+            <img src="{{ tenant.logo_url.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
           </div>
-          <div class="logo-upload-actions">
+          <!-- <div class="logo-upload-actions">
             <button type="button" class="btn-dark">Carregar Logotipo</button>
             <p>PNG, JPG, SVG</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -62,26 +65,22 @@
         <div class="color-settings">
           <div class="color-input">
             <p>Cor Primária</p>
-            <input type="color" id="colorPrimary" value="#13a4ec" />
+            <div id="colorPrimary" style="background-color: {{ tenant.paleta_de_cores }};"></div> 
           </div>
-          <div class="color-preview">
-            <p>Pré-visualização</p>
+          <!-- <div class="color-preview">
+            <p>Pré-visualização - Puramente apenas para ver não funcionar isso</p>
             <div class="preview-boxes">
               <div style="background-color: #13a4ec;"></div>
               <div style="background-color: #13a4ec; opacity: 0.75;"></div>
               <div style="background-color: #13a4ec; opacity: 0.5;"></div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- <div class="tenant-actions">
-    <button class="btn-light">Cancelar</button>
-    <button class="btn-primary">Salvar Alterações</button>
-  </div> -->
 </div>
 
 {% endfor %}

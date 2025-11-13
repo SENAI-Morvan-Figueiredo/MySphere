@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import DashboardPageView, UsersPageView #, AddUsersStaffView
 from gamification.views import StaffGamificationView
-from tenants.views import StaffTenantView
+from tenants.views import StaffTenantView, StaffTenantUpdateView
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home_staff'),
@@ -10,5 +10,6 @@ urlpatterns = [
     path('users/', UsersPageView.as_view(), name='users_staff'),
     # path('users/add/', AddUsersStaffView.as_view(), name='add_users_staff'), # AJUSTES A FAZER MAS FUNCIONA,
     path('game/', StaffGamificationView.as_view(), name='game_staff'), # provisorio
-    path('tenant/', StaffTenantView.as_view(), name='tenant_staff') 
+    path('tenant/', StaffTenantView.as_view(), name='tenant_staff'),
+    path('tenant/<int:pk>/update/', StaffTenantUpdateView.as_view(), name='tenant_staff_form'),
 ]

@@ -63,12 +63,19 @@ body {
   margin-bottom: 6px;
 }
 
-.form-group input {
+.form-group input, 
+#tenant-domain, #tenant-name {
   width: 85%;
   padding: 10px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.95rem;
+}
+
+.logo-tenant {
+  max-width: 200px;
+  height: auto;
+  width: 100%;
 }
 
 .input-with-prefix {
@@ -158,7 +165,7 @@ body {
   font-size: 0.9rem;
 }
 
-.color-input input[type="color"] {
+.color-input input[type="color"], #colorPrimary {
   width: 80px;
   height: 40px;
   border: 1px solid #d1d5db;

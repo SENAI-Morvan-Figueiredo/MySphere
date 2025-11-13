@@ -1,0 +1,83 @@
+{% extends 'staff/staff_home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_tenant.css' %}" />
+{% endblock %}
+
+{% block content %}
+{% for tenant in tenants %}
+<div class="tenant-wrapper">
+  <div class="tenant-header">
+    <h1>Configurações do {{ tenant.nome }}</h1>
+    <p>Gerencie as informações gerais e a identidade visual do seu tenant.</p>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="tenant-sections">
+
+      <!-- INFORMAÇÕES GERAIS -->
+      <div class="tenant-card">
+        <div class="tenant-card-header">
+          <h2>Informações Gerais</h2>
+          <p>Edite o nome e o domínio do seu tenant.</p>
+        </div>
+        <div class="tenant-card-body">
+          <div class="form-group">
+            <label for="{{ form.nome.id_for_label }}">Nome do Tenant</label>
+            {{ form.nome }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.dominio.id_for_label }}">Domínio do Tenant</label>
+            {{ form.dominio }}
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGOTIPO -->
+      <div class="tenant-card">
+        <div class="tenant-card-header">
+          <h2>Logotipo do Tenant</h2>
+          <p>Faça o upload do logotipo da sua organização.</p>
+        </div>
+        <div class="tenant-card-body">
+          <div class="logo-upload-section">
+            <div class="logo-preview">
+              {% if tenant.logo %}
+                <img src="{{ tenant.logo.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
+              {% else %}
+                <img src="{% static 'img/default_logo.png' %}" alt="Sem logotipo" class="logo-tenant">
+              {% endif %}
+            </div>
+            <div class="logo-upload-actions">
+              <label for="{{ form.logo.id_for_label }}" class="btn-dark">Carregar Logotipo</label>
+              {{ form.logo }}
+              <p>Formatos aceitos: PNG, JPG, SVG</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESQUEMA DE CORES -->
+      <div class="tenant-card">
+        <div class="tenant-card-header">
+          <h2>Esquema de Cores</h2>
+          <p>Escolha a cor principal para a interface do seu tenant.</p>
+        </div>
+        <div class="tenant-card-body">
+          <div class="color-settings">
+            <div class="color-input">
+              <label for="{{ form.paleta_cor.id_for_label }}">Cor Primária</label>
+              {{ form.paleta_cor }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Salvar Alterações</button>
+  </form>
+</div>
+{% endfor %}
+{% endblock content %}
