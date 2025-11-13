@@ -9,18 +9,13 @@ def listar_eventos(request, modo=None):
     eventos = Evento.objects.all().order_by('inicio')
     pode_gerenciar = request.user.is_staff
 
-    # Define o template conforme o modo
-    if modo == 'compacto':
-        template = 'eventos/list_eventos.html'  # para exibir no feed, por exemplo
-    else:
-        template = 'eventos/index.html'     # tela completa de eventos
+    template = 'eventos/list_eventos.html' if modo == 'compacto' else 'eventos/index.html'
 
     return render(request, template, {
         'eventos': eventos,
         'pode_gerenciar': pode_gerenciar
     })
 
-    
 
 
 
