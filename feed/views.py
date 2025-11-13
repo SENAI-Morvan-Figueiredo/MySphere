@@ -9,6 +9,7 @@ from chat.models import Chat
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from eventos.models import Evento
+from django.utils import timezone
 
 @login_required
 def feed_view(request):
@@ -32,7 +33,12 @@ def feed_view(request):
     ).order_by('inicio')
 
     # 🔹 Se quiser, restringe aos próximos eventos:
-    # eventos = eventos.filter(fim__gte=timezone.now())
+    hoje = timezone.now()
+    eventos = (
+        Evento.objects.filter(fim__gte=hoje)  # só os que ainda vão acontecer
+        .order_by('fim')                      # ordena do mais próximo pro mais distante
+    )[:3]  # limita aos 5 primeiros
+    
 
     pode_gerenciar = request.user.is_staff or request.user.groups.filter(name='Organizadores').exists()
 

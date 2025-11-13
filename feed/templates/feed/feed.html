@@ -408,52 +408,30 @@
                     <a href="{% url 'chat' %}" class="view-all">Ver todas</a>
                 </div>
 
-<div class="eventos-card">
-  <div class="eventos-header">
-    <h3>📅 Eventos</h3>
-    {% if pode_gerenciar %}
-    <a href="{% url 'criar_evento' %}" class="evento-novo">+ Novo</a>
-    {% endif %}
-  </div>
+<div class="eventos-container">
+  {% for evento in eventos %}
+    <div class="evento-topo">
+      Evento
+    </div>  
+    <div class="evento-card">
+      {% if evento.foto %}
+        <img src="{{ evento.foto.url }}" alt="{{ evento.titulo }}" class="evento-foto">
+      {% else %}
+        <img src="{% static 'img/default-event.png' %}" alt="Evento" class="evento-foto">
+      {% endif %}
+      
+      <div class="evento-info">
+        <h4 class="evento-titulo">{{ evento.titulo }}</h4>
+        <p class="evento-desc">{{ evento.descricao|default:"(sem descrição)"|truncatechars:30  }}</p>
+        <span class="evento-data">{{ evento.fim|date:"d/m H:i" }}</span>
+      </div>
+    </div>
+  {% empty %}
+    <p class="sem-eventos">Nenhum evento encontrado.</p>
+  {% endfor %}
 
-  <div class="eventos-tabela-container">
-    <table class="eventos-tabela">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Início</th>
-          <th>Fim</th>
-          <th>Criado por</th>
-          {% if pode_gerenciar %}
-          <th>Ações</th>
-          {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for evento in eventos %}
-        <tr>
-          <td>{{ evento.titulo }}</td>
-          <td>{{ evento.inicio|date:"d/m/Y H:i" }}</td>
-          <td>{{ evento.fim|date:"d/m/Y H:i" }}</td>
-          <td>{{ evento.criado_por.username }}</td>
-          {% if pode_gerenciar %}
-          <td class="acoes">
-            <a href="{% url 'editar_evento' evento.id %}" class="acao-editar" title="Editar evento">✏️</a>
-            <form action="{% url 'excluir_evento' evento.id %}" method="post" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="acao-excluir" title="Excluir evento"
-                      onclick="return confirm('Tem certeza que deseja excluir este evento?');">🗑️</button>
-            </form>
-          </td>
-          {% endif %}
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="5" class="nenhum-evento">Nenhum evento encontrado.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="ver-todos-container">
+    <a href="{% url 'listar_eventos' %}" class="btn-ver-todos">Ver todos os eventos →</a>
   </div>
 </div>
 

@@ -4,15 +4,24 @@ from .models import Evento
 from django.contrib import messages
 from datetime import datetime
 
-
 @login_required
-def listar_eventos(request):
+def listar_eventos(request, modo=None):
     eventos = Evento.objects.all().order_by('inicio')
     pode_gerenciar = request.user.is_staff
-    return render(request, 'eventos/index.html', {
+
+    # Define o template conforme o modo
+    if modo == 'compacto':
+        template = 'eventos/list_eventos.html'  # para exibir no feed, por exemplo
+    else:
+        template = 'eventos/index.html'     # tela completa de eventos
+
+    return render(request, template, {
         'eventos': eventos,
         'pode_gerenciar': pode_gerenciar
     })
+
+    
+
 
 
 @login_required
