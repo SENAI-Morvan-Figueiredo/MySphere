@@ -44,7 +44,7 @@
               <td>{{ tenant.dominio }}</td>
               <td>
                 {% if tenant.logo_url %}
-                  <img src="{{ tenant.logo_url }}" alt="Logo" width="50" style="border-radius: 8px; height: auto;">
+                  <img src="{{ tenant.logo_url.url }}" alt="Logo" width="50" style="border-radius: 8px; height: auto;">
                 {% else %}
                   <span class="muted">Sem logo</span>
                 {% endif %}

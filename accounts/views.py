@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from .models import User
 from .forms import UserForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from feed.models import Post
 from django.contrib.auth.decorators import login_required
@@ -125,10 +125,15 @@ class novo(CreateView):
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'  
     redirect_authenticated_user = True     
-    
+        
+    def get_success_url(self):
+        user = self.request.user
+        if user.is_superuser:
+            return reverse('tenant_list')
+        elif user.tenant:
+            return reverse('feed:feed')
     
 ROOT_URLCONF = 'MySphere.urls'
-
 
 
 @login_required

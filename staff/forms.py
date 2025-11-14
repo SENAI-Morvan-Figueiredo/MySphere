@@ -9,9 +9,13 @@ class FormAddUsersStaff(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        password = self.cleaned_data.get("password")
-        if password:
-            user.set_password(password)
+        nome = user.username.strip()
+        letra_senha = nome[0].upper()
+        data = user.data_nascimento
+        data_senha = data.strftime("%Y%m%d")
+        senha_gerada = f"{letra_senha}{data_senha}"
+        user.set_password(senha_gerada)
+
         if commit:
             user.save()
         return user
