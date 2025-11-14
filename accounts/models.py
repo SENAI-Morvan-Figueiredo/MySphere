@@ -2,12 +2,6 @@ from django.db import models
 from tenants.models import Tenant
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-
-
-class Profile(models.Model):
-    sobre_mim = models.CharField(max_length=500, null=True, blank=True)
-
-
 class UserManager(BaseUserManager):
     use_in_migrations = True
 

@@ -1,0 +1,122 @@
+{% extends 'staff/staff_home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_tenant.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="tenant-wrapper">
+  <div class="tenant-header">
+    <div class="title-page">
+      {% if not modoForm %}
+      <h1>Configurações do {{ tenant.nome }}</h1>
+      <p>Gerencie as informações gerais e a identidade visual do seu tenant.</p>
+      {% else %}
+      <h1>Edite os dados da empresa {{ tenant.nome }}</h1>
+      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus.</p>
+      {% endif %}
+    </div>
+    <div class="btn-form">
+      {% if not modoForm %}
+      <a href="?edit=true" class="btn-edit">Editar</a>
+      {% else %}
+      <a href="{% url 'tenant_staff' %}" class="btn-cancel">Cancelar</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if modoForm %}
+  <form method="post" enctype="multipart/form-data" class="tenant-form">
+    {% csrf_token %}
+    {% endif %}
+
+    <div class="tenant-sections">
+
+      <!-- INFORMAÇÕES GERAIS -->
+      <div class="tenant-card">
+        <div class="tenant-card-header">
+          <h2>Informações Gerais</h2>
+          <p>Edite o nome e o domínio do seu tenant.</p>
+        </div>
+        <div class="tenant-card-body">
+          <div class="form-group">
+            <label for="tenant-name">Nome do Tenant</label>
+            {% if modoForm %}
+            {{ form.nome }}
+            {% else %}
+            <p id="tenant-name">{{ tenant.nome }}</p>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="tenant-domain">Domínio do Tenant</label>
+            {% if modoForm %}
+            {{ form.dominio }}
+            {% else %}
+            <p id="tenant-domain">{{ tenant.dominio }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="tenant-section tenant-row">
+        <!-- LOGOTIPO -->
+        <div class="tenant-card">
+          <div class="tenant-card-header">
+            <h2>Logotipo do Tenant</h2>
+            <p>Faça o upload do logotipo da sua organização.</p>
+          </div>
+          <div class="tenant-card-body">
+            <div class="logo-upload-section">
+              <div class="logo-preview">
+                {% if tenant.logo_url %}
+                <img src="{{ tenant.logo_url.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
+                {% else %}
+                <p>Nenhum logotipo definido.</p>
+                {% endif %}
+              </div>
+
+              {% if modoForm %}
+              <div class="logo-upload-actions">
+                {{ form.logo_url }}
+                <p>Formatos aceitos: PNG, JPG, SVG</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- ESQUEMA DE CORES -->
+        <div class="tenant-card">
+          <div class="tenant-card-header">
+            <h2>Esquema de Cores</h2>
+            <p>Escolha a cor principal para a interface do seu tenant.</p>
+          </div>
+          <div class="tenant-card-body">
+            <div class="color-settings">
+              <div class="color-input">
+                <label for="colorPrimary">Cor Primária</label>
+                {% if modoForm %}
+                {{ form.paleta_de_cores }}
+                {% else %}
+                <div id="colorPrimary" style="background-color: {{ tenant.paleta_de_cores }};" class="color-box"></div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {% if modoForm %}
+    <div class="form-actions">
+      <button type="submit" class="btn-save">Salvar Alterações</button>
+      <a href="{% url 'tenant_staff' %}" class="btn-cancel">Cancelar</a>
+    </div>
+  </form>
+  {% endif %}
+</div>
+
+{% endblock content %}

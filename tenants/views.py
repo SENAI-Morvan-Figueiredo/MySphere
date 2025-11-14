@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Tenant
 from accounts.models import User
-from .forms import TenantForm
+from .forms import TenantForm#, TenantStaffForm
 from accounts.forms import UserFormTenant
 from django.urls import reverse_lazy
 
@@ -77,7 +77,6 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return user.is_superuser or (user.is_staff and user.tenant_id == int(tenant_id))
     
     def form_valid(self, form):
-    
         tenant_id = self.kwargs['pk']    
         self.object = form.save(commit=False) 
         self.object.tenant_id = tenant_id
@@ -87,3 +86,31 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_success_url(self):
         tenant_id = self.kwargs["pk"]
         return reverse_lazy('tenant_users', kwargs={'pk': tenant_id})
+
+# CLASS PARA TELA DE STAFF
+
+class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = 'staff/staff_tenant.html'
+    success_url = reverse_lazy('tenant_staff')
+
+    def test_func(self):
+        return self.request.user.is_staff 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tenant = Tenant.objects.get(pk=self.request.user.tenant.pk)
+        context["tenant"] = tenant
+        context["form"] = TenantForm(instance=tenant)
+        context["modoForm"] = self.request.GET.get("edit") == "true"
+        return context
+
+    def post(self, request, *args, **kwargs):
+        tenant = Tenant.objects.get(pk=self.request.user.tenant.pk)
+        form = TenantForm(request.POST, request.FILES, instance=tenant)
+        if form.is_valid():
+            form.save()
+            return redirect(self.success_url)
+        context = self.get_context_data()
+        context["form"] = form
+        context["modoForm"] = True
+        return self.render_to_response(context)
