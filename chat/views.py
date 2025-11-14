@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Chat, Message
+from .models import Chat, Message, User
 from .forms import MessageForm
 from django.db.models import Q, Max
 from django.http import JsonResponse
@@ -9,19 +9,65 @@ from .forms import ChatForm
 from cryptography.fernet import Fernet
 from django.conf import settings
 from django.http import FileResponse, Http404
+from django.urls import reverse
 
 fernet = Fernet(settings.FERNET_KEY.encode())
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.urls import reverse
+from .models import Chat, Message, User
+from .forms import MessageForm
+from django.contrib import messages
 
 @login_required
 @require_POST
 def criar_chat_ajax(request):
+    destinatario_email = request.POST.get("email")
+    # ... (validação de e-mail e obtenção de destinatario) ...
+
+    destinatario = get_object_or_404(User, email=destinatario_email)
+
+    # Criar ou obter o chat COM tenant obrigatório
+    chat, created = Chat.objects.get_or_create(
+        tenant=request.user.tenant,
+        user1=request.user,
+        user2=destinatario
+    )
+
+    # Se quiser criar uma primeira mensagem opcional
     form = MessageForm(request.POST, request.FILES)
     if form.is_valid():
-        msg = form.save(commit=False)
-        msg.remetente = request.user
-        msg.chat = Chat
-        msg.save()
-        return redirect("chat_detail", chat_id=Chat.id)
+        # 🟢 VERIFICA SE HÁ CONTEÚDO ANTES DE SALVAR!
+        conteudo = form.cleaned_data.get("conteudo")
+        imagem = form.cleaned_data.get("imagem")
+        video = form.cleaned_data.get("video")
+        arquivo = form.cleaned_data.get("arquivo")
+
+        if any([conteudo, imagem, video, arquivo]):
+            msg = form.save(commit=False)
+            msg.remetente = request.user
+            msg.chat = chat
+            msg.save()
+        
+    # 🟢 ADICIONAR MENSAGEM DE SUCESSO DO DJANGO (É NECESSÁRIO O IMPORT: from django.contrib import messages)
+    from django.contrib import messages # Adicione este import, se não estiver no topo
+
+    if created:
+        messages.success(request, f"Chat com {destinatario.username} criado com sucesso!")
+    else:
+        messages.info(request, f"Chat com {destinatario.username} já existia. Redirecionando.")
+
+
+    return JsonResponse({
+        "status": "ok",
+        "chat_id": chat.id,
+        "redirect_url": reverse("chat_detail", args=[chat.id])
+    })
+
+
 
 @login_required
 def chat_list(request):

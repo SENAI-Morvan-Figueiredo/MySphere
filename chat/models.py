@@ -112,17 +112,23 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
 
         if self.imagem and not self.imagem.name.endswith(".enc"):
+            # 🟢 Adicionar para garantir que a leitura comece do início
+            self.imagem.file.seek(0) 
             original_data = self.imagem.read()
             encrypted_data = fernet.encrypt(original_data)
             self.imagem.save(self.imagem.name + ".enc", ContentFile(encrypted_data), save=False)
 
         if self.video and not self.video.name.endswith(".enc"):
+            # 🟢 CORREÇÃO: Adicionar seek(0) aqui!
+            self.video.file.seek(0) 
             original_data = self.video.read()
             encrypted_data = fernet.encrypt(original_data)
             self.video.save(self.video.name + ".enc", ContentFile(encrypted_data), save=False)
 
         # Criptografa arquivo
         if self.arquivo and not self.arquivo.name.endswith(".enc"):
+            # 🟢 Adicionar para garantir que a leitura comece do início
+            self.arquivo.file.seek(0) 
             original_data = self.arquivo.read()
             encrypted_data = fernet.encrypt(original_data)
             self.arquivo.save(self.arquivo.name + ".enc", ContentFile(encrypted_data), save=False)
