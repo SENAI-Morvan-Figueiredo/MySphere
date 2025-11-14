@@ -4,6 +4,7 @@ from accounts.models import User
 from django.conf import settings
 from cryptography.fernet import Fernet
 import io
+import os
 from django.core.files.base import ContentFile
 
 fernet = Fernet(settings.FERNET_KEY.encode())
@@ -45,17 +46,68 @@ class Message(models.Model):
 
     @property
     def conteudo(self):
+        """
+        Retorna o texto descriptografado.
+        Se der erro, retorna None (e não a string "<mensagem corrompida>").
+        """
         try:
-            # Cria o Fernet usando a chave atual dos settings
             fernet = Fernet(settings.FERNET_KEY.encode())
             return fernet.decrypt(bytes(self.conteudo_encrypted)).decode()
         except Exception:
-            return "<mensagem corrompida>"
+            return None
 
     @conteudo.setter
     def conteudo(self, value):
         fernet = Fernet(settings.FERNET_KEY.encode())
         self.conteudo_encrypted = fernet.encrypt(value.encode())
+
+    @property
+    def conteudo_corrompido(self):
+        """Retorna True se falhar a descriptografia."""
+        try:
+            fernet = Fernet(settings.FERNET_KEY.encode())
+            fernet.decrypt(bytes(self.conteudo_encrypted))
+            return False
+        except Exception:
+            return True
+
+
+    # ----------- NOME ORIGINAL DOS ARQUIVOS (sem .enc) -----------
+
+    def _original_name_from_field(self, field):
+        if not field:
+            return None
+        try:
+            name = os.path.basename(field.name)
+            if name.endswith('.enc'):
+                name = name[:-4]
+            return name
+        except Exception:
+            return None
+
+    @property
+    def imagem_nome(self):
+        return self._original_name_from_field(self.imagem)
+
+    @property
+    def video_nome(self):
+        return self._original_name_from_field(self.video)
+
+    @property
+    def arquivo_nome(self):
+        return self._original_name_from_field(self.arquivo)
+
+    @property
+    def arquivo_tamanho(self):
+        """Tamanho aproximado do arquivo."""
+        f = self.arquivo
+        if not f:
+            return None
+        try:
+            kb = max(1, f.size // 1024)
+            return f"{kb} KB"
+        except Exception:
+            return None
      # === Criptografia de arquivos ===
     def save(self, *args, **kwargs):
 

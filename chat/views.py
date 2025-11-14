@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from .forms import ChatForm
 from cryptography.fernet import Fernet
 from django.conf import settings
+from django.http import FileResponse, Http404
 
 fernet = Fernet(settings.FERNET_KEY.encode())
 
@@ -48,10 +49,16 @@ def chat_detail(request, chat_id):
     if request.method == "POST":
         form = MessageForm(request.POST, request.FILES)
         if form.is_valid():
+            conteudo = form.cleaned_data.get("conteudo")
+            imagem = form.cleaned_data.get("imagem")
+            video = form.cleaned_data.get("video")
+            arquivo = form.cleaned_data.get("arquivo")
+
+            # ❌ Evita mensagem vazia
+            if not any([conteudo, imagem, video, arquivo]):
+                return redirect("chat_detail", chat_id=chat.id)
+
             msg = form.save(commit=False, remetente=request.user, chat=chat)
-
-            # 🔹 Verifica se há imagem, vídeo ou arquiv
-
             msg.save()
             return redirect("chat_detail", chat_id=chat.id)
     else:
@@ -70,6 +77,34 @@ def chat_detail(request, chat_id):
         "chats": chats,
     }
     return render(request, "chat/chat_detail.html", context)
+
+@login_required
+def visualizar_arquivo(request, msg_id, tipo):
+    try:
+        msg = Message.objects.get(id=msg_id)
+        if request.user not in [msg.chat.user1, msg.chat.user2]:
+            raise Http404("Acesso negado")
+
+        # Seleciona o campo correto
+        file_field = getattr(msg, tipo, None)
+        if not file_field:
+            raise Http404("Arquivo não encontrado")
+
+        # Descriptografa
+        decrypted_file = msg.get_decrypted_file(file_field)
+        if decrypted_file is None:
+            raise Http404("Erro ao descriptografar")
+
+        # Define tipo de mídia
+        content_type = "application/octet-stream"
+        if tipo == "imagem":
+            content_type = "image/jpeg"
+        elif tipo == "video":
+            content_type = "video/mp4"
+
+        return FileResponse(decrypted_file, content_type=content_type)
+    except Message.DoesNotExist:
+        raise Http404("Mensagem não encontrada")
 
 
 
