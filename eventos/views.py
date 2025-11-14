@@ -4,6 +4,8 @@ from .models import Evento
 from django.contrib import messages
 from datetime import datetime
 
+
+
 @login_required
 def listar_eventos(request, modo=None):
     eventos = Evento.objects.all().order_by('inicio')
@@ -15,6 +17,7 @@ def listar_eventos(request, modo=None):
         'eventos': eventos,
         'pode_gerenciar': pode_gerenciar
     })
+
 
 
 

@@ -95,8 +95,8 @@
                     <a href="#" class="menu-item">
                         <span class="icon">🏆</span> Conquistas
                     </a>
-                    <a href="#" class="menu-item">
-                        <span class="icon">🗓️</span> Eventos
+                    <a href="{% url 'listar_eventos_compacto' %}" class="menu-item" >
+                        <span class="icon" >🗓️</span> Eventos
                     </a>
                     <a href="{% url 'chat' %}" class="menu-item">
                         <span class="icon">💬</span> Chat
@@ -431,7 +431,7 @@
   {% endfor %}
 
   <div class="ver-todos-container">
-    <a href="{% url 'listar_eventos' %}" class="btn-ver-todos">Ver todos os eventos →</a>
+    <a href="{% url 'listar_eventos_compacto' %}" class="btn-ver-todos">Ver todos os eventos →</a>
   </div>
 </div>
 
