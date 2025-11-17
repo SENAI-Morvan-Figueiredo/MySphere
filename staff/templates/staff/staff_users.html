@@ -10,20 +10,20 @@
   <main class="main-content">
     <div>
       <div class="title-page">
-          <h1>Gerenciamento de Usuários</h1>
-          <span class="divider">—</span>
-          <p>Adicione, edite e controle permissões de forma simples e rápida.</p>
+        <h1>Gerenciamento de Usuários</h1>
+        <span class="divider">—</span>
+        <p>Adicione, edite e controle permissões de forma simples e rápida.</p>
       </div>
       <div>
         <div class="container-card">
           <div class="form-column">
             <div class="form-card">
               <h2>Cadastrar Novo Usuário</h2>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Salvar Usuário</button>
-                </form>
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Salvar Usuário</button>
+              </form>
             </div>
           </div>
           <div class="table-column">
@@ -69,8 +69,11 @@
                         </td>  -->
                         <td>
                           <div>
-                            <button><span class="material-symbols-outlined">edit</span></button>
-                            <button><span class="material-symbols-outlined">delete</span></button>
+                            <a href="{% url 'edit_user_staff' user.pk %}"><span class="material-symbols-outlined">edit</span></a>
+                              <form method="post" action="{% url 'delete_user_staff' user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button>
+                              </form>
                           </div>
                         </td>
                       </tr>

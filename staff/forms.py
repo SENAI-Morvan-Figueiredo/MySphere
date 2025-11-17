@@ -12,10 +12,11 @@ class FormAddUsersStaff(forms.ModelForm):
         nome = user.username.strip()
         letra_senha = nome[0].upper()
         data = user.data_nascimento
-        data_senha = data.strftime("%Y%m%d")
+        data_senha = data.strftime("%d%m%Y")
         senha_gerada = f"{letra_senha}{data_senha}"
+        print(f'Senha aqui: {senha_gerada}')
         user.set_password(senha_gerada)
 
         if commit:
             user.save()
-        return user
+        return user 
