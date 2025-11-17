@@ -55,9 +55,9 @@
                 <!-- Modal -->
                 <div class="new-chat-box" id="newChatBox">
                     <h3>Novo Chat</h3>
-                    <form id="chatForm">
+                    <form id="chatForm" method="POST" action="{% url 'criar_chat_ajax' %}">
                         {% csrf_token %}
-                        <input type="email" name="email" placeholder="E-mail do usuário" required class="form-control">
+                        <input type="email" name="email" placeholder="E-mail do usuário" required>
                         <button type="submit">Criar</button>
                     </form>
                     <p id="formMessage"></p>
@@ -126,31 +126,175 @@
             {% endblock content %}
         </div>
     </div>
-    <script>
-
+<script>
+    // URLs
     const criarChatUrl = "{% url 'criar_chat_ajax' %}";
     const atualizarChatsUrl = "{% url 'atualizar_chats' %}";
-    // Funcionalidade de pesquisa de chats
+    // Cria uma URL base para 'chat_detail' removendo o '0/'
+    const chatDetailBaseUrl = "{% url 'chat_detail' 0 %}".slice(0, -1); 
+
+    // --- FUNÇÃO DE ATUALIZAÇÃO E POLLING ---
+    function fetchAndRenderChats() {
+        fetch(atualizarChatsUrl)
+            .then(response => response.json())
+            .then(data => {
+                const chatListContainer = document.querySelector('.chat-list');
+                if (!chatListContainer) return;
+
+                let newHtml = '';
+                
+                // Tenta determinar o ID do chat atualmente aberto (se estiver em chat_detail)
+                const pathParts = window.location.pathname.split('/');
+                // Procura um ID no caminho que se pareça com /chat/123/
+                const currentChatId = pathParts.find((part, index) => 
+                    index > 0 && pathParts[index - 1] === 'chat' && !isNaN(parseInt(part))
+                );
+
+                if (data.chats && data.chats.length > 0) {
+                    data.chats.forEach(chat => {
+                        // Verifica se é o chat ativo para adicionar a classe de estilo
+                        const isCurrentChat = chat.id == currentChatId;
+                        const activeClass = isCurrentChat ? ' active-chat' : '';
+                        
+                        // 1. Determinar o avatar
+                        const avatarHtml = chat.foto_url 
+                            ? `<img src="${chat.foto_url}" alt="${chat.username}">`
+                            : `<div class="default-avatar">${chat.username.charAt(0).toUpperCase()}</div>`;
+                        
+                        // 2. Determinar a última mensagem
+                        const lastMessage = chat.last_message ? chat.last_message.substring(0, 30) + (chat.last_message.length > 30 ? '...' : '') : 'Sem mensagens';
+                        const lastMessageTime = chat.last_message_time || '';
+                        
+                        // 3. HTML para o bloco de chat (inclui o unread_count)
+                        newHtml += `
+                            <a class="clique${activeClass}" href="${chatDetailBaseUrl}${chat.id}/">
+                                <div class="chat-block">
+                                    ${avatarHtml}
+                                    <div class="chat-info">
+                                        <div class="chat-info-header">
+                                            <strong>${chat.username}</strong>
+                                            <span class="chat-time">${lastMessageTime}</span>
+                                        </div>
+                                        <span class="chat-preview">${lastMessage}</span>
+                                    </div>
+                                    ${chat.unread_count > 0 ? `<div class="unread-count">${chat.unread_count}</div>` : ''}
+                                </div>
+                            </a>
+                        `;
+                    });
+                } else {
+                    newHtml = `
+                        <div class="no-chats">
+                            <p>Você não tem chats ainda.</p>
+                            <p style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+                                Clique em "Novo Chat" para começar!
+                            </p>
+                        </div>
+                    `;
+                }
+                
+                // Substitui o conteúdo da lista, garantindo a atualização instantânea
+                chatListContainer.innerHTML = newHtml;
+
+                // Re-inicializa a funcionalidade de pesquisa
+                initializeSearch();
+            })
+            .catch(error => {
+                console.error("Erro ao buscar chats:", error);
+            });
+    }
+
+    // Inicializa a funcionalidade de pesquisa, para ser chamada após a atualização da lista
+    function initializeSearch() {
+        const searchInput = document.getElementById('chatSearch');
+        
+        if (searchInput) {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            document.querySelectorAll('.clique').forEach(function(link) {
+                // Certifique-se de que o elemento existe antes de tentar acessar suas propriedades
+                const chatBlock = link.querySelector('.chat-block');
+                if (!chatBlock) return;
+                
+                const username = chatBlock.querySelector('strong').textContent.toLowerCase();
+                const preview = chatBlock.querySelector('.chat-preview').textContent.toLowerCase();
+                
+                if (username.includes(searchTerm) || preview.includes(searchTerm)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        }
+    }
+
+
+    // --- Lógica de Criação de Chat (Melhoria) ---
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('chatSearch');
-        const chatBlocks = document.querySelectorAll('.chat-block');
+        const addBtn = document.querySelector('.add-btn');
+        const overlay = document.getElementById('overlay');
+        const newChatBox = document.getElementById('newChatBox');
+        const closeBtn = document.getElementById('closeBtn');
+        const chatForm = document.getElementById('chatForm');
+        const formMessage = document.getElementById('formMessage');
 
-        if (searchInput && chatBlocks.length > 0) {
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
+        // Funcionalidade do modal (open/close)
+        if (addBtn) {
+            addBtn.addEventListener('click', function() {
+                newChatBox.style.display = 'block';
+                overlay.style.display = 'block';
+            });
+        }
 
-                chatBlocks.forEach(function(block) {
-                    const username = block.querySelector('strong').textContent.toLowerCase();
-                    const preview = block.querySelector('.chat-preview').textContent.toLowerCase();
-                    const parentLink = block.closest('.clique');
-
-                    if (username.includes(searchTerm) || preview.includes(searchTerm)) {
-                        parentLink.style.display = 'block';
-                    } else {
-                        parentLink.style.display = 'none';
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                newChatBox.style.display = 'none';
+                overlay.style.display = 'none';
+                formMessage.textContent = ''; 
+                chatForm.reset();
+            });
+        }
+        
+        // Intercepta o envio do formulário de novo chat
+        if (chatForm) {
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                formMessage.textContent = "Criando chat...";
+                formMessage.style.color = "#3498db"; 
+                
+                fetch(criarChatUrl, {
+                    method: 'POST',
+                    body: new FormData(chatForm),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
                     }
+                })
+                .then(response => {
+                    // Trata respostas HTTP não-2xx
+                    if (!response.ok) {
+                        return response.json().then(errorData => Promise.reject(errorData));
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'ok' && data.redirect_url) {
+                        // Sucesso: Redireciona para o chat recém-criado, garantindo a atualização da página inteira.
+                        window.location.href = data.redirect_url; 
+                    } 
+                })
+                .catch(errorData => {
+                    console.error('Erro ao criar chat:', errorData);
+                    const errorMessage = errorData.error || "Ocorreu um erro desconhecido ao tentar criar o chat.";
+                    formMessage.textContent = `Erro: ${errorMessage}`;
+                    formMessage.style.color = "red";
                 });
             });
+        }
+        
+        // Funcionalidade de pesquisa de chats (inicia o listener)
+        if (searchInput) {
+            searchInput.addEventListener('input', initializeSearch);
         }
 
         // Auto-hide mensagens após 5 segundos
@@ -163,9 +307,16 @@
                 }, 300);
             }, 5000);
         });
+
+        // 🟢 INICIA O POLLING PARA ATUALIZAÇÃO AUTOMÁTICA
+        // Chamada inicial para carregar/atualizar a lista
+        fetchAndRenderChats();
+        
+        // Define o intervalo de polling (a cada 5 segundos)
+        setInterval(fetchAndRenderChats, 1000); 
     });
 
-    // Animação de saída
+    // Animação de saída (mantenha o CSS para os alerts)
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideOutRight {
@@ -180,6 +331,6 @@
         }
     `;
     document.head.appendChild(style);
-    </script>
+</script>
 </body>
 </html>

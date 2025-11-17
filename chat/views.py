@@ -1,28 +1,73 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Chat, Message
+from .models import Chat, Message, User
 from .forms import MessageForm
 from django.db.models import Q, Max
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .forms import ChatForm
+from cryptography.fernet import Fernet
+from django.conf import settings
+from django.http import FileResponse, Http404
+from django.urls import reverse
+
+fernet = Fernet(settings.FERNET_KEY.encode())
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.urls import reverse
+from .models import Chat, Message, User
+from .forms import MessageForm
+from django.contrib import messages
 
 @login_required
 @require_POST
 def criar_chat_ajax(request):
-    form = ChatForm(request.POST, user=request.user, tenant=request.user.tenant)
+    destinatario_email = request.POST.get("email")
+    # ... (validação de e-mail e obtenção de destinatario) ...
+
+    destinatario = get_object_or_404(User, email=destinatario_email)
+
+    # Criar ou obter o chat COM tenant obrigatório
+    chat, created = Chat.objects.get_or_create(
+        tenant=request.user.tenant,
+        user1=request.user,
+        user2=destinatario
+    )
+
+    # Se quiser criar uma primeira mensagem opcional
+    form = MessageForm(request.POST, request.FILES)
     if form.is_valid():
-        chat = form.save()
-        return JsonResponse({
-            "success": True,
-            "chat": {
-                "id": chat.id,
-                "user2": chat.user2.username,
-                "email": chat.user2.email,
-            }
-        })
+        # 🟢 VERIFICA SE HÁ CONTEÚDO ANTES DE SALVAR!
+        conteudo = form.cleaned_data.get("conteudo")
+        imagem = form.cleaned_data.get("imagem")
+        video = form.cleaned_data.get("video")
+        arquivo = form.cleaned_data.get("arquivo")
+
+        if any([conteudo, imagem, video, arquivo]):
+            msg = form.save(commit=False)
+            msg.remetente = request.user
+            msg.chat = chat
+            msg.save()
+        
+    # 🟢 ADICIONAR MENSAGEM DE SUCESSO DO DJANGO (É NECESSÁRIO O IMPORT: from django.contrib import messages)
+    from django.contrib import messages # Adicione este import, se não estiver no topo
+
+    if created:
+        messages.success(request, f"Chat com {destinatario.username} criado com sucesso!")
     else:
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        messages.info(request, f"Chat com {destinatario.username} já existia. Redirecionando.")
+
+
+    return JsonResponse({
+        "status": "ok",
+        "chat_id": chat.id,
+        "redirect_url": reverse("chat_detail", args=[chat.id])
+    })
+
+
 
 @login_required
 def chat_list(request):
@@ -40,26 +85,31 @@ def chat_list(request):
 def chat_detail(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
 
-    # Segurança — impede abrir chat que não pertence ao usuário
+    # Impede acesso indevido
     if request.user not in [chat.user1, chat.user2]:
         return redirect("chat_list")
-    
-    chat.messages.exclude(remetente=request.user).filter(lido=False).update(lido=True)
 
+    chat.messages.exclude(remetente=request.user).filter(lido=False).update(lido=True)
     mensagens = chat.messages.order_by("criado_em")
 
     if request.method == "POST":
-        form = MessageForm(request.POST)
+        form = MessageForm(request.POST, request.FILES)
         if form.is_valid():
-            msg = form.save(commit=False)
-            msg.chat = chat
-            msg.remetente = request.user
+            conteudo = form.cleaned_data.get("conteudo")
+            imagem = form.cleaned_data.get("imagem")
+            video = form.cleaned_data.get("video")
+            arquivo = form.cleaned_data.get("arquivo")
+
+            # ❌ Evita mensagem vazia
+            if not any([conteudo, imagem, video, arquivo]):
+                return redirect("chat_detail", chat_id=chat.id)
+
+            msg = form.save(commit=False, remetente=request.user, chat=chat)
             msg.save()
             return redirect("chat_detail", chat_id=chat.id)
     else:
         form = MessageForm()
 
-    # 🔹 Buscar todos os chats sem duplicar (igual acima)
     chats = Chat.objects.filter(
         Q(user1=request.user) | Q(user2=request.user)
     ).annotate(
@@ -73,6 +123,34 @@ def chat_detail(request, chat_id):
         "chats": chats,
     }
     return render(request, "chat/chat_detail.html", context)
+
+@login_required
+def visualizar_arquivo(request, msg_id, tipo):
+    try:
+        msg = Message.objects.get(id=msg_id)
+        if request.user not in [msg.chat.user1, msg.chat.user2]:
+            raise Http404("Acesso negado")
+
+        # Seleciona o campo correto
+        file_field = getattr(msg, tipo, None)
+        if not file_field:
+            raise Http404("Arquivo não encontrado")
+
+        # Descriptografa
+        decrypted_file = msg.get_decrypted_file(file_field)
+        if decrypted_file is None:
+            raise Http404("Erro ao descriptografar")
+
+        # Define tipo de mídia
+        content_type = "application/octet-stream"
+        if tipo == "imagem":
+            content_type = "image/jpeg"
+        elif tipo == "video":
+            content_type = "video/mp4"
+
+        return FileResponse(decrypted_file, content_type=content_type)
+    except Message.DoesNotExist:
+        raise Http404("Mensagem não encontrada")
 
 
 
