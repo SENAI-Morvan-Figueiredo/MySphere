@@ -12,24 +12,24 @@ from django.db.models.functions import RowNumber
 
 # VIEWS - LIST
 
-class TaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
-    model = Task
-    template_name = 'gamification/gamification_tasks_list.html'
-    context_object_name = 'tasks'
-
-class UserTaskListView(OnlyIsStaff, TenantAccessMixin, ListView):
-    model = User_Task
-    template_name = 'gamification/gamification_users_tasks_list.html'
-    context_object_name = 'user_tasks'
-
-class PointsListView(OnlyIsStaff, TenantAccessMixin, ListView):
+class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, ListView):
+    template_name = 'staff/staff_gamification.html'
     model = Points
-    template_name = 'gamification/gamification_points_list.html'
     context_object_name = 'points'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        tenant = self.request.user.tenant
+        context['tasks'] = Task.objects.filter(tenant=tenant)
+        context['user_tasks'] = User_Task.objects.filter(task__tenant=tenant)
+
+        return context
+
 
 # VIEW QUE RENDERIZA PONTOS E TASKS DO USER
 
-class GameHomeView(ListView):
+class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
     model = Points
     template_name = 'gamification/gamification_points_user.html'
     context_object_name = 'points'
@@ -78,49 +78,19 @@ def concluir_tarefa(request, task_id):
     
     return redirect('game_home')
 
-# VIEW PARA CRIAR O RANKING GAMIFICATION
-
-@login_required
-def game_ranking(request, tenant_id=None):
-   
-    tenant_id = tenant_id or getattr(request.user, 'tenant_id', None)
-
-    if not tenant_id:
-        return render(request, "gamification/error.html", {"mensagem": "Tenant não identificado."})
-
-    ranking = Points.objects.filter(
-        tenant_id=tenant_id
-    ).annotate(
-        posicao=Window(
-            expression=RowNumber(),
-            order_by=F('pontos').desc()
-        )
-    ).order_by('-pontos')
-
-    top5 = ranking[:5]
-
-    user_line = ranking.filter(user=request.user).first()
-
-    return render(request, "gamification/gamification_points_user.html", {
-        "top5": top5,
-        "user_line": user_line,
-        "tenant_id": tenant_id,
-    })
-
-
 # VIEWS - CREATE
 
 class TaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = "gamification/gamification_tasks_form.html"
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
     
 class UserTaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
     model = User_Task
     form_class = UserTaskForm
     template_name = "gamification/gamification_users_tasks_form.html"
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')
 
     def form_valid(self, form):
         form.instance.atribuido_por = self.request.user 
@@ -132,20 +102,20 @@ class TaskUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'gamification/gamification_tasks_form.html'
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
 
 class UserTaskUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
     model = User_Task
     form_class = UserTaskForm
     template_name = 'gamification/gamification_users_tasks_form.html'
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')
 
 # VIEWS - DELETE 
 
 class TaskDeleteView(OnlyIsStaff, DeleteView):
     model = Task
-    success_url = reverse_lazy('task_list')
+    success_url = reverse_lazy('game_staff')
 
 class UserTaskDeleteView(OnlyIsStaff, DeleteView):
     model = User_Task
-    success_url = reverse_lazy('user_task_list')
+    success_url = reverse_lazy('game_staff')

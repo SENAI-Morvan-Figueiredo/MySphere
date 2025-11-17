@@ -1,0 +1,27 @@
+{% extends 'staff/staff_home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_users.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-all">
+  <main class="main-content">
+        <div class="container-card">
+          <div class="form-column">
+            <div class="form-card">
+              <h2>Editar Usuário</h2>
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Editar Usuário</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock content %}

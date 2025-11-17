@@ -1,0 +1,155 @@
+{% extends 'staff/staff_home.html' %} 
+{% load static %} 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_gamification.css' %}" />
+{% endblock %} 
+{% block content %}
+<div class="container-all">
+  <main class="main-content">
+    <div>
+      <div class="cabecalho">
+        <div class="title-page">
+          <h1>Gestão de Gamificação</h1>
+          <p>Administre tarefas, pontos e o ranking de usuários.</p>
+        </div>
+      <div class="btn-container"
+          data-url-task="{% url 'task_create' %}"
+          data-url-user-task="{% url 'user_task_create' %}">
+          <a href="{% url 'task_create' %}" class="btn-form">
+              <i class="fa-solid fa-plus"></i>
+              Nova Tarefa
+          </a>
+      </div>
+      </div> 
+      <div class="tabs">
+        <div class="tab active" data-tab="tarefas">Tarefas</div>
+        <div class="tab" data-tab="tarefas_user">Atribuição</div>
+        <div class="tab" data-tab="pontos">Pontos</div>
+      </div>
+
+      <!-- INICIO DAS TASKS -->
+      <section id="tarefas" class="tab-content active"> 
+        <div class="table-wrap">
+          <table class="tasks-table" aria-label="Lista de tasks do sistema">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Pontos</th>
+                <th>Criado por</th>
+                <th>Criada em</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task in tasks %}
+              <tr>
+                <td>{{ task.titulo }}</td>
+                <td>{{ task.descricao|truncatechars:80 }}</td>
+                <td>{{ task.pontos }}</td>
+                <td>{{ task.criado_por.username }}</td>
+                <td>{{ task.criado_em |date:"d/m/Y" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="empty">Nenhuma Task cadastrada.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- FIM DAS TASKS -->
+      <!-- ATRIBUIÇÃO DE USERS -->
+      <section id="tarefas_user" class="tab-content">
+        <div class="table-wrap">
+          <table class="tasks-table" aria-label="Lista de tasks de usuários">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Task</th>
+                <th>Atribuído por</th>
+                <th>Concluído</th>
+                <th>Concluído em</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ut in user_tasks %}
+              <tr>
+                <td>
+                    <div class="perfil-user">
+                    {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                    {% else %}
+                    <div class="profile-avatar default-avatar-large">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    {% endif %}
+                    <div>{{ user.username }}</div>
+                    </div>
+                </td>
+                <td>{{ ut.task.titulo }}</td>
+                <td>
+                  {% if ut.atribuido_por %}
+                  {{ ut.atribuido_por.username }}
+                  {%else %}—{% endif %}
+                </td>
+                <td>
+                  {% if ut.concluido %}<span class="status done">Sim</span>
+                  {%else %}<span class="status pending">Não</span>{% endif %}
+                </td>
+                <td>{{ ut.concluido_em|default:"—" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="empty">
+                  Nenhum registro de tarefas de usuário.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- FIM TASKS_USER -->
+      <!-- PONTOS DOS USUARIOS -->
+      <section id="pontos" class="tab-content">
+        <div class="table-wrap">
+          <table class="tasks-table" claaria-label="Tabela de pontos de usuários">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Pontos</th>
+                <th>Nível</th>
+                <th>Última atualização</th>
+                <th>Tenant</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in points %}
+              <tr>
+                <td>
+                  <div>{{ p.user.username }}</div>
+                  <div>ID: {{ p.user.id }}</div>
+                </td>
+                <td>{{ p.pontos }}</td>
+                <td>{{ p.nivel }}</td>
+                <td>{{ p.ultima_atualizacao }}</td>
+                <td>{{ p.tenant }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="empty">
+                  Nenhum registro de pontos encontrado.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- FIM DOS PONTOS -->
+    </div>
+  </main>
+</div>
+<script src="{% static 'js/gamification.js' %}"></script>
+{% endblock content %}

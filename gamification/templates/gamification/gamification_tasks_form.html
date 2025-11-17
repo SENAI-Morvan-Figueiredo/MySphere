@@ -1,31 +1,28 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Criar Task — MySphere</title>
-  <link rel="stylesheet" href="{% static 'css/gamification_tasks_form.css' %}">
-</head>
-<body>
-  <main class="wrap">
-    <header class="page-header">
-      <div class="title-block">
-        <h1>Criar Task</h1>
-        <p class="subtitle">Defina uma nova tarefa para o sistema de gamificação</p>
-      </div>
-      <a href="{% url 'task_list' %}" class="btn btn-ghost">Voltar à lista</a>
-    </header>
+{% extends 'staff/staff_home.html' %} 
+{% load static %} 
+{% comment %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/gamification_tasks_form.css' %}">
+{% endblock %} 
+{% endcomment %}
+{% block content %}
 
-    <section class="card">
-      <form method="post" class="task-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-      </form>
-    </section>
-  </main>
-</body>
-</html>
+<main class="wrap">
+  <header class="page-header">
+    <div class="title-block">
+      <h1>Criar Task</h1>
+      <p class="subtitle">Defina uma nova tarefa para o sistema de gamificação</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <form method="post" class="task-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock content %}

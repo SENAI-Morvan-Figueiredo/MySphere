@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('lista/', TenantListView.as_view(), name='tenant_list'), 
+    path('', TenantListView.as_view(), name='tenant_list'), 
     path('criar/', TenantCreateView.as_view(), name='tenant_create'), 
     path('edit/<int:pk>', TenantUpdateView.as_view(), name='tenant_edit'), 
     path('lista/<int:pk>/delete/', TenantDeleteView.as_view(), name='tenant_delete'), 

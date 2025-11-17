@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acesso Negado</title>
+  <link rel="stylesheet" href="{% static 'css/403.css' %}">
+</head>
+<body>
+  <div class="card">
+    <h1>403</h1>
+    <h2>Acesso Negado</h2>
+    <p>
+      Desculpe, você não tem permissão para acessar esta página.
+    </p>
+    <div class="details">
+      <strong>Motivo:</strong>
+      <p>Por não ter autorização</p>
+    </div>
+
+    <div class="btns">
+      <a href="/" class="btn btn-primary">Voltar à página inicial</a>
+      <a href="javascript:history.back()" class="btn btn-ghost">Voltar à página anterior</a>
+    </div>
+  </div>
+</body>
+</html>

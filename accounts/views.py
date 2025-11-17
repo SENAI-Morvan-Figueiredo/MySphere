@@ -1,11 +1,10 @@
 from feed.models import Post, Comment, Like, Share
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from .models import User
-from .forms import UserForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from feed.models import Post
 from django.contrib.auth.decorators import login_required
@@ -14,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from django.views.decorators.http import require_POST
+from .forms import UserEditFormStaff
 
 # Create your views here.
 
@@ -116,19 +116,18 @@ class Users(ListView):
 #     template_name = "accounts/account_home.html"
 #     context_object_name = "users"
 
-class novo(CreateView):
-    model = User
-    form_class = UserForm
-    template_name = "accounts/add.html"
-    success_url = reverse_lazy('users')
-
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'  
     redirect_authenticated_user = True     
-    
+        
+    def get_success_url(self):
+        user = self.request.user
+        if user.is_superuser:
+            return reverse('tenant_list')
+        elif user.tenant:
+            return reverse('feed:feed')
     
 ROOT_URLCONF = 'MySphere.urls'
-
 
 
 @login_required
@@ -266,3 +265,15 @@ def share_post_perfil(request, post_id):
     })
 #_________________________________________________________________________________________________________________
 
+# VIEW QUE DELETA E EDIT USER PELO STAFF
+
+class UserStaffDeleteView(DeleteView):
+    model = User
+    template_name = 'staff/staff_users.html'
+    success_url = reverse_lazy('users_staff')
+    
+class UserStaffEditView(UpdateView):
+    model = User
+    form_class = UserEditFormStaff
+    template_name = 'staff/staff_users_form.html'
+    success_url = reverse_lazy('users_staff')

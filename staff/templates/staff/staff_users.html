@@ -1,0 +1,96 @@
+{% extends 'staff/staff_home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_users.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-all">
+  <main class="main-content">
+    <div>
+      <div class="title-page">
+        <h1>Gerenciamento de Usuários</h1>
+        <span class="divider">—</span>
+        <p>Adicione, edite e controle permissões de forma simples e rápida.</p>
+      </div>
+      <div>
+        <div class="container-card">
+          <div class="form-column">
+            <div class="form-card">
+              <h2>Cadastrar Novo Usuário</h2>
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Salvar Usuário</button>
+              </form>
+            </div>
+          </div>
+          <div class="table-column">
+            <div class="table-card">
+              <h2>Todos os Usuários</h2>
+              <div class="table-wrapper">
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Função</th>
+                        <th scope="col">Data de Ingresso</th>
+                        <!-- <th scope="col">Status</th> -->
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-users">
+                      {% for user in users %}
+                      <tr>
+                        <td>
+                          <div class="perfil-user">
+                            {% if user.foto %}
+                            <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                            {% else %}
+                            <div class="profile-avatar default-avatar-large">
+                              {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                            <div>{{ user.username }}</div>
+                          </div>
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                        <!-- <td>
+                          {% if user.ativo %}
+                          <span class="active-status">Ativo</span>
+                          {% else %}
+                          <span class="inactive-status">Inativo</span>
+                          {% endif %}
+                        </td>  -->
+                        <td>
+                          <div>
+                            <a href="{% url 'edit_user_staff' user.pk %}"><span class="material-symbols-outlined">edit</span></a>
+                              <form method="post" action="{% url 'delete_user_staff' user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button>
+                              </form>
+                          </div>
+                        </td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock content %}

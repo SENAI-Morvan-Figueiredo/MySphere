@@ -84,39 +84,109 @@ body{
   border:1px solid var(--border);
 }
 
-.task-form p{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-bottom:18px;
-}
-.task-form label{
-  font-weight:600;
-  color:var(--text);
-  font-size:0.95rem;
-}
-.task-form input,
-.task-form select,
-.task-form textarea{
-  padding:10px 12px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  font-size:0.95rem;
-  font-family:inherit;
-  transition:border-color .2s;
-}
-.task-form input:focus,
-.task-form select:focus,
-.task-form textarea:focus{
-  border-color:var(--primary);
-  outline:none;
+/* Container do formulário */
+.task-form {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: "Inter", sans-serif;
 }
 
-.form-actions{
-  display:flex;
-  justify-content:flex-end;
-  margin-top:12px;
+/* Título da sessão */
+.task-form h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
+
+/* Label padrão */
+.task-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Estilo base dos inputs */
+.task-form input,
+.task-form textarea {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #CCC;
+    padding: 14px 45px;    /* espaço para ícone */
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* efeito de foco */
+.task-form input:focus,
+.task-form textarea:focus {
+    border-color: #7a5af8;
+    box-shadow: 0 0 0 3px rgba(122, 90, 248, 0.2);
+}
+
+/* wrapper para ícone */
+.input-wrapper {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+/* ícones dentro do input */
+.input-wrapper i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #777;
+}
+
+/* textarea ajustado */
+textarea {
+    resize: none;
+    min-height: 110px;
+}
+
+/* Botão Salvar */
+.btn-save {
+    background: #624BFF;
+    color: #FFF;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    background: #5338ff;
+}
+
+/* Botão Voltar */
+.btn-back {
+    background: #eee;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background: #ddd;
+}
+
+/* container dos botões */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
 
 @media (max-width:600px){
   .wrap{padding:16px;margin:20px;}

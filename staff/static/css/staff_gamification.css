@@ -1,0 +1,249 @@
+/* ========================================================================
+   HERDA AS VARIÁVEIS DO ARQUIVO PRINCIPAL
+   ======================================================================== */
+:root {
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-900: #18181b;
+  --color-white: #ffffff;
+
+  --rounded-default: 0.25rem;
+  --rounded-lg: 0.5rem;
+  --rounded-xl: 0.75rem;
+
+  --transition-duration-200: 200ms;
+  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================================================
+   LAYOUT GERAL
+   ======================================================================== */
+   
+.container-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content {
+  background-color: rgba(250, 250, 250, 0.6);
+  width: 100%;
+  max-width: 1100px;
+  border-radius: var(--rounded-xl);
+  padding: 2rem;
+}
+
+/* ========================================================================
+   TÍTULO E INTRODUÇÃO
+   ======================================================================== */
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-page {
+  margin-bottom: 1.5rem;
+}
+
+.title-page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-zinc-900);
+  margin-bottom: 0.5rem;
+}
+
+.title-page p {
+  color: var(--color-zinc-700);
+  margin: 0;
+}
+
+/* ========================================================================
+   CARD PRINCIPAL
+   ======================================================================== */
+.card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-zinc-200);
+  border-radius: var(--rounded-xl);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================================================
+   TABELA DE TAREFAS
+   ======================================================================== */
+.table-wrap {
+  overflow-y: auto;
+  height: 55.5vh;
+  background-color: var(--color-white);
+  border-radius: 0 var(--rounded-lg) var(--rounded-lg) var(--rounded-lg);
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.tasks-table thead {
+  background-color: var(--color-zinc-100);
+}
+
+.tasks-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-zinc-700);
+  border-bottom: 1px solid var(--color-zinc-200);
+}
+
+.tasks-table td {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-zinc-700);
+  border-bottom: 1px solid var(--color-zinc-200);
+}
+
+.tasks-table tr:hover {
+  background-color: var(--color-zinc-50);
+  transition: background-color var(--transition-duration-200) var(--transition-ease);
+}
+
+/* Alinhamento de colunas */
+.center {
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-zinc-500);
+  font-style: italic;
+}
+
+/* ========================================================================
+   RESPONSIVIDADE
+   ======================================================================== */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .tasks-table {
+    font-size: 0.8rem;
+    min-width: 100%;
+  }
+}
+
+/* ========================================================================
+   TABS - BARRA DE NAVEGAÇÃO
+   ======================================================================== */
+   
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  border-bottom: 1px solid var(--color-zinc-200);
+  margin-bottom: 1.25rem;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
+  background-color: var(--color-zinc-100);
+  color: var(--color-zinc-700);
+  transition: all var(--transition-duration-200) var(--transition-ease);
+}
+
+.tab:hover {
+  background-color: var(--color-zinc-200);
+}
+
+.tab.active {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-zinc-200);
+  border-bottom: none;
+  font-weight: 700;
+  color: var(--color-zinc-900);
+}
+
+/* ========================================================================
+   CONTEÚDO DE CADA ABA
+   ======================================================================== */
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ========================================================================
+    BOTÃO DO FORMS
+   ======================================================================== */
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.btn-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;                  
+  background-color: #624BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;        
+  border-radius: 10px;       
+  font-size: 15px;
+  font-weight: 250;
+  cursor: pointer;
+  text-decoration: none;     
+  transition: 0.2s ease-in-out;
+  box-shadow: 0px 2px 6px rgba(98, 75, 255, 0.25);
+  margin-bottom: 1rem;
+}
+
+.btn-form:hover {
+  background-color: #5535ff;
+  box-shadow: 0px 3px 9px rgba(98, 75, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ==========================
+   USERS
+========================== */
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.default-avatar,
+.default-avatar-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.perfil-user {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
