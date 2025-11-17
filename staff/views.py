@@ -23,18 +23,18 @@ class DashboardPageView(StaffRequiredMixin, TemplateView):
 #         tenant_id = self.request.user.tenant.pk
 #         return User.objects.filter(tenant_id=tenant_id)
 
-# class AddUsersStaffView(CreateView):
-#     model = User
-#     form_class = FormAddUsersStaff
-#     template_name = "staff/users.html"
-#     success_url = reverse_lazy('users_staff')
+class AddUsersStaffView(CreateView):
+    model = User
+    form_class = FormAddUsersStaff
+    template_name = "staff/users.html"
+    success_url = reverse_lazy('users_staff')
 
-#     def form_valid(self, form):
-#         tenant_id = self.request.user.tenant.pk
-#         self.object = form.save(commit=False) 
-#         self.object.tenant_id = tenant_id
-#         self.object.save()
-#         return super().form_valid(form) 
+    def form_valid(self, form):
+        tenant_id = self.request.user.tenant.pk
+        self.object = form.save(commit=False) 
+        self.object.tenant_id = tenant_id
+        self.object.save()
+        return super().form_valid(form) 
 
 class UsersPageView(StaffRequiredMixin, TemplateView):
     template_name = "staff/staff_users.html"
