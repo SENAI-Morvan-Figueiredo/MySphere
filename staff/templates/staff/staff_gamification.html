@@ -77,14 +77,14 @@
               <tr>
                 <td>
                     <div class="perfil-user">
-                    {% if user.foto %}
-                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                    {% if ut.user.foto %}
+                    <img src="{{ ut.user.foto.url }}" alt="{{ ut.user.username }}" class="profile-avatar" />
                     {% else %}
                     <div class="profile-avatar default-avatar-large">
-                        {{ user.username|slice:":1"|upper }}
+                        {{ ut.user.username|slice:":1"|upper }}
                     </div>
                     {% endif %}
-                    <div>{{ user.username }}</div>
+                    <div>{{ ut.user.username }}</div>
                     </div>
                 </td>
                 <td>{{ ut.task.titulo }}</td>
