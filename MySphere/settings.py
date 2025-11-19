@@ -22,16 +22,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-la*^kt%-et6k^1q3is3=e37u8#kg+p3%^yis!7(qf#77f+wd)o'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev', 'https://*.repl.co']
 
+DEBUG = os.getenv('DEBUG', 'False').lower == 'true'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+FERNET_KEY = env("FERNET_KEY")
 
 # Application definition
 
@@ -133,14 +133,27 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Check if DATABASE_URL is available for PostgreSQL, otherwise use SQLite
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-FERNET_KEY = env("FERNET_KEY")
 
-DATABASES = {
-    "default": env.db()
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
 
+if DATABASE_URL:
+    # Ambiente local (PostgreSQL local)
+    DATABASES = {
+        "default": env.db()
+    }
+
+else:
+    # Ambiente VPS (PostgreSQL local do servidor)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST", "localhost"),
+            "PORT": os.getenv("DB_PORT", 5432),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
