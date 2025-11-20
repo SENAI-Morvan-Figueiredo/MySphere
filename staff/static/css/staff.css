@@ -491,3 +491,21 @@ body {
 .dashboard-content-container {
   padding: 1rem;
 }
+
+
+/*  LOGO TENANT RESPONSIVA  */
+
+.logo-image {
+    width: 3rem;         
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-image .logo-tenant {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+    border-radius: 50%; 
+}

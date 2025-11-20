@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, CreateView
 from accounts.models import User
+from tenants.models import Tenant
 from .forms import FormAddUsersStaff
 from django.urls import reverse_lazy
 from .mixins import StaffRequiredMixin

@@ -25,15 +25,14 @@
                 <div class="logo-section">
                     <div class="logo-info">
                         <div class="logo-image">
-                            <!-- {% if tenant.logo_url %}
+                            {% if tenant.logo_url %}
                                 <img src="{{ tenant.logo_url.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
                             {% else %}
-                                <p>Nenhum logotipo definido.</p>
-                            {% endif %} -->
+                                <p>NÃO TEM</p>
+                            {% endif %}
                         </div>
-                        
                         <div class="logo-text">
-                            <h1>{{ user.tenant.nome }}</h1>
+                            <h1><a href="{% url 'feed:feed' %}" style="text-decoration: none;">{{ user.tenant.nome }}</a></h1>
                         </div>
                     </div>
                     <nav>
