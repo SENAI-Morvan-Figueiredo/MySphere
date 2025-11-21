@@ -301,5 +301,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("load", () => scrollToBottom(false));
 });
+
+// ===== LONG POLLING DE MENSAGENS ===== //
+
+function longPollingMensagens() {
+    fetch(`/chat/{{ chat.id }}/atualizar/`)
+        .then(r => r.json())
+        .then(data => {
+            atualizarMensagensNaTela(data.mensagens);
+            longPollingMensagens(); // chama de novo
+        })
+        .catch(() => {
+            setTimeout(longPollingMensagens, 1500); // tenta de novo se falhar
+        });
+}
+
+function atualizarMensagensNaTela(mensagens) {
+    const mensagensDiv = document.getElementById("mensagens");
+    mensagensDiv.innerHTML = "";
+
+    mensagens.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("mensagem");
+
+        if (msg.meu) div.classList.add("remetente");
+        else div.classList.add("destinatario");
+
+        let html = `
+            <div class="mensagem-header">
+                <span class="mensagem-autor">${msg.autor}</span>
+            </div>
+            <div class="mensagem-conteudo">
+                ${msg.conteudo ? `<p>${msg.conteudo}</p>` : ""}
+                ${msg.imagem ? `<img src="${msg.imagem}" class="msg-media-img">` : ""}
+                ${msg.video ? `<video controls class="msg-media-video"><source src="${msg.video}" type="video/mp4"></video>` : ""}
+                ${msg.arquivo ? `<a href="${msg.arquivo}" download>Baixar arquivo</a>` : ""}
+            </div>
+            <div class="mensagem-footer">
+                <span class="mensagem-hora">${msg.hora}</span>
+            </div>
+        `;
+
+        div.innerHTML = html;
+        mensagensDiv.appendChild(div);
+    });
+
+    mensagensDiv.scrollTo({ top: mensagensDiv.scrollHeight, behavior: "smooth" });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    longPollingMensagens();
+});
+
 </script>
 {% endblock content %}

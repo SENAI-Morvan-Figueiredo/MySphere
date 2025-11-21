@@ -184,3 +184,28 @@ def atualizar_chats(request):
         })
 
     return JsonResponse({'chats': chat_list})
+
+@login_required
+def atualizar_mensagens(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if request.user not in [chat.user1, chat.user2]:
+        return JsonResponse({'erro': 'acesso negado'}, status=403)
+
+    mensagens = chat.messages.order_by("criado_em")
+
+    msgs_json = []
+    for msg in mensagens:
+        msgs_json.append({
+            "id": msg.id,
+            "autor": msg.remetente.username,
+            "conteudo": msg.conteudo or "",
+            "imagem": msg.imagem.url if msg.imagem else None,
+            "video": msg.video.url if msg.video else None,
+            "arquivo": msg.arquivo.url if msg.arquivo else None,
+            "hora": msg.criado_em.strftime("%H:%M"),
+            "meu": msg.remetente == request.user
+        })
+
+    return JsonResponse({"mensagens": msgs_json})
+
