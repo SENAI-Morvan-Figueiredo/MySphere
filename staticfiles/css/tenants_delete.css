@@ -4,9 +4,9 @@
   --text: #1F2937;
   --muted: #6B7280;
   --border: #E6E9F2;
-  --primary: #4C6FFF; 
-  --danger: #4C6FFF; 
-  --danger-hover: #3e5ae5;
+  --primary: #4C6FFF;
+  --danger: #EF4444;
+  --danger-hover: #DC2626;
   --soft-shadow: 0 6px 18px rgba(33, 41, 61, 0.06);
   --radius: 12px;
   --max-width: 520px;
@@ -45,7 +45,7 @@ h2 {
   margin: 0 0 12px;
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--danger); 
+  color: var(--danger);
 }
 
 /* Texto */
@@ -80,11 +80,10 @@ form {
 .btn-secondary {
   background: transparent;
   color: var(--primary);
-  border: 1px solid var(--primary);
+  border: 1px solid rgba(76, 111, 255, 0.2);
 }
 .btn-secondary:hover {
-  background: var(--primary);
-  color: #fff;
+  background: rgba(76, 111, 255, 0.08);
   transform: translateY(-1px);
 }
 

@@ -1,14 +1,12 @@
+{% extends 'tenants/tenants_base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
+{% block title %}Usuários do Tenant{% endblock %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>Lista de Tenants</title>
-  <link rel="stylesheet" href="{% static 'css/tenants_list.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tenants_list.css' %}">
+{% endblock %}
 
-<body>
+{% block content %}
   <div class="wrap">
     <header class="page-header">
       <div class="title-block">
@@ -69,6 +67,4 @@
       </div>
     </div>
   </div>
-</body>
-
-</html>
+{% endblock content %}

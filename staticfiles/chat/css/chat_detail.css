@@ -1,0 +1,421 @@
+/* ====== VARIÁVEIS CSS (Sem mudanças) ====== */
+:root {
+    --chat-bg-dark: #0b141a;
+    --chat-header-bg: #1e3a8a;
+    --chat-input-bg: #243b8a;
+    --chat-input-field-bg: #3b509b;
+    --chat-input-field-focus: #4a60b5;
+    --chat-bg-light: #f0f0f0;
+    --chat-bg-pattern: #e0e0e0;
+    --chat-msg-bg-sent: #4a90e2;
+    --chat-msg-bg-received: #ffffff;
+    --chat-text-light: #e9edef;
+    --chat-text-dark: #1e293b;
+    --chat-text-muted: #64748b;
+    --chat-text-placeholder: #a0a8c0;
+    --primary-color: #4a90e2;
+    --secondary-color: #10b981;
+    --border-radius-lg: 18px;
+    --border-radius-md: 12px;
+    --border-radius-sm: 6px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --focus-ring-color: var(--primary-color);
+    --focus-ring-shadow: 0 0 0 2px var(--chat-bg-dark), 0 0 0 4px var(--focus-ring-color);
+}
+
+/* ====== RESET, CONTAINER, HEADER (Sem mudanças) ====== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.container-2 {
+    display: flex; flex-direction: column; background: var(--chat-bg-dark);
+    width: 100%; height: calc(100dvh - 70px); overflow: hidden; position: relative;
+}
+.chat-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+.chat-header {
+    background: var(--chat-header-bg); color: var(--chat-text-light);
+    padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow-sm); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0; z-index: 10;
+}
+.header-info { display: flex; align-items: center; gap: 14px; }
+.header-avatar {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--secondary-color);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; box-shadow: var(--shadow-sm); flex-shrink: 0;
+}
+.header-name { font-weight: 700; font-size: 1rem; color: var(--chat-text-light); }
+
+/* ====== ÁREA DE MENSAGENS (Scrollbar) ====== */
+.mensagens {
+    flex: 1; background-color: var(--chat-bg-light);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="#f0f0f0"/><rect x="0" y="0" width="10" height="10" fill="#e0e0e0"/><rect x="10" y="10" width="10" height="10" fill="#e0e0e0"/></svg>');
+    background-size: 200px 200px; padding: 20px 8%; display: flex; flex-direction: column;
+    overflow-y: auto; overflow-x: hidden; gap: 12px; scroll-behavior: smooth; min-height: 0;
+    &::-webkit-scrollbar { width: 8px; }
+    &::-webkit-scrollbar-track { background: var(--chat-bg-light); }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--chat-bg-pattern);
+        border-radius: 10px; border: 2px solid var(--chat-bg-light);
+    }
+    scrollbar-width: thin; scrollbar-color: var(--chat-bg-pattern) var(--chat-bg-light);
+}
+
+/* ====== MENSAGENS VAZIAS (Sem mudanças) ====== */
+.empty-messages {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; flex: 1; color: var(--chat-text-muted);
+    opacity: 0.7; text-align: center;
+}
+.empty-messages-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.4; }
+
+/* ====== ESTRUTURA DA MENSAGEM (Sem mudanças) ====== */
+.mensagem {
+    max-width: 65%; background: transparent; padding: 0;
+    border-radius: 0; box-shadow: none; display: flex;
+    flex-direction: column; position: relative;
+    word-wrap: break-word; word-break: break-word;
+}
+.mensagem.remetente { align-self: flex-end; margin-inline-start: auto; }
+.mensagem.destinatario { align-self: flex-start; margin-inline-end: auto; }
+.mensagem-conteudo { display: flex; flex-direction: column; gap: 2px; }
+
+/* ====== BOLHA DE MENSAGEM (Sem mudanças) ====== */
+.mensagem-conteudo > * {
+    max-width: 100%; word-break: break-word;
+    line-height: 1.5; box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-md);
+}
+.remetente .mensagem-conteudo > * { background: var(--chat-msg-bg-sent); color: #fff; }
+.destinatario .mensagem-conteudo > * { background: var(--chat-msg-bg-received); color: var(--chat-text-dark); }
+.mensagem-conteudo > p { padding: 10px 14px; font-size: 0.95rem; }
+.mensagem-conteudo > .media-card { padding: 0; overflow: hidden; position: relative; box-shadow: none; }
+.mensagem-conteudo > .file-card { padding: 10px; }
+.remetente .mensagem-conteudo > :first-child { border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); }
+.remetente .mensagem-conteudo > :last-child { border-bottom-left-radius: var(--border-radius-lg); border-bottom-right-radius: var(--border-radius-sm); }
+.destinatario .mensagem-conteudo > :first-child { border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); }
+.destinatario .mensagem-conteudo > :last-child { border-bottom-right-radius: var(--border-radius-lg); border-bottom-left-radius: var(--border-radius-sm); }
+.remetente .mensagem-conteudo > :only-child { border-radius: var(--border-radius-lg) var(--border-radius-lg) var(--border-radius-sm) var(--border-radius-lg); }
+.destinatario .mensagem-conteudo > :only-child { border-radius: var(--border-radius-lg) var(--border-radius-lg) var(--border-radius-lg) var(--border-radius-sm); }
+
+/* ====== METADADOS (Sem mudanças) ====== */
+.mensagem-header { margin-bottom: 4px; padding: 0 4px; }
+.mensagem-autor { font-weight: 600; font-size: 0.8rem; opacity: 0.8; color: var(--chat-text-muted); }
+.mensagem-footer { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 0.75rem; margin-top: 6px; color: var(--chat-text-muted); }
+.check-icon { font-size: 0.8rem; color: var(--secondary-color); }
+
+/* ====== MÍDIA (Sem mudanças) ====== */
+.media-card { background: #000; }
+.msg-media-img, .msg-media-video {
+    display: block; width: 100%; height: auto; max-height: 400px;
+    object-fit: cover; cursor: pointer; transition: transform 0.3s ease;
+}
+.media-caption {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 10px 8px;
+    font-size: 0.85rem; word-break: break-word;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); min-height: 40px; 
+}
+.msg-media-img:hover, .msg-media-video:hover { transform: scale(1.01); }
+.msg-media-video { background-color: #000; }
+
+/* ====== CARD DE ARQUIVO (Ícone SVG) ====== */
+.file-card {
+    display: flex; align-items: center; gap: 12px;
+}
+.mensagem.remetente .file-card { background: var(--chat-msg-bg-sent); border: none; }
+.mensagem.destinatario .file-card { background: var(--chat-msg-bg-received); border: none; }
+.file-card:hover { filter: brightness(1.1); }
+
+.file-icon {
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-md);
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+}
+/* MUDANÇA: Estilizando o SVG dentro do ícone */
+.file-icon svg {
+    width: 24px; height: 24px;
+    stroke: var(--chat-text-dark); /* Cor do ícone */
+    opacity: 0.6;
+}
+.mensagem.remetente .file-icon { background: rgba(255, 255, 255, 0.2); }
+.mensagem.remetente .file-icon svg { stroke: #fff; opacity: 1; }
+
+.file-mid { flex-grow: 1; min-width: 0; }
+.file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; }
+.file-meta { font-size: 0.75rem; opacity: 0.7; }
+.msg-file {
+    text-decoration: none; font-weight: 600; flex-shrink: 0;
+    padding: 6px 10px; border-radius: var(--border-radius-lg);
+    transition: background 0.2s ease; font-size: 0.8rem;
+    background: var(--primary-color); color: #fff; border: none;
+}
+.mensagem.remetente .msg-file { background: #fff; color: var(--primary-color); }
+.msg-file:hover { transform: scale(1.05); }
+
+
+/* ==============================================
+▼▼▼▼▼ MUDANÇA PRINCIPAL (INPUTS E ÍCONES) ▼▼▼▼▼
+==============================================
+*/
+
+/* ====== RODAPÉ DO CHAT - INPUT ====== */
+.chat-footer {
+    background: var(--chat-input-bg);
+    padding: 10px 12px; /* Reduzido um pouco */
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    z-index: 10;
+    gap: 10px; /* Espaço entre o preview e o input */
+}
+
+.chat-footer form {
+    display: contents; /* O form não participa do layout flex */
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 8px; /* Espaço entre os botões e o input */
+    align-items: center; /* Alinha tudo verticalmente */
+    width: 100%;
+}
+
+/* MUDANÇA: Harmonizando a altura de tudo para 44px */
+.chat-input {
+    flex-grow: 1;
+    background: var(--chat-input-field-bg);
+    border: none;
+    color: var(--chat-text-light);
+    font-size: 15px;
+    padding: 10px 18px; /* Padding ajustado */
+    border-radius: 22px; /* Metade da altura */
+    height: 44px; /* Altura fixa */
+    transition: background 0.2s ease;
+    outline: none; 
+}
+
+.chat-input::placeholder {
+    color: var(--chat-text-placeholder);
+}
+
+.chat-input:focus-visible {
+    background: var(--chat-input-field-focus);
+    
+}
+
+/* ===== Botões de upload e envio (SVGs) ===== */
+.upload-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Espaço entre os botões de upload */
+}
+
+/* Estilo base para TODOS os botões no rodapé */
+.upload-btn,
+.send-btn,
+.cancel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    color: var(--chat-text-light); /* Cor do ícone (herdada pelo SVG) */
+    flex-shrink: 0;
+}
+
+/* Foco para acessibilidade */
+.upload-btn:focus-visible,
+.send-btn:focus-visible,
+.cancel-btn:focus-visible {
+    box-shadow: var(--focus-ring-shadow);
+}
+
+/* Botões de Upload */
+.upload-btn {
+    width: 44px; /* Altura fixa */
+    height: 44px; /* Altura fixa */
+    opacity: 0.8;
+}
+.upload-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
+/* Botão de Envio */
+.send-btn {
+    width: 44px; /* Altura fixa */
+    height: 44px; /* Altura fixa */
+    background: var(--primary-color);
+    color: #fff; /* Cor do ícone de avião */
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+}
+.send-btn:hover {
+    background: #3a7bd5;
+    transform: scale(1.05);
+}
+
+/* MUDANÇA: Estilo do SVG (Substitui .upload-btn img) */
+.upload-btn svg,
+.send-btn svg,
+.cancel-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor; /* Pega a cor do 'color:' do botão */
+}
+
+/* 'fill' específico para o avião de envio */
+.send-btn svg {
+    fill: currentColor;
+    stroke: none;
+    transform: translateX(1px); /* Ajuste de pixel */
+}
+
+/* ===== Preview estilizado (MUDANÇA) ===== */
+#preview-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Coloca o 'X' na direita */
+    gap: 12px;
+    padding: 8px;
+    /* margin-bottom foi substituído pelo 'gap' no .chat-footer */
+    background: var(--chat-input-field-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    color: var(--chat-text-light);
+}
+
+#preview-content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0; /* Para o text-overflow funcionar */
+}
+
+#preview-content img,
+#preview-content video {
+    width: 60px; /* Tamanho fixo */
+    height: 60px;
+    border-radius: var(--border-radius-sm);
+    object-fit: cover;
+}
+
+/* Estilos para o preview de ARQUIVO (do JS) */
+.preview-file-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    min-width: 0;
+}
+.preview-file-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    background: rgba(0,0,0,0.2);
+    border-radius: var(--border-radius-sm);
+}
+.preview-file-icon svg {
+    width: 20px; height: 20px;
+    stroke: var(--chat-text-light);
+}
+.preview-file-mid {
+    flex-grow: 1; min-width: 0;
+}
+.preview-file-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.preview-file-meta {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* Botão de Cancelar Preview */
+.cancel-btn {
+    width: 32px;
+    height: 32px;
+    opacity: 0.7;
+}
+.cancel-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+.cancel-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ==============================================
+▲▲▲▲▲ FIM DAS MUDANÇAS ▲▲▲▲▲
+==============================================
+*/
+
+
+/* ====== RESPONSIVIDADE (Ajustada) ====== */
+@media (max-width: 768px) {
+    /* ... (Estilos de mensagem, header, etc. sem mudanças) ... */
+    .mensagens { padding: 10px 4%; gap: 10px; }
+    .mensagem { max-width: 90%; }
+    .mensagem-conteudo > p { font-size: 0.9rem; padding: 8px 12px; }
+    .mensagem-autor { font-size: 0.8rem; }
+    .mensagem-footer { font-size: 0.7rem; }
+    .chat-header { padding: 10px 15px; }
+    .header-avatar { width: 38px; height: 38px; font-size: 14px; }
+    .header-name { font-size: 0.9rem; }
+    .msg-media-img, .msg-media-video { max-height: 250px; }
+
+    /* MUDANÇA: Ajustes no rodapé responsivo */
+    .chat-footer {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+    .input-wrapper {
+        gap: 4px;
+    }
+    
+    /* Reduzindo a altura harmonizada para mobile */
+    .chat-input,
+    .upload-btn,
+    .send-btn {
+        height: 40px;
+    }
+    
+    .chat-input {
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 0.9rem;
+    }
+    
+    .upload-btn,
+    .send-btn {
+        width: 40px;
+    }
+
+    .upload-btn svg,
+    .send-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ====== INDICADOR DE DIGITAÇÃO (Removido do CSS) ====== */
+/*
+.typing-indicator { ... }
+.typing-dots { ... }
+.typing-dots span { ... }
+@keyframes opacity-pulse { ... }
+*/

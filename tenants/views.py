@@ -87,6 +87,32 @@ class TenantCreateUserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         tenant_id = self.kwargs["pk"]
         return reverse_lazy('tenant_users', kwargs={'pk': tenant_id})
 
+class TenantUpdateUserView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = User
+    form_class = UserFormTenant
+    template_name = "tenants/tenants_user_form.html"
+
+    def test_func(self):
+        user = self.request.user
+        tenant_id = self.kwargs["tenant_pk"]
+        return user.is_superuser or (user.is_staff and user.tenant_id == int(tenant_id))
+
+    def get_success_url(self):
+        return reverse_lazy('tenant_users', kwargs={'pk': self.kwargs["tenant_pk"]})
+
+class TenantDeleteUserView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = User
+    template_name = "tenants/tenants_delete_user.html"
+
+    def test_func(self):
+        user = self.request.user
+        tenant_id = self.kwargs["tenant_pk"]
+        return user.is_superuser or (user.is_staff and user.tenant_id == int(tenant_id))
+
+    def get_success_url(self):
+        return reverse_lazy('tenant_users', kwargs={'pk': self.kwargs["tenant_pk"]})
+
+
 # CLASS PARA TELA DE STAFF
 
 class StaffTenantView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

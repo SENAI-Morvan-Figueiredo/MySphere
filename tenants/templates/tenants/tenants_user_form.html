@@ -3,18 +3,24 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Criar Usuário</title>
+  <title>{% if object %}Editar Usuário{% else %}Criar Usuário{% endif %}</title>
   <link rel="stylesheet" href="{% static 'css/tenants_user_form.css' %}">
 </head>
 <body>
   <div class="form-wrap">
-    <h1>Criar Usuário</h1>
+    <h1>{% if object %}Editar Usuário{% else %}Criar Usuário{% endif %}</h1>
+
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <button type="submit">Salvar</button>
     </form>
-    <a href="{% url 'tenant_list' %}">← Voltar à lista de tenants</a>
+
+    {% if not object %}
+      <a href="{% url 'tenant_list' %}">← Voltar à lista de tenants</a>
+    {% else %}
+      <a href="{% url 'tenant_users' object.tenant.pk %}">← Voltar à lista de usuários</a>
+    {% endif %}
   </div>
 </body>
 </html>

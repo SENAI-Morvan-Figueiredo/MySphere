@@ -1,12 +1,11 @@
+{% extends 'tenants/tenants_base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <title>Lista de Usuários do Tenant</title>
-  <link rel="stylesheet" href="{% static 'css/tenants_users.css' %}">
-</head>
-<body>
+{% block title %}Usuários do Tenant{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tenants_users.css' %}">
+{% endblock %}
+
+{% block content %}
   <div class="container">
   <header class="page-header">
     <h1>Usuários do Tenant: <span>{{ tenant.nome }}</span></h1>
@@ -28,7 +27,7 @@
           <th>Data de Nascimento</th>
           <th>Adicionado em</th>
           <th>Staff</th>
-          <th>Tenant ID</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -41,7 +40,10 @@
             <td>{{ user.data_nascimento }}</td>
             <td>{{ user.date_joined }}</td>
             <td>{{ user.is_staff }}</td>
-            <td>{{ user.tenant_id }}</td>
+            <td class="actions">
+                <a href="{% url 'tenant_users_edit' tenant.pk user.pk %}" class="btn btn-edit">Editar</a>
+                <a href="{% url 'tenant_users_delete' tenant.pk user.pk %}" class="btn btn-delete">Excluir</a>
+            </td>
           </tr>
         {% empty %}
           <tr>
@@ -51,5 +53,4 @@
       </tbody>
     </table>
   </div>
-</body>
-</html>
+{% endblock content %}

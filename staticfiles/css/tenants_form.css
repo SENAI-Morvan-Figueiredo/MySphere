@@ -1,0 +1,146 @@
+:root {
+  --bg: #F5F7FB;
+  --card-bg: #FFFFFF;
+  --primary: #4C6FFF;
+  --text: #1F2937;
+  --muted: #6B7280;
+  --border: #E6E9F2;
+  --soft-shadow: 0 6px 18px rgba(33, 41, 61, 0.06);
+  --radius: 12px;
+  --gap: 20px;
+  --max-width: 850px; 
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Container principal */
+.form-wrap {
+  width: 1000px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+  box-shadow: var(--soft-shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Título */
+.form-wrap h1 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  letter-spacing: -0.3px;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Campos */
+form p {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="file"],
+select,
+textarea {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 111, 255, 0.15);
+}
+
+/* Botões */
+button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 22px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--soft-shadow);
+  align-self: center;
+  width: 50%; 
+}
+
+button:hover {
+  background: #3e5ae5;
+  transform: translateY(-2px);
+}
+
+a {
+  text-align: center;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #3e5ae5;
+}
+
+/* Responsivo */
+@media (max-width: 800px) {
+  .form-wrap {
+    padding: 28px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+  }
+}

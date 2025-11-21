@@ -1,21 +1,20 @@
 {% load static %}
-<html>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Deletar Tenant</title>
-    <link rel="stylesheet" href="{% static 'css/tenant_delete.css' %}">
+    <title>Deletar Usuário</title>
+    <link rel="stylesheet" href="{% static 'css/tenants_delete.css' %}">
 </head>
 <body>
 
 <div class="container mt-4">
     <h2>Confirmar Exclusão</h2>
-    <p>Tem certeza que deseja excluir o Tenant</p>
+    <p>Tem certeza que deseja excluir o usuário <strong>{{ object.username }}</strong>?</p>
 
     <form method="post">
       {% csrf_token %}
-      <a href="{% url 'tenant_list' %}" class="btn btn-secondary">Cancelar</a>
+      <a href="{% url 'tenant_users' object.tenant.pk %}" class="btn btn-ghost">Cancelar</a>
       <button type="submit" class="btn btn-danger">Excluir</button>
     </form>
 </div>

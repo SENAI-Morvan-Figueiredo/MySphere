@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Tenants{% endblock %}</title>
+
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="{% static 'css/tenants_base.css' %}">
+
+    <!-- CSS extra (de outras páginas) -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="{% url 'tenant_list' %}" class="logo">MySphere</a>
+        </div>
+
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <span class="user-info">Logado como: <strong>{{ user.username }}</strong></span>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>
