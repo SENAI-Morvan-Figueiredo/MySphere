@@ -30,7 +30,6 @@
         </div>
     </header>
 
-    <!-- Mensagens do Django -->
     {% if messages %}
         <div class="messages-container">
             {% for message in messages %}
@@ -47,12 +46,9 @@
                 <h1>Chat</h1>
                 <input type="text" placeholder="Pesquisar..." class="chat-barra" id="chatSearch">
                 
-                <!-- Botão Novo Chat agora funcional -->
                 <a class="add-btn">+ Novo Chat</a>
-                <!-- Overlay (fundo escurecido) -->
                 <div class="overlay" id="overlay"></div>
 
-                <!-- Modal -->
                 <div class="new-chat-box" id="newChatBox">
                     <h3>Novo Chat</h3>
                     <form id="chatForm" method="POST" action="{% url 'criar_chat_ajax' %}">
@@ -117,7 +113,6 @@
         </div>
         <div class="container-2">
             {% block content %}
-                <!-- Mensagem padrão quando nenhum chat está selecionado -->
                 <div class="no-chat-selected">
                     <div class="no-chat-icon">💬</div>
                     <h2>Selecione um chat</h2>
@@ -227,6 +222,42 @@
         }
     }
 
+    // ===============================================
+    // ▼▼▼ LÓGICA DE LAYOUT RESPONSIVO (MUDANÇA) ▼▼▼
+    // ===============================================
+    function updateLayout() {
+        const isMobile = window.innerWidth <= 768;
+        const container1 = document.querySelector('.container-1');
+        const container2 = document.querySelector('.container-2');
+        
+        if (!container1 || !container2) return;
+
+        // Verifica se a URL é de um chat detalhado (ex: /chat/123/)
+        const pathParts = window.location.pathname.split('/');
+        const isChatDetail = pathParts.some((part, index) => 
+            index > 0 && pathParts[index - 1] === 'chat' && !isNaN(parseInt(part))
+        );
+
+        if (isMobile) {
+            if (isChatDetail) {
+                // Em mobile, na tela de chat: ESCONDE a lista, MOSTRA o chat
+                container1.style.display = 'none';
+                container2.style.display = 'flex'; // .container-2 é um flex-column
+            } else {
+                // Em mobile, na lista: MOSTRA a lista, ESCONDE o container de chat
+                container1.style.display = 'flex'; // .container-1 é um flex-column
+                container2.style.display = 'none';
+            }
+        } else {
+            // Em desktop: MOSTRA ambos
+            container1.style.display = 'flex';
+            container2.style.display = 'flex';
+        }
+    }
+    // ===============================================
+    // ▲▲▲ FIM DA LÓGICA DE LAYOUT ▲▲▲
+    // ===============================================
+
 
     // --- Lógica de Criação de Chat (Melhoria) ---
     document.addEventListener('DOMContentLoaded', function() {
@@ -314,6 +345,10 @@
         
         // Define o intervalo de polling (a cada 5 segundos)
         setInterval(fetchAndRenderChats, 1000); 
+
+        // 🟢 CHAMA A LÓGICA DE LAYOUT RESPONSIVO
+        updateLayout();
+        window.addEventListener('resize', updateLayout);
     });
 
     // Animação de saída (mantenha o CSS para os alerts)

@@ -8,6 +8,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: #f0f2f5;
     color: #1c1e21;
+    /* MUDANÇA: Impede o scroll do body em mobile quando o chat está visível */
+    overflow: hidden;
 }
 
 .container {
@@ -27,6 +29,8 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    /* MUDANÇA: Definir altura fixa para o cálculo de 100dvh */
+    height: 70px; 
 }
 
 .header-left {
@@ -128,20 +132,25 @@ body {
 /* ====== CONTAINER PRINCIPAL ====== */
 .containers{
     display: flex;
+    /* MUDANÇA: Garante que os containers não ultrapassem a tela */
+    width: 100%;
+    height: calc(100dvh - 70px); 
 }
 
 .container-1 {
     position: relative;
-    
-    left: 0;
+    /* left: 0; */ /* Removido pois não é mais necessário com flex */
     width: 26vw;
-    height: calc(100vh - 70px);
+    height: 100%; /* MUDANÇA: Ocupa 100% da altura do pai (.containers) */
     background-color: #fff;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #1e3a8a;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+    /* MUDANÇA: Transição suave para layout */
+    transition: width 0.3s ease;
+    flex-shrink: 0; /* Impede que encolha */
 }
 
 /* ====== MENU DO CHAT ====== */
@@ -194,6 +203,8 @@ body {
     overflow-y: auto;
     flex: 1;
     padding-right: 5px;
+    /* MUDANÇA: Garante que a lista tenha altura mínima para scroll */
+    min-height: 0; 
 }
 .clique {
     cursor: pointer;
@@ -240,6 +251,8 @@ body {
     flex-direction: column;
     justify-content: center;
     width: 100%;
+    /* MUDANÇA: Impede que o texto vaze */
+    min-width: 0; 
 }
 
 .chat-info-header {
@@ -253,11 +266,17 @@ body {
     font-size: 1rem;
     color: #111827;
     font-weight: 600;
+    /* MUDANÇA: Trunca nomes longos */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
 }
 
 .chat-time {
     font-size: 0.75rem;
     color: #9ca3af;
+    flex-shrink: 0; /* Impede que a hora encolha */
 }
 
 .chat-preview {
@@ -591,3 +610,50 @@ body {
     }
 
     /* Script de pesquisa */
+
+
+/* ===============================================
+   ▼▼▼ MUDANÇA: MEDIA QUERY PARA RESPONSIVO ▼▼▼
+   =============================================== */
+@media (max-width: 768px) {
+    .containers {
+        /* Em mobile, a altura é controlada pelo JS, 
+           mas garantimos que eles possam empilhar. */
+        flex-direction: column;
+        height: calc(100dvh - 70px); /* Ocupa a altura total menos o header */
+        overflow: hidden; /* Impede o body de rolar */
+    }
+
+    .container-1 {
+        width: 100%; /* Largura total */
+        height: 100%; /* Altura total */
+        border-right: none; /* Remove a borda divisória */
+        padding: 0.5rem;
+    }
+
+    .container-2 {
+        width: 100%; /* Largura total */
+        height: 100%; /* Altura total */
+    }
+
+    /* Ajustes na lista de chat para mobile */
+    .chat-menu {
+        padding: 0 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .chat-menu h1 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    .container-1 hr {
+        margin: 0.5rem 0;
+    }
+    .chat-list {
+        padding: 0 0.5rem;
+    }
+
+    /* Oculta mensagens de alerta do Django em mobile para economizar espaço */
+    .messages-container {
+        display: none;
+    }
+}
