@@ -1,21 +1,24 @@
-const ctx = document.getElementById("postsChart");
-if (ctx) {
-  new Chart(ctx, {
+const canvas = document.getElementById("postsChart");
+
+if (canvas) {
+
+  const labels = JSON.parse(document.getElementById("labels-data").textContent);
+  const counts = JSON.parse(document.getElementById("counts-data").textContent);
+
+  new Chart(canvas, {
     type: "line",
     data: {
-      labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+      labels: labels,
       datasets: [
         {
           label: "Posts",
-          data: [65, 59, 80, 81, 56, 55, 90],
+          data: counts,
           fill: true,
           backgroundColor: "rgba(99, 102, 241, 0.2)",
           borderColor: "rgba(99, 102, 241, 1)",
           tension: 0.4,
           pointBackgroundColor: "rgba(99, 102, 241, 1)",
           pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgba(99, 102, 241, 1)",
         },
       ],
     },
@@ -24,28 +27,21 @@ if (ctx) {
       maintainAspectRatio: false,
       scales: {
         y: {
-          beginAtZero: true,
-          grid: {
-            color: "rgba(203, 213, 225, 0.5)",
-          },
-          ticks: {
+        beginAtZero: true,
+        ticks: {
             color: "#64748b",
-          },
+            callback: function(value) {
+            return Number.isInteger(value) ? value : null;
+            }
+        },
+        grid: { color: "rgba(203, 213, 225, 0.5)" }
         },
         x: {
-          grid: {
-            display: false,
-          },
-          ticks: {
-            color: "#64748b",
-          },
+          ticks: { color: "#64748b" },
+          grid: { display: false },
         },
       },
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
+      plugins: { legend: { display: false } },
     },
   });
 }

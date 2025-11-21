@@ -13,11 +13,8 @@ from .mixins import StaffRequiredMixin
 def error_403_view(request, exception=None):
     return render(request, 'staff/403.html', status=403)
 
-class HomePageView(StaffRequiredMixin, TemplateView):
-    template_name = 'staff/staff_home.html'
-
 class DashboardPageView(TemplateView):
-    template_name = "staff/staff_dashboard.html"
+    template_name = "staff/staff_home.html"
 
     def get_context_data(self, **kwargs):
         tenant = self.request.user.tenant
@@ -30,7 +27,7 @@ class DashboardPageView(TemplateView):
         context["total_hashtags"] = Hashtag.objects.filter(tenant=tenant).count()
 
         hoje = timezone.now().date()
-        dias = [hoje - timedelta(days=i) for i in range(29, -1, -1)]
+        dias = [hoje - timedelta(days=i) for i in range(6, -1, -1)]
 
         labels = [dia.strftime("%d/%m") for dia in dias]
         counts = [
