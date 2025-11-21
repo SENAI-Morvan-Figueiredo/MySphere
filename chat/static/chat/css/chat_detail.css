@@ -26,9 +26,15 @@
 
 /* ====== RESET, CONTAINER, HEADER (Sem mudanças) ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* MUDANÇA: .container-2 agora é estilizado aqui para altura e largura
+   (embora o style.css também o defina, esta é a folha de estilo principal
+   para este container quando ele está ativo) */
 .container-2 {
     display: flex; flex-direction: column; background: var(--chat-bg-dark);
-    width: 100%; height: calc(100dvh - 70px); overflow: hidden; position: relative;
+    width: 100%; 
+    height: calc(100dvh - 70px); /* Ocupa 100% da altura do pai */
+    overflow: hidden; position: relative;
 }
 .chat-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
 .chat-header {
@@ -37,13 +43,44 @@
     box-shadow: var(--shadow-sm); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     flex-shrink: 0; z-index: 10;
 }
-.header-info { display: flex; align-items: center; gap: 14px; }
+.header-info { display: flex; align-items: center; gap: 14px; min-width: 0; /* MUDANÇA: Para truncamento */ }
 .header-avatar {
     width: 44px; height: 44px; border-radius: 50%; background: var(--secondary-color);
     color: #fff; display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 16px; box-shadow: var(--shadow-sm); flex-shrink: 0;
 }
 .header-name { font-weight: 700; font-size: 1rem; color: var(--chat-text-light); }
+
+
+/* ==============================================
+   ▼▼▼ MUDANÇA: ESTILO DO BOTÃO VOLTAR ▼▼▼
+   ============================================== */
+.back-btn {
+    display: none; /* Escondido por padrão (visível em @media) */
+    color: var(--chat-text-light);
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    margin-left: -10px; /* Compensa o padding */
+    margin-right: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    align-items: center;
+    justify-content: center;
+}
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.back-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+}
+/* ==============================================
+   ▲▲▲ FIM DA MUDANÇA ▲▲▲
+   ============================================== */
+
 
 /* ====== ÁREA DE MENSAGENS (Scrollbar) ====== */
 .mensagens {
@@ -367,18 +404,36 @@
 
 /* ====== RESPONSIVIDADE (Ajustada) ====== */
 @media (max-width: 768px) {
-    /* ... (Estilos de mensagem, header, etc. sem mudanças) ... */
+    /* MUDANÇA: Mostrar botão Voltar e ajustar header */
+    .back-btn {
+        display: flex;
+    }
+    .chat-header {
+        padding: 10px 10px; /* Padding ajustado para o botão voltar */
+    }
+    .header-name {
+        /* Trunca o nome para caber */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: calc(100vw - 120px); /* Garante que não estoure */
+    }
+    .header-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+    
+    /* ... (Estilos de mensagem, etc. que já existiam) ... */
     .mensagens { padding: 10px 4%; gap: 10px; }
     .mensagem { max-width: 90%; }
     .mensagem-conteudo > p { font-size: 0.9rem; padding: 8px 12px; }
     .mensagem-autor { font-size: 0.8rem; }
     .mensagem-footer { font-size: 0.7rem; }
-    .chat-header { padding: 10px 15px; }
-    .header-avatar { width: 38px; height: 38px; font-size: 14px; }
-    .header-name { font-size: 0.9rem; }
+    
     .msg-media-img, .msg-media-video { max-height: 250px; }
 
-    /* MUDANÇA: Ajustes no rodapé responsivo */
+    /* MUDANÇA: Ajustes no rodapé responsivo (já existiam, mantidos) */
     .chat-footer {
         padding: 8px 10px;
         gap: 8px;
