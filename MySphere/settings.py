@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'gamification',
     'staff', 
     'colorfield',
+    'eventos',
 ]
 
 AUTH_USER_MODEL = "accounts.User"
