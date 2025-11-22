@@ -70,7 +70,7 @@
                             <input type="checkbox" name="remember" id="remember">
                             <span>Remember me</span>
                         </label>
-                        <a href="#" class="forgot-password">Forgot password?</a>
+                        <a href="{% url "password_reset" %}" class="forgot-password">Forgot password?</a>
                     </div>
                     
                     <button type="submit" class="btn-primary">Sign in</button>
@@ -96,9 +96,7 @@
                     {% endif %}
                 {% endfor %}
                 
-                <p class="signup-link">
-                    Don't have an account? <a href="#">Sign up now</a>
-                </p>
+
             </div>
         </div>
     </div>
