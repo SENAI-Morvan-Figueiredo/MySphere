@@ -19,7 +19,7 @@
             </div>
             <div class="header-right">
                 {% if user.is_staff %}
-                    <a href="{% url 'home_staff' %}" class="btn-staff">Staff</a>
+                    <a href="{% url 'dashboard_staff' %}" class="btn-staff">Staff</a>
                 {% endif %}
                 <div class="user-info">
                     {% if user.foto %}

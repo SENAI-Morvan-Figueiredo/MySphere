@@ -9,7 +9,6 @@
 body {
   background-color: #f5f7fa;
   color: #333;
-  padding: 40px;
 }
 
 /* Container centralizado */
@@ -20,6 +19,7 @@ body {
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 5rem;
 }
 
 /* Cabeçalho */
