@@ -14,7 +14,8 @@
         </div>
       <div class="btn-container"
           data-url-task="{% url 'task_create' %}"
-          data-url-user-task="{% url 'user_task_create' %}">
+          data-url-user-task="{% url 'user_task_create' %}"
+          data-url-conquistas="{% url 'conquista_create' %}">
           <a href="{% url 'task_create' %}" class="btn-form">
               <i class="fa-solid fa-plus"></i>
               Nova Tarefa
@@ -23,6 +24,7 @@
       </div> 
       <div class="tabs">
         <div class="tab active" data-tab="tarefas">Tarefas</div>
+        <div class="tab" data-tab="conquistas">Conquistas</div>
         <div class="tab" data-tab="tarefas_user">Atribuição</div>
         <div class="tab" data-tab="pontos">Pontos</div>
       </div>
@@ -51,7 +53,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="4" class="empty">Nenhuma Task cadastrada.</td>
+                <td colspan="5" class="empty">Nenhuma Task cadastrada.</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -59,54 +61,66 @@
         </div>
       </section>
       <!-- FIM DAS TASKS -->
+      <!-- INICIO DAS CONQUISTAS -->
+      <section id="conquistas" class="tab-content"> 
+        <div class="table-wrap">
+          <table class="tasks-table" aria-label="Lista de tasks do sistema">
+            <thead>
+                <tr>
+                    <th>Conquista</th>
+                    <th>Foto</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for c in conquistas %}
+                <tr>
+                    <td>{{ c.nome }}</td>
+                    <td><img src="{{ c.imagem.url }}" alt="{{ c.nome }}"
+                      style="display: block; margin: 0 auto; max-width: 60px; height: 50px; ">
+                    </td>
+                    <td>{{ c.descricao }}</td>
+                    <td>{{ c.criado_em |date:"d/m/Y" }}</td>
+                </tr>    
+                {% empty %}
+                <tr>
+                    <td colspan="4">Você ainda não possui conquistas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+      </section>
+      <!-- FIM DAS CONQUISTAS -->
       <!-- ATRIBUIÇÃO DE USERS -->
       <section id="tarefas_user" class="tab-content">
         <div class="table-wrap">
-          <table class="tasks-table" aria-label="Lista de tasks de usuários">
-            <thead>
-              <tr>
-                <th>Usuário</th>
-                <th>Task</th>
-                <th>Atribuído por</th>
-                <th>Concluído</th>
-                <th>Concluído em</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for ut in user_tasks %}
-              <tr>
-                <td>
-                    <div class="perfil-user">
-                    {% if user.foto %}
-                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
-                    {% else %}
-                    <div class="profile-avatar default-avatar-large">
-                        {{ user.username|slice:":1"|upper }}
-                    </div>
-                    {% endif %}
-                    <div>{{ user.username }}</div>
-                    </div>
-                </td>
-                <td>{{ ut.task.titulo }}</td>
-                <td>
-                  {% if ut.atribuido_por %}
-                  {{ ut.atribuido_por.username }}
-                  {%else %}—{% endif %}
-                </td>
-                <td>
-                  {% if ut.concluido %}<span class="status done">Sim</span>
-                  {%else %}<span class="status pending">Não</span>{% endif %}
-                </td>
-                <td>{{ ut.concluido_em|default:"—" }}</td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="5" class="empty">
-                  Nenhum registro de tarefas de usuário.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
+          <table class="tasks-table" aria-label="Lista de Conquistas">
+              <thead>
+                  <tr>
+                      <th>Conquista</th>
+                      <th>Foto</th>
+                      <th>Descrição</th>
+                      <th>Data</th>
+                  </tr>
+              </thead>
+
+              <tbody>
+                  {% for c in conquistas %}
+                  <tr>
+                      <td>{{ c.conquista.nome }}</td>
+                      <td><img src="{{ c.conquista.imagem.url }}" alt="{{ c.conquista.nome }}"></td>
+                      <td>{{ c.conquista.descricao }}</td>
+                      <td>{{ c.recebido_em }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="4">Você ainda não possui conquistas.</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
           </table>
         </div>
       </section>

@@ -15,81 +15,100 @@
                 <h1>{{ user.tenant.nome }}</h1>
             </div>
         </div>
+
         <div class="header-center">
             <h1>Gamificação</h1>
         </div>
+
         <div class="header-right">
             <div class="user-info">
                 {% if user.foto %}
-                <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
                 {% else %}
-                <div class="user-avatar-small default-avatar">{{ user.username|slice:":1"|upper }}</div>
+                    <div class="user-avatar-small default-avatar">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
                 {% endif %}
                 <span><a href="{% url 'home' %}" style="text-decoration: none;">{{ user.username }}</a></span>
             </div>
         </div>
     </header>
+
     <section class="pontuacao">
         <h2>Meus Pontos</h2>
+
         {% if points %}
-        {% for point in points %}
-        <article class="card">
-            <p><strong>Pontos:</strong> {{ point.pontos }}</p>
-            <p><strong>Nível:</strong> {{ point.nivel }}</p>
-        </article>
-        {% endfor %}
+            {% for point in points %}
+            <article class="card">
+                <p><strong>Pontos Atuais:</strong> {{ point.points_atual }}</p>
+                <p><strong>Pontos Totais:</strong> {{ point.points_total }}</p>
+                <p><strong>Nível:</strong> {{ point.nivel }}</p>
+            </article>
+            {% endfor %}
         {% else %}
-        <p class="vazio">Você ainda não possui pontos registrados.</p>
+            <p class="vazio">Você ainda não possui pontos registrados.</p>
         {% endif %}
     </section>
+
     <div class="tabs">
         <div class="tab active" data-tab="tarefas">Tarefas</div>
         <div class="tab" data-tab="ranking">Ranking</div>
+        <div class="tab" data-tab="conquistas">Conquistas</div>
     </div>
+
     <main class="container">
 
+        <!-- TAREFAS -->
         <section id="tarefas" class="tab-content active">
             <h2>Minhas Tarefas</h2>
+
             {% if user_tasks %}
-            {% for user_task in user_tasks %}
-            <article class="task-card">
-                <p><strong>Título:</strong> {{ user_task.task.titulo }}</p>
-                <p><strong>Descrição:</strong> {{ user_task.task.descricao }}</p>
-                <p><strong>Valor de Pontos:</strong> {{ user_task.task.pontos }}</p>
-                <p>Status:
-                    {% if user_task.concluido %}
-                    ✅ Concluída
-                    {% else %}
-                    ❌ Pendente
-                <form method="POST" action="{% url 'concluir_tarefa' user_task.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Concluir</button>
-                </form>
-                {% endif %}
-                </p>
-            </article>
-            {% endfor %}
+                {% for user_task in user_tasks %}
+                <article class="task-card">
+                    <p><strong>Título:</strong> {{ user_task.task.titulo }}</p>
+                    <p><strong>Descrição:</strong> {{ user_task.task.descricao }}</p>
+                    <p><strong>Valor de Pontos:</strong> {{ user_task.task.pontos }}</p>
+
+                    <p>Status:
+                        {% if user_task.concluido %}
+                            ✅ Concluída
+                        {% else %}
+                            ❌ Pendente
+                            <form method="POST" action="{% url 'concluir_tarefa' user_task.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Concluir</button>
+                            </form>
+                        {% endif %}
+                    </p>
+                    {% if user_task.task.conquista %}
+                        <p>Recompensa Conquista: {{ user_task.task.conquista.nome }}</p>
+                    {% endif %}
+                </article>
+                {% endfor %}
             {% else %}
-            <p class="vazio">Você ainda não possui tarefas atribuídas.</p>
+                <p class="vazio">Você ainda não possui tarefas atribuídas.</p>
             {% endif %}
         </section>
+
+        <!-- RANKING -->
         <section id="ranking" class="tab-content">
             <h2>Ranking</h2>
+
             <table>
                 <thead>
                     <tr>
                         <th>Posição</th>
                         <th>Usuário</th>
-                        <th>Pontos</th>
+                        <th>Pontos Totais</th>
                         <th>Nível</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for r in ranking %}
-                    <tr {% if r.user == request.user %}style='font-weight: bold ;background-color: #e8eaff;'{% endif %}>
+                    <tr {% if r.user == request.user %} style="font-weight: bold; background-color: #e8eaff;" {% endif %}>
                         <td>{{ r.posicao }}</td>
                         <td>{{ r.user.username }}</td>
-                        <td>{{ r.pontos }}</td>
+                        <td>{{ r.points_total }}</td>
                         <td>{{ r.nivel }}</td>
                     </tr>
                     {% endfor %}
@@ -97,12 +116,38 @@
             </table>
 
             {% if user_line and user_line.posicao > 5 %}
-            <p><strong>Sua posição:</strong> {{ user_line.posicao }}º lugar com {{ user_line.pontos }} pontos.</p>
+            <p>
+                <strong>Sua posição:</strong> {{ user_line.posicao }}º lugar 
+                com {{ user_line.points_total }} pontos.
+            </p>
             {% endif %}
         </section>
+
+        <!-- CONQUISTAS -->
+        <section id="conquistas" class="tab-content">
+            <h2>Suas Conquistas</h2>
+
+            <div class="conquistas-grid">
+                {% for c in conquistas %}
+                <div class="conquista-card">
+                    <div class="conquista-icon">
+                        {% if c.conquista.imagem %}
+                        <img src="{{ c.conquista.imagem.url }}" alt="{{ c.conquista.nome }}">
+                        {% endif %}
+                    </div>
+
+                    <h3>{{ c.conquista.nome }}</h3>
+                    <p>{{ c.conquista.descricao }}</p>
+                    <small>Obtida em: {{ c.recebido_em | date:"d/m/Y" }}</small>
+                </div>
+                {% empty %}
+                <p>Você ainda não possui conquistas.</p>
+                {% endfor %}
+            </div>
+        </section>
+
     </main>
 
     <script src="{% static 'js/script.js' %}"></script>
 </body>
-
 </html>

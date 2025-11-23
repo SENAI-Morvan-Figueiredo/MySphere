@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
-from .models import Task, User_Task, Points
-from .forms import TaskForm, UserTaskForm
+from .models import Task, User_Task, Points, Conquista, User_Conquista
+from .forms import TaskForm, UserTaskForm, ConquistaForm
 from .mixins import TenantAccessMixin, OnlyIsStaff
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -23,6 +23,7 @@ class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, ListView):
         tenant = self.request.user.tenant
         context['tasks'] = Task.objects.filter(tenant=tenant)
         context['user_tasks'] = User_Task.objects.filter(task__tenant=tenant)
+        context['conquistas'] = Conquista.objects.filter(tenant=tenant)
 
         return context
 
@@ -50,9 +51,10 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
             ).annotate(
                 posicao=Window(
                     expression=RowNumber(),
-                    order_by=F('pontos').desc()
+                    order_by=F('points_total').desc()
+
                 )
-            ).order_by('-pontos')
+            ).order_by('-points_total')
 
             top5 = ranking[:5]
             user_line = ranking.filter(user=user).first()
@@ -60,6 +62,7 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
             context['user_line'] = user_line
 
         context['user_tasks'] = User_Task.objects.filter(user=user)
+        context['conquistas'] = User_Conquista.objects.filter(user=user)
 
         return context
 
@@ -68,14 +71,29 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
 def concluir_tarefa(request, task_id):
     user_task = get_object_or_404(User_Task, id=task_id, user=request.user)
 
-    if not user_task.concluido:
-        user_task.concluido = True
-        user_task.save()
-        
-    pontos_user = Points.objects.get(user=request.user)
-    pontos_user.save()
-    pontos_user.atualizar_nivel()
-    
+    if user_task.concluido:
+        return redirect('game_home')
+
+    user_task.concluido = True
+    user_task.save()
+
+    pontos_user, _created = Points.objects.get_or_create(
+        user=request.user,
+        defaults={'tenant': getattr(request.user, 'tenant', None),
+                  'points_atual': 0,
+                  'points_total': 0,
+                  'nivel': 'Iniciante'}
+    )
+
+    if user_task.task.pontos > 0:
+        pontos_user.add_points(user_task.task.pontos)
+
+    if user_task.task.conquista:
+        UserConquista.objects.get_or_create(
+            user=request.user,
+            conquista=user_task.task.conquista
+        )
+
     return redirect('game_home')
 
 # VIEWS - CREATE
@@ -118,4 +136,33 @@ class TaskDeleteView(OnlyIsStaff, DeleteView):
 
 class UserTaskDeleteView(OnlyIsStaff, DeleteView):
     model = User_Task
+    success_url = reverse_lazy('game_staff')
+
+# CONQUISTAS
+
+class ConquistaListView(ListView):
+    model = Conquista
+    template_name = "gamification/gamification_points_user.html"
+    # template_name = "gamification/gamification_conquista_list.html"
+    context_object_name = "conquistas"
+
+class ConquistaCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
+    model = Conquista
+    form_class = ConquistaForm
+    template_name = "gamification/gamification_conquista_form.html"
+    success_url = reverse_lazy('game_staff')
+
+    def form_valid(self, form):
+        form.instance.tenant = self.request.user.tenant
+        return super().form_valid(form)
+
+class ConquistaUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
+    model = Conquista
+    form_class = ConquistaForm
+    template_name = "gamification/gamification_conquista_form.html"
+    success_url = reverse_lazy('game_staff')
+
+
+class ConquistaDeleteView(OnlyIsStaff, DeleteView):
+    model = Conquista
     success_url = reverse_lazy('game_staff')

@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         <i class="fa-solid fa-plus"></i> Nova Atribuição
                     </a>`;
                 btnContainer.style.display = "flex";
+            } else if (tab.dataset.tab === "conquistas") {
+                btnContainer.innerHTML = `
+                    <a href="${btnContainer.dataset.urlConquistas}" class="btn-form">
+                        <i class="fa-solid fa-plus"></i> Nova Conquista
+                    </a>`;
+                btnContainer.style.display = "flex";
             } else {
                 btnContainer.style.display = "none";
             }
