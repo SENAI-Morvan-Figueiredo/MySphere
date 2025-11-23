@@ -1,0 +1,21 @@
+{% extends 'staff/staff_home.html' %} 
+{% load static %} 
+{% comment %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/gamification_tasks_form.css' %}">
+{% endblock %} 
+{% endcomment %}
+{% block content %}
+
+<h1>Criar Conquista</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="{% url 'game_staff' %}">Voltar</a>
+
+{% endblock content %}

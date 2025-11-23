@@ -1,33 +1,30 @@
 from django import forms
-from .models import Task, User_Task
+from .models import Task, User_Task, Conquista
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['titulo', 'descricao', 'pontos']
-        
+        fields = ['titulo', 'descricao', 'pontos', 'conquista']
         widgets = {
-            'titulo': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Ex: Completar relatório mensal'
-            }),
-            'descricao': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Forneça uma breve descrição dos requisitos da tarefa...',
-                'rows': 3
-            }),
-            'pontos': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Ex: 100'
-            }),
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control'}),
+            'pontos': forms.NumberInput(attrs={'class': 'form-control'}),
+            'conquista': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
-            'titulo': 'Título da Tarefa',
+            'titulo': 'Título',
             'descricao': 'Descrição',
-            'pontos': 'Pontos'
+            'pontos': 'Pontos da Task',
+            'conquista': 'Conquista concedida (opcional)'
         }
+
         
 class UserTaskForm(forms.ModelForm):
     class Meta:
         model = User_Task
         fields = ['user', 'task']
+
+class ConquistaForm(forms.ModelForm):
+    class Meta:
+        model = Conquista
+        fields = ['nome', 'descricao', 'imagem']
