@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, CreateView
 from accounts.models import User
+from feed.models import Post, Comment, Hashtag, Share, Like
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from tenants.models import Tenant
 from .forms import FormAddUsersStaff
 from django.urls import reverse_lazy
 from .mixins import StaffRequiredMixin
@@ -8,20 +13,51 @@ from .mixins import StaffRequiredMixin
 def error_403_view(request, exception=None):
     return render(request, 'staff/403.html', status=403)
 
-class HomePageView(StaffRequiredMixin, TemplateView):
-    template_name = 'staff/staff_home.html'
+class DashboardPageView(TemplateView):
+    template_name = "staff/staff_home.html"
 
-class DashboardPageView(StaffRequiredMixin, TemplateView):
-    template_name = 'staff/staff_dashboard.html'
-    
-# class UsersPageView(ListView):
-#     model = User
-#     template_name = 'staff/users.html'
-#     context_object_name = 'users'
+    def get_context_data(self, **kwargs):
+        tenant = self.request.user.tenant
 
-#     def get_queryset(self):
-#         tenant_id = self.request.user.tenant.pk
-#         return User.objects.filter(tenant_id=tenant_id)
+        context = super().get_context_data(**kwargs)
+
+        context["total_users"] = User.objects.filter(tenant=tenant).count()
+        context["total_posts"] = Post.objects.filter(tenant=tenant).count()
+        context["total_comments"] = Comment.objects.filter(tenant=tenant).count()
+        context["total_hashtags"] = Hashtag.objects.filter(tenant=tenant).count()
+
+        hoje = timezone.now().date()
+        dias = [hoje - timedelta(days=i) for i in range(6, -1, -1)]
+
+        labels = [dia.strftime("%d/%m") for dia in dias]
+        counts = [
+            Post.objects.filter(
+                tenant=tenant,
+                criado_em__date=dia
+            ).count()
+            for dia in dias
+        ]
+
+        context["posts_labels"] = labels
+        context["posts_counts"] = counts
+
+        total_likes = Like.objects.filter(tenant=tenant).count()
+        total_comments = Comment.objects.filter(tenant=tenant).count()
+        total_shares = Share.objects.filter(tenant=tenant).count()
+
+        context["engajamento"] = [total_likes, total_comments, total_shares]
+
+        hashtags_qs = (
+            Hashtag.objects.filter(tenant=tenant)
+            .annotate(qtd=Count("posts"))
+            .order_by("-qtd")[:5]
+        )
+        context["hashtags_labels"] = [h.tag for h in hashtags_qs]
+        context["hashtags_counts"] = [h.qtd for h in hashtags_qs]
+
+        context["recent_posts"] = Post.objects.filter(tenant=tenant).order_by("-criado_em")[:5]
+
+        return context
 
 class AddUsersStaffView(CreateView):
     model = User

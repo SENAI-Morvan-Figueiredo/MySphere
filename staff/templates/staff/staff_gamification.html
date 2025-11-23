@@ -102,50 +102,49 @@
       <!-- ATRIBUIÇÃO DE USERS -->
       <section id="tarefas_user" class="tab-content">
         <div class="table-wrap">
-          <table class="tasks-table" aria-label="Lista de Conquistas">
-              <thead>
-                <tr>
-                  <th>Usuário</th>
-                  <th>Task</th>
-                  <th>Atribuído por</th>
-                  <th>Concluído</th>
-                  <th>Concluído em</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {% for ut in user_tasks %}
-                <tr>
-                  <td>
-                      <div class="perfil-user">
-                      {% if user.foto %}
-                      <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
-                      {% else %}
-                      <div class="profile-avatar default-avatar-large">
-                          {{ user.username|slice:":1"|upper }}
-                      </div>
-                      {% endif %}
-                      <div>{{ user.username }}</div>
-                      </div>
-                  </td>
-                  <td>{{ ut.task.titulo }}</td>
-                  <td>
-                    {% if ut.atribuido_por %}
-                    {{ ut.atribuido_por.username }}
-                    {%else %}—{% endif %}
-                  </td>
-                  <td>
-                    {% if ut.concluido %}<span class="status done">Sim</span>
-                    {%else %}<span class="status pending">Não</span>{% endif %}
-                  </td>
-                  <td>{{ ut.concluido_em|default:"—" }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="5" class="empty">
-                    Nenhum registro de tarefas de usuário.
-                  </td>
-                </tr>
+          <table class="tasks-table" aria-label="Lista de tasks de usuários">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Task</th>
+                <th>Atribuído por</th>
+                <th>Concluído</th>
+                <th>Concluído em</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ut in user_tasks %}
+              <tr>
+                <td>
+                    <div class="perfil-user">
+                    {% if ut.user.foto %}
+                    <img src="{{ ut.user.foto.url }}" alt="{{ ut.user.username }}" class="profile-avatar" />
+                    {% else %}
+                    <div class="profile-avatar default-avatar-large">
+                        {{ ut.user.username|slice:":1"|upper }}
+                    </div>
+                    {% endif %}
+                    <div>{{ ut.user.username }}</div>
+                    </div>
+                </td>
+                <td>{{ ut.task.titulo }}</td>
+                <td>
+                  {% if ut.atribuido_por %}
+                  {{ ut.atribuido_por.username }}
+                  {%else %}—{% endif %}
+                </td>
+                <td>
+                  {% if ut.concluido %}<span class="status done">Sim</span>
+                  {%else %}<span class="status pending">Não</span>{% endif %}
+                </td>
+                <td>{{ ut.concluido_em|default:"—" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="empty">
+                  Nenhum registro de tarefas de usuário.
+                </td>
+              </tr>
               {% endfor %}
               </tbody>
           </table>
