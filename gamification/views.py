@@ -61,6 +61,19 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
             context['ranking'] = top5
             context['user_line'] = user_line
 
+        ranking_geral = Points.objects.annotate(
+            posicao=Window(
+                expression=RowNumber(),
+                order_by=F('points_total').desc()
+            )
+        ).order_by('-points_total')
+
+        top10_geral = ranking_geral[:5]  
+        user_line_geral = ranking_geral.filter(user=user).first()
+
+        context['ranking_geral'] = top10_geral
+        context['user_line_geral'] = user_line_geral
+
         context['user_tasks'] = User_Task.objects.filter(user=user)
         context['conquistas'] = User_Conquista.objects.filter(user=user)
 
@@ -77,19 +90,21 @@ def concluir_tarefa(request, task_id):
     user_task.concluido = True
     user_task.save()
 
-    pontos_user, _created = Points.objects.get_or_create(
+    pontos_user, created = Points.objects.get_or_create(
         user=request.user,
-        defaults={'tenant': getattr(request.user, 'tenant', None),
-                  'points_atual': 0,
-                  'points_total': 0,
-                  'nivel': 'Iniciante'}
+        defaults={
+            'tenant': request.user.tenant,
+            'points_atual': 0,
+            'points_total': 0,
+            'nivel': 'Iniciante'
+        }
     )
 
     if user_task.task.pontos > 0:
         pontos_user.add_points(user_task.task.pontos)
 
     if user_task.task.conquista:
-        UserConquista.objects.get_or_create(
+        User_Conquista.objects.get_or_create(
             user=request.user,
             conquista=user_task.task.conquista
         )
@@ -143,7 +158,6 @@ class UserTaskDeleteView(OnlyIsStaff, DeleteView):
 class ConquistaListView(ListView):
     model = Conquista
     template_name = "gamification/gamification_points_user.html"
-    # template_name = "gamification/gamification_conquista_list.html"
     context_object_name = "conquistas"
 
 class ConquistaCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
@@ -161,7 +175,6 @@ class ConquistaUpdateView(OnlyIsStaff, TenantAccessMixin, UpdateView):
     form_class = ConquistaForm
     template_name = "gamification/gamification_conquista_form.html"
     success_url = reverse_lazy('game_staff')
-
 
 class ConquistaDeleteView(OnlyIsStaff, DeleteView):
     model = Conquista

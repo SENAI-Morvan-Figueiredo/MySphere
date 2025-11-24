@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>Pontos - {{ user.username }}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'gamification/css/style.css' %}">
 </head>
 
 <body>
@@ -54,6 +54,7 @@
         <div class="tab active" data-tab="tarefas">Tarefas</div>
         <div class="tab" data-tab="ranking">Ranking</div>
         <div class="tab" data-tab="conquistas">Conquistas</div>
+        <div class="tab" data-tab="ranking_geral">Ranking Geral</div>
     </div>
 
     <main class="container">
@@ -99,7 +100,7 @@
                     <tr>
                         <th>Posição</th>
                         <th>Usuário</th>
-                        <th>Pontos Totais</th>
+                        <th>Pontos Totais do Mês</th>
                         <th>Nível</th>
                     </tr>
                 </thead>
@@ -146,8 +147,42 @@
             </div>
         </section>
 
+        <!-- RANKING GERAL -->
+        <section id="ranking_geral" class="tab-content">
+            <h2>Ranking Geral</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Usuário</th>
+                        <th>Pontos Totais</th>
+                        <th>Nível</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in ranking_geral %}
+                    <tr {% if r.user == request.user %} style="font-weight: bold; background-color: #e8eaff;" {% endif %}>
+                        <td>{{ r.posicao }}</td>
+                        <td>{{ r.user.username }}</td>
+                        <td>{{ r.points_total }}</td>
+                        <td>{{ r.nivel }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if user_line_geral and user_line_geral.posicao > 5 %}
+            <p>
+                <strong>Sua posição geral:</strong> {{ user_line_geral.posicao }}º lugar
+                com {{ user_line_geral.points_total }} pontos.
+            </p>
+            {% endif %}
+        </section>
+
+
     </main>
 
-    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'gamification/js/gamification_script.js' %}"></script>
 </body>
 </html>
