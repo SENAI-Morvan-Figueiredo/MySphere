@@ -1,21 +1,32 @@
 {% extends 'staff/staff_home.html' %} 
 {% load static %} 
-{% comment %}
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/gamification_tasks_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/gamification_users_tasks_form.css' %}">
 {% endblock %} 
-{% endcomment %}
+
 {% block content %}
 
-<h1>Criar Conquista</h1>
+<main class="wrap">
+  <header class="page-header">
+    <div class="title-block">
+      <h1>Criar Conquista</h1>
+      <p class="subtitle">Defina uma nova conquista (medalha/badge) para o sistema</p>
+    </div>
+  </header>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+  <section class="card">
+    <form method="POST" enctype="multipart/form-data" class="user-task-form">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <button type="submit">Salvar</button>
-</form>
-
-<a href="{% url 'game_staff' %}">Voltar</a>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    </form>
+    
+    <a href="{% url 'game_staff' %}" style="display: inline-block; margin-top: 15px;">Voltar</a>
+  </section>
+</main>
 
 {% endblock content %}

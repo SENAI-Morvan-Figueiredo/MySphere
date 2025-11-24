@@ -191,4 +191,14 @@ textarea {
 @media (max-width:600px){
   .wrap{padding:16px;margin:20px;}
   .task-form p{margin-bottom:14px;}
+
+  /* ADICIONADO: Responsividade para botões */
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-actions .btn, 
+  .form-actions .btn-save,
+  .form-actions .btn-back {
+    width: 100%;
+  }
 }

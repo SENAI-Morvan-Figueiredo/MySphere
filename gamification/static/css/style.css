@@ -14,6 +14,12 @@ body {
   line-height: 1.5;
 }
 
+/* ADICIONADO: Estilo para o link do logo */
+.logo-link {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* ==============================
    HEADER
 ============================== */
@@ -27,6 +33,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  flex-wrap: wrap; /* MODIFICADO: Permitir quebra de linha */
+  gap: 15px;      /* ADICIONADO: Espaçamento para itens que quebram a linha */
 }
 
 .header-left,
@@ -245,18 +253,41 @@ body {
   }
 }
 
+/* ADICIONADO: Media query para o cabeçalho */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column; /* Empilha os itens do header */
+    align-items: center; /* Centraliza */
+  }
+
+  .header-left,
+  .header-center,
+  .header-right {
+    width: 100%; /* Ocupa largura total */
+    justify-content: center; /* Centraliza conteúdo interno */
+  }
+}
+
+
 /* ==============================
    RANKING
 ============================== */
 
+/* ADICIONADO: Wrapper para a tabela rolar em telas pequenas */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
 table {
   margin: 20px auto;
   border-collapse: collapse;
-  width: 80%;
+  width: 100%; /* MODIFICADO: de 80% para 100% (controlado pelo wrapper) */
   background: white;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow: hidden;
+  min-width: 600px; /* ADICIONADO: Garante que a tabela tenha um tamanho mínimo antes de rolar */
 }
 
 th,
