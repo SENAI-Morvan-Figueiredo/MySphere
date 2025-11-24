@@ -222,7 +222,7 @@ def atualizar_mensagens(request, chat_id):
             "imagem_url": get_view_url("imagem", msg),
             "video_url": get_view_url("video", msg),
             "arquivo_url": get_view_url("arquivo", msg),
-            "hora": msg.criado_em.strftime("%H:%M"),
+            "hora_utc": msg.criado_em.isoformat(),
             "meu": msg.remetente == request.user,
         })
 

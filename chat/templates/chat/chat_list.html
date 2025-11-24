@@ -126,7 +126,7 @@
     const criarChatUrl = "{% url 'criar_chat_ajax' %}";
     const atualizarChatsUrl = "{% url 'atualizar_chats' %}";
     // Cria uma URL base para 'chat_detail' removendo o '0/'
-    const chatDetailBaseUrl = "{% url 'chat_detail' 0 %}".slice(0, -1); 
+    const chatDetailBaseUrl = "{% url 'chat_detail' 0 %}".slice(0, -2); 
 
     // --- FUNÇÃO DE ATUALIZAÇÃO E POLLING ---
     function fetchAndRenderChats() {
@@ -157,8 +157,12 @@
                             : `<div class="default-avatar">${chat.username.charAt(0).toUpperCase()}</div>`;
                         
                         // 2. Determinar a última mensagem
-                        const lastMessage = chat.last_message ? chat.last_message.substring(0, 30) + (chat.last_message.length > 30 ? '...' : '') : 'Sem mensagens';
-                        const lastMessageTime = chat.last_message_time || '';
+
+                        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+                        let lastMessageTime = '';
+                        if (chat.last_message_time_utc) {
+                            lastMessageTime = new Date(chat.last_message_time_utc).toLocaleTimeString(navigator.language, options);
+                        }
                         
                         // 3. HTML para o bloco de chat (inclui o unread_count)
                         newHtml += `

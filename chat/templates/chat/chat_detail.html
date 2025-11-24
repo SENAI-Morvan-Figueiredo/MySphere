@@ -402,6 +402,12 @@ function atualizarMensagensNaTela(mensagens) {
              conteudoHtml += '<p class="msg-corrompida">&lt;mensagem corrompida&gt;</p>';
         }
 
+        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+        let horaLocal = '';
+        if (msg.hora_utc) {
+            horaLocal = new Date(msg.hora_utc).toLocaleTimeString(navigator.language, options);
+        }
+
         let html = `
             <div class="mensagem-header">
                 <span class="mensagem-autor">${msg.autor}</span>
@@ -410,7 +416,7 @@ function atualizarMensagensNaTela(mensagens) {
                 ${conteudoHtml}
             </div>
             <div class="mensagem-footer">
-                <span class="mensagem-hora">${msg.hora}</span>
+                <span class="mensagem-hora">${horaLocal}</span>
                 ${msg.meu ? '<span class="check-icon">✓✓</span>' : ''}
             </div>
         `;
