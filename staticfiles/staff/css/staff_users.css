@@ -1,9 +1,9 @@
 /* ========================================================================
-   HERDA AS VARIÁVEIS E BASE DO ARQUIVO PRINCIPAL
+   DESIGN SYSTEM: Variáveis de Base
    ======================================================================== */
 
-/* Garante que tudo use as mesmas variáveis */
 :root {
+  /* Cores (existentes) */
   --color-primary: #13a4ec;
   --color-primary-90: #1194d5;
   --color-primary-10: rgba(19, 164, 236, 0.1);
@@ -24,125 +24,155 @@
   --color-red-100: #fee2e2;
   --color-red-800: #991b1b;
 
-  --rounded-default: 0.25rem;
-  --rounded-lg: 0.5rem;
-  --rounded-xl: 0.75rem;
+  /* <<< MELHORIA: Variáveis de Espaçamento (Tokens) >>> */
+  /* Isso cria um ritmo visual consistente */
+  --spacing-xs: 0.25rem;  /* 4px */
+  --spacing-sm: 0.5rem;   /* 8px */
+  --spacing-md: 1rem;     /* 16px */
+  --spacing-lg: 1.5rem;   /* 24px */
+  --spacing-xl: 2rem;     /* 32px */
 
+  /* <<< MELHORIA: Variáveis de Borda e Sombra >>> */
+  --radius-md: 0.375rem; /* 6px */
+  --radius-lg: 0.5rem;   /* 8px */
+  --radius-xl: 0.75rem;  /* 12px */
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* Transições (existentes) */
   --transition-duration-200: 200ms;
   --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
+  /* Fontes (existentes) */
   --font-display: "Be Vietnam Pro", sans-serif;
 }
 
+/* <<< MELHORIA: Reset e Base Globais >>> */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 /* ========================================================================
-   PÁGINA DE USUÁRIOS
+   LAYOUT DA PÁGINA
    ======================================================================== */
 
+.main-content {
+  /* <<< MODIFICADO: Aplicamos o fundo aqui >>> */
+  background-color: var(--color-background-light);
+  display: flex;
+  flex-direction: column; /* Garante que o conteúdo flua verticalmente */
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-md); /* Espaçamento em telas pequenas */
+}
 
-
+/* <<< MELHORIA: Título com Tipografia Fluida >>> */
 .title-page {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 1.2rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-zinc-600);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap; /* Permite quebrar em linhas menores */
 }
 
 .title-page h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--color-text-primary);
-}
-
-.title-page p {
-    margin: 0;
-}
-
-.title-page .divider {
-    font-weight: 600;
-    color: var(--color-text-secondary);
-}
-
-
-/* Wrapper geral */
-
-.container-all {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-content {
-  background-color: rgba(250, 250, 250, 0.6);
-  display: flex;
-}
-
-.container-card {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: stretch;
-}
-
-/* ==========================
-   USERS
-========================== */
-
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-
-.default-avatar,
-.default-avatar-large {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.perfil-user {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-/* ==========================
-   FORMULÁRIO
-========================== */
-
-.form-card {
-  border-radius: var(--rounded-xl);
-  border: 1px solid var(--color-zinc-200);
-  background-color: var(--color-white);
-  padding: 1rem;
-  width: 25vw;
-  height: 95%;
-}
-
-.form-card h2 {
-  font-size: 1rem;
+  /* Tipografia fluida: cresce com a tela, mas tem limites */
+  font-size: clamp(1.75rem, 1.5rem + 1.2vw, 2.25rem);
   font-weight: 700;
   color: var(--color-zinc-900);
 }
 
+.title-page p {
+  font-size: 1rem;
+}
+
+.title-page .divider {
+  font-weight: 600;
+  color: var(--color-zinc-400);
+}
+
+/* ========================================================================
+   ESTRUTURA DOS CARDS (Flexbox Responsivo)
+   ======================================================================== */
+
+.container-all {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.container-card {
+  display: flex;
+  /* <<< MELHORIA: Usando 'gap' para espaçamento >>> */
+  gap: var(--spacing-lg);
+  flex-wrap: wrap; /* Esta é a chave da responsividade */
+  justify-content: center; /* Centraliza o form de "Editar" quando está sozinho */
+  width: 100%;
+  max-width: 1600px; /* Limite máximo para telas ultrawide */
+  margin: 0 auto; /* Centraliza o container principal */
+}
+
+/* <<< MELHORIA: Colunas baseadas em Flex-Basis >>> */
+/* Elas tentarão ter esse tamanho, mas podem crescer/encolher.
+   Quando não couberem mais lado a lado, o 'wrap' as empilhará. */
+.form-column {
+  flex: 1 1 360px; /* Cresce(1), Encolhe(1), Tamanho Base (360px) */
+  min-width: 320px; /* Largura mínima antes de quebrar */
+  max-width: 500px; /* Impede que o form fique largo demais */
+}
+
+.table-column {
+  flex: 2 1 500px; /* Cresce(2), Encolhe(1), Tamanho Base (500px) */
+  min-width: 320px;
+}
+
+/* ========================================================================
+   ESTILO DOS CARDS (Formulário e Tabela)
+   ======================================================================== */
+
+.form-card,
+.table-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-zinc-200);
+  background-color: var(--color-white);
+  padding: var(--spacing-lg);
+  width: 100%; /* Ocupa 100% da coluna-pai */
+  height: 100%; /* Ocupa 100% da altura (definido pelo align-items: stretch do flex) */
+  box-shadow: var(--shadow-md);
+  /* <<< MELHORIA: Permite que o wrapper da tabela cresça >>> */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-card h2,
+.table-card h2 {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: var(--color-zinc-900);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ========================================================================
+   FORMULÁRIO (Inputs, Botões)
+   ======================================================================== */
+
 .form-card form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1.25rem;
+  gap: var(--spacing-md); /* Espaço entre cada campo do form */
 }
 
+/* <<< MELHORIA: Corrigindo espaçamento do 'form.as_p' >>> */
 .form-card form p {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs); /* Espaço entre o label e o input */
 }
 
 .form-card form label {
@@ -153,258 +183,262 @@
 
 .form-card input,
 .form-card select {
-  padding: 0.5rem 0.75rem;
+  padding: 0.65rem 0.75rem;
   border: 1px solid var(--color-zinc-300);
-  border-radius: var(--rounded-lg);
+  border-radius: var(--radius-lg);
   background-color: var(--color-white);
   font-size: 0.875rem;
   outline: none;
-  transition: border-color var(--transition-duration-200) var(--transition-ease);
+  transition: all var(--transition-duration-200) var(--transition-ease);
+  box-shadow: var(--shadow-sm);
 }
 
+/* <<< MELHORIA: Estado de Foco Acessível (focus-visible) >>> */
 .form-card input:focus,
-.form-card select:focus {
+.form-card select:focus,
+.form-card input:focus-visible,
+.form-card select:focus-visible {
   border-color: var(--color-primary);
+  /* Sombra de anel para acessibilidade */
+  box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
-.form-card form button {
-  margin-top: 1.5rem;
+.form-card form button[type="submit"] {
+  margin-top: var(--spacing-sm);
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  background-color: #1194d5;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-}
-
-/* Grupo da senha com botão do olho */
-.password-group {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--color-zinc-300);
-  border-radius: var(--rounded-lg);
-  overflow: hidden;
-}
-
-.password-group input {
-  flex: 1;
-  border: none;
-  padding: 0.5rem 0.75rem;
-}
-
-.password-group button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0 0.5rem;
-  color: var(--color-zinc-500);
-}
-
-/* Ações do formulário */
-.form-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.submit-button,
-.reset-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--rounded-lg);
-  padding: 0.5rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color var(--transition-duration-200);
-}
-
-.submit-button {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 150ms var(--transition-ease);
 }
 
-.submit-button:hover {
+/* <<< MELHORIA: Interação de Botão mais moderna >>> */
+.form-card form button[type="submit"]:hover {
   background-color: var(--color-primary-90);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
-.reset-button {
-  background-color: var(--color-zinc-100);
-  color: var(--color-zinc-700);
+.form-card form button[type="submit"]:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
-.reset-button:hover {
-  background-color: var(--color-zinc-200);
-}
-
-/* ==========================
+/* ========================================================================
    TABELA
-========================== */
+   ======================================================================== */
 
 .table-card {
-  border-radius: var(--rounded-xl);
-  border: 1px solid var(--color-zinc-200);
-  background-color: var(--color-white);
-  padding: 1rem;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 50vw;
-  height: 95%;
+  /* O flex-direction: column já foi aplicado na regra geral */
+  overflow: hidden; /* Garante que o card contenha o wrapper */
 }
 
-.table-card h2 {
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
+/* <<< MELHORIA: Wrapper da tabela rolável e flexível >>> */
 .table-wrapper {
-  overflow-x: auto;
-  overflow-y: auto;
-  height: 65.5vh;
-  position: relative;
+  flex: 1 1 auto; /* Permite que o wrapper cresça para preencher o card */
+  overflow: auto; /* Adiciona scroll X e Y *apenas* se necessário */
+  position: relative; /* Contexto para o header fixo */
+  /* Remove a altura fixa 'vh', que é frágil */
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
-}
-
-.table-header-wrapper {
-  position: sticky;
-  top: 0;
-  background-color: #f0f0f0;
-  z-index: 1;
+  min-width: 600px; /* Garante que a tabela tenha uma largura mínima, forçando o scroll-x */
 }
 
 .table-wrapper thead th {
-  position: sticky;
+  position: sticky; /* Header da tabela fica fixo no topo */
   top: 0;
   z-index: 10;
   background-color: var(--color-zinc-100);
-}
-
-thead {
-  background-color: var(--color-zinc-100);
-}
-
-thead th {
   padding: 0.75rem;
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-zinc-700);
   text-align: left;
-  border-bottom: 1px solid var(--color-zinc-200);
+  border-bottom: 2px solid var(--color-zinc-200);
 }
 
+/* <<< MELHORIA: Zebrado para melhor legibilidade >>> */
 tbody tr {
   border-bottom: 1px solid var(--color-zinc-200);
   transition: background-color var(--transition-duration-200);
 }
 
-tbody tr:hover {
+tbody tr:nth-child(even) {
   background-color: var(--color-zinc-50);
+}
+
+tbody tr:hover {
+  background-color: var(--color-zinc-100);
 }
 
 tbody td {
   padding: 0.75rem;
   font-size: 0.875rem;
   color: var(--color-zinc-700);
+  /* Alinha verticalmente no meio, útil para a foto de perfil */
+  vertical-align: middle;
 }
 
-/* Nome + avatar */
-td > div {
+/* Célula de Perfil (Avatar + Nome) */
+.perfil-user {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
-td img {
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--rounded-full);
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
   object-fit: cover;
+  /* <<< REMOVIDO: margin-bottom, 'gap' agora controla isso >>> */
 }
 
-/* Status */
-.active-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--rounded-full);
-  background-color: var(--color-green-100);
-  color: var(--color-green-800);
+.default-avatar-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+/* Status Ativo/Inativo */
+.active-status,
+.inactive-status {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 600;
+  display: inline-block;
+}
+
+.active-status {
+  background-color: var(--color-green-100);
+  color: var(--color-green-800);
 }
 
 .inactive-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--rounded-full);
   background-color: var(--color-red-100);
   color: var(--color-red-800);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
-/* Botões AÇÕES */
+/* Célula de Ações (Editar/Deletar) */
+/* <<< MELHORIA: Alinhamento de botões e formulários inline >>> */
+td > div {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+td form {
+  display: inline; /* Garante que o form não quebre a linha */
+}
+
+td a,
 td button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: none;
   cursor: pointer;
-  padding: 0.25rem;
-  border-radius: var(--rounded-default);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
   transition: background-color var(--transition-duration-200);
   color: var(--color-zinc-600);
+  text-decoration: none; /* Para o <a> */
 }
 
-td button:hover {
+td a:hover {
   background-color: var(--color-zinc-200);
+  color: var(--color-zinc-900);
 }
 
-/* ==========================
-   CAMPO DE BUSCA
-========================== */
-
-.table-card label > div {
-  display: flex;
-  align-items: center;
-  background-color: var(--color-zinc-100);
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--rounded-lg);
-  border: 1px solid var(--color-zinc-200);
+td button[type="submit"]:hover {
+  background-color: var(--color-red-100);
+  color: var(--color-red-800);
 }
 
-.table-card input {
-  border: none;
-  background: none;
-  outline: none;
-  flex: 1;
-  padding-left: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-zinc-700);
-}
+/* ========================================================================
+   MEDIA QUERIES (Ajustes finos para telas menores)
+   ======================================================================== */
 
-/* Ícone de busca */
-.table-card span.material-symbols-outlined {
-  color: var(--color-zinc-500);
-}
+@media (max-width: 768px) {
+  /* <<< MELHORIA: Reduz espaçamento geral em tablets/móveis >>> */
+  .page-wrapper {
+    padding: var(--spacing-md);
+  }
 
-/* ==========================
-   RESPONSIVO
-========================== */
-@media (max-width: 760px) {
-  .form-actions {
+  .container-card {
+    gap: var(--spacing-md);
+  }
+
+  .form-card,
+  .table-card {
+    padding: var(--spacing-md);
+  }
+
+  /* Empilha o título em telas menores */
+  .title-page {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
   }
 
-  td > div {
-    flex-direction: row;
-    align-items: center;
+  .title-page .divider {
+    display: none; /* Oculta o divisor em telas pequenas */
   }
+
+  .title-page p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* <<< MELHORIA: Mais redução para smartphones >>> */
+  .page-wrapper {
+    padding: var(--spacing-md);
+  }
+
+  .form-card,
+  .table-card {
+    padding: var(--spacing-sm);
+  }
+
+  /* Na tabela, empilha o avatar e o nome em telas muito pequenas */
+  .perfil-user {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}
+
+.table-wrapper {
+  flex: 1 1 auto; 
+  overflow: auto; /* Isso já garante o scroll X e, agora, o scroll Y */
+  position: relative; 
+  /* --- NOVO: Limita a altura para forçar o scroll Y --- */
+  max-height: 60vh; /* Define uma altura máxima. Use 'px' ou 'rem' se preferir um valor fixo. */
+}
+
+/* Opcional, mas recomendado para o header da tabela: */
+.table-wrapper thead th {
+  /* Mantido: Garante que o cabeçalho fique fixo ao rolar */
+  position: sticky; 
+  top: 0;
+  z-index: 10;
+  /* ... */
 }

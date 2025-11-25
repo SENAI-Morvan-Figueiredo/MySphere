@@ -20,9 +20,12 @@
 
   <body>
     <div class="main-wrapper" x-data="{ sidebarOpen: true }">
-      <!-- INICIO DO HAMBURGUER -->
       <aside :class="{'-ml-64': !sidebarOpen}" class="sidebar">
         <div class="sidebar-inner">
+            <button @click="sidebarOpen = false" class="btn-close-sidebar">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+            
           <div class="logo-section">
             <div class="logo-info">
               <div class="logo-image">
@@ -88,10 +91,7 @@
           </div>
         </div>
       </aside>
-      <!-- FIM DO HAMBURGUER -->
-
       <main class="main-content-area">
-        <!-- INICIO DO HEADER -->
         <header class="main-header">
           <div class="titulo-navbar">
             <button @click="sidebarOpen = !sidebarOpen" class="btn-hamburguer">
@@ -105,17 +105,10 @@
           <div class="header-right-section">
             <div class="search-input-container">
               <label>
-                <div>
-                  <input placeholder="Buscar usuários, posts..." value="" />
-                  <button class="search-icon">
-                    <span class="material-symbols-outlined">search</span>
-                  </button>
-                </div>
               </label>
             </div>
           </div>
         </header>
-        <!-- FIM DO HEADER -->
         <div class="dashboard-content-container">
           {% block content %}
             <div class="dashboard-wrapper">
@@ -124,7 +117,6 @@
 
                
 
-                <!-- Metrics -->
                 <div class="grid grid-4">
 
                     <div class="card metric-card">
@@ -161,7 +153,6 @@
 
                 </div>
 
-                <!-- Charts -->
                 <div class="grid grid-3">
                     <div class="card chart-card wide">
                     <h3 class="chart-title">Posts por Dia</h3>

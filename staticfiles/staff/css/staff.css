@@ -1,5 +1,6 @@
 :root {
-  /* Cores customizadas do Tailwind config */
+  /* ... (Cores e Fontes mantidas) ... */
+
   --color-primary: #13a4ec;
   --color-background: #f7f8fa;
   --color-card: #ffffff;
@@ -11,14 +12,9 @@
   --color-gray-200: #e5e7eb;
   --color-white: #ffffff;
 
-  /* Fontes customizadas do Tailwind config */
   --font-display: "Be Vietnam Pro", sans-serif;
-
-  /* Border Radius customizados do Tailwind config */
   --rounded-lg: 0.75rem;
   --rounded-full: 9999px;
-
-  /* Transições e Duração */
   --transition-duration-300: 300ms;
   --transition-timing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -32,294 +28,99 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.5;
-  /* Default line-height */
   margin: 0;
-  /* Remove margem padrão do body para evitar vãos */
 }
 
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-/* Alpine.js State Class */
-.-ml-64 {
-  margin-left: -16rem;
-}
+/* Alpine.js State Class - Usada para determinar estado de fechado */
+/* Agora controlamos a visibilidade usando TRANSFORMS */
+
 
 /* Main Wrapper */
 .main-wrapper {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden; /* Evita rolagem horizontal durante transição */
 }
 
+/* Conteúdo Principal - Ajuste a margem esquerda para o espaço do sidebar */
 .main-content-area {
   flex: 1 1 0%;
-  transition-property: all;
-  transition-timing-function: var(--transition-timing-ease-in-out);
-  transition-duration: var(--transition-duration-300);
-}
-
-/* Utility Classes (Mínimas, para elementos que não são componentes) */
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.h-full {
-  height: 100%;
-}
-
-.relative {
-  position: relative;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.hidden {
-  display: none;
-}
-
-.min-w-0 {
-  min-width: 0px;
-}
-
-.resize-none {
-  resize: none;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.z-20 {
-  z-index: 20;
-}
-
-.sticky {
-  position: sticky;
-}
-
-.top-0 {
-  top: 0;
-}
-
-/* Typography Utilities */
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.leading-normal {
-  line-height: 1.5rem;
-}
-
-.leading-tight {
-  line-height: 1.25;
-}
-
-.tracking-tight {
-  letter-spacing: -0.025em;
-}
-
-.text-text-primary {
-  color: var(--color-text-primary);
-}
-
-.text-text-secondary {
-  color: var(--color-text-secondary);
+  transition: margin-left var(--transition-duration-300) var(--transition-timing-ease-in-out);
+  min-width: 0;
+  margin-left: 18rem; /* Espaço para o sidebar aberto (16rem width + 1rem padding total, aprox 18rem) */
 }
 
 /* ==========================================================================
-   SIDEBAR STYLES
+   SIDEBAR STYLES (CORREÇÕES DE COMPORTAMENTO)
    ========================================================================== */
 
 .sidebar {
   flex-shrink: 0;
-  height: 96.5vh;
-  width: 16rem;
+  width: 16rem; /* Largura base */
   display: flex;
   flex-direction: column;
   background-color: var(--color-card);
   padding: 1rem;
   border-right: 1px solid var(--color-border-color);
-  position: sticky;
+  
+  /* Padrão em todas as resoluções: Fixed (Overlay/Push controlado por JS/CSS) */
+  position: fixed; 
+  height: 100vh;
   top: 0;
-  transform: translate(0, 0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1);
-  transition-property: all;
-  transition-timing-function: var(--transition-timing-ease-in-out);
-  transition-duration: var(--transition-duration-300);
-  z-index: 30;
+  left: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); 
+  z-index: 60; /* Z-index ALTO para estar sempre na frente da navbar (z-index: 50) */
+
+  /* Estado Aberto (Padrão para desktop) */
+  transform: translateX(0); 
+  transition: transform var(--transition-duration-300) var(--transition-timing-ease-in-out);
 }
 
-.sidebar > div:first-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+/* ESTADO FECHADO: Aplicações da classe Alpine.js -ml-64 */
+/* Quando o sidebarOpen for FALSE, aplica a transformação para ocultar */
+.sidebar.-ml-64 {
+  transform: translateX(-100%); 
 }
 
-/* Logo/Title Section */
-.sidebar .logo-section {
-  /* flex-col gap-8 */
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  /* gap-8 */
+/* CORREÇÃO DO MAIN-CONTENT-AREA QUANDO O SIDEBAR FECHA */
+.main-wrapper .sidebar.-ml-64 ~ .main-content-area {
+    margin-left: 0;
 }
 
-.sidebar .logo-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+
+/* Estilos Mobile/Tablet (Sidebar como Overlay com Full Height) */
+@media (max-width: 1023px) {
+  /* Em mobile, o sidebar sempre é overlay e a main-content-area não tem margin-left */
+  .main-content-area {
+    margin-left: 0;
+  }
 }
 
-.sidebar .logo-image {
-  background-position: center;
-  background-repeat: no-repeat;
-  aspect-ratio: 1 / 1;
-  background-size: cover;
-  border-radius: var(--rounded-full);
-  width: 2.5rem;
-  height: 2.5rem;
-}
+/* --- (Outros estilos do Sidebar e navegação mantidos) --- */
+.sidebar > div:first-child { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.sidebar .logo-section { display: flex; flex-direction: column; gap: 2rem; }
+.sidebar .logo-info { display: flex; align-items: center; gap: 0.75rem; padding-left: 0.5rem; padding-right: 0.5rem; }
+.sidebar .logo-image { background-position: center; background-repeat: no-repeat; aspect-ratio: 1 / 1; background-size: cover; border-radius: var(--rounded-full); width: 2.5rem; height: 2.5rem; }
+.sidebar .logo-text { display: flex; flex-direction: column; }
+.sidebar .logo-text h1 { color: var(--color-text-primary); font-size: 1rem; font-weight: 700; line-height: 1.5rem; margin: 0; }
+.sidebar nav { display: flex; flex-direction: column; gap: 0.5rem; }
+.nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.75rem; border-radius: var(--rounded-lg); color: var(--color-text-secondary); font-weight: 500; transition: all var(--transition-duration-300) var(--transition-timing-ease-in-out); text-decoration: none; }
+.nav-item p { font-size: 0.875rem; line-height: 1.5rem; margin: 0; }
+.nav-item.active { background-color: var(--color-primary); color: var(--color-white); font-weight: 600; }
+.nav-item:hover { background-color: var(--color-gray-100); color: var(--color-text-primary); }
+.sidebar .footer-section { display: flex; flex-direction: column; gap: 0.25rem; border-top: 1px solid var(--color-border-color); padding-top: 1rem; }
+.footer-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: var(--rounded-lg); color: var(--color-text-secondary); font-weight: 500; transition: all var(--transition-duration-300) var(--transition-timing-ease-in-out); text-decoration: none; }
+.footer-link p { font-size: 0.875rem; line-height: 1.5rem; margin: 0; }
+.footer-link:hover { background-color: var(--color-gray-100); color: var(--color-text-primary); }
+.nav-item:hover .material-symbols-outlined.group-hover-fill-1, .footer-link:hover .material-symbols-outlined.group-hover-fill-1, .material-symbols-outlined.material-symbols-outlined-fill { font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24; }
+.logo-image { width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; }
+.logo-image .logo-tenant { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-.sidebar .logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar .logo-text h1 {
-  color: var(--color-text-primary);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5rem;
-}
-
-/* Navigation */
-.sidebar nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  /* gap-2 */
-}
-
-/* Navigation Item */
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
-  border-radius: var(--rounded-lg);
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-timing-function: var(--transition-timing-ease-in-out);
-  transition-duration: var(--transition-duration-300);
-  text-decoration: none;
-}
-
-.nav-item p {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  margin: 0;
-}
-
-/* Navigation Item - Active State */
-.nav-item.active {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  font-weight: 600;
-}
-
-/* Navigation Item - Hover State */
-.nav-item:hover {
-  background-color: var(--color-gray-100);
-  color: var(--color-text-primary);
-}
-
-/* Footer Section */
-.sidebar .footer-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  border-top: 1px solid var(--color-border-color);
-  padding-top: 1rem;
-}
-
-/* Footer Link */
-.footer-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-radius: var(--rounded-lg);
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-timing-function: var(--transition-timing-ease-in-out);
-  transition-duration: var(--transition-duration-300);
-  text-decoration: none;
-}
-
-.footer-link p {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  margin: 0;
-}
-
-.footer-link:hover {
-  background-color: var(--color-gray-100);
-  color: var(--color-text-primary);
-}
-
-/* Icon Fill on Hover/Active */
-.nav-item:hover .material-symbols-outlined.group-hover-fill-1,
-.footer-link:hover .material-symbols-outlined.group-hover-fill-1,
-.material-symbols-outlined.material-symbols-outlined-fill {
-  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
-}
 
 /* ==========================================================================
    HEADER STYLES
@@ -328,14 +129,12 @@ body {
 .main-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 50; /* Z-index ALTO para estar na frente do conteúdo, mas atrás do sidebar aberto */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  /* gap-4 */
   padding: 1rem;
-  /* p-4 */
   border-bottom: 1px solid var(--color-border-color);
   background-color: var(--color-card);
 }
@@ -343,8 +142,10 @@ body {
 .main-header .titulo-navbar {
   display: flex;
   align-items: center;
+  gap: 1rem; /* Adicionado gap */
 }
 
+/* Botão Hamburguer (mantido) */
 .main-header .btn-hamburguer {
   padding: 0.5rem;
   border-radius: var(--rounded-full);
@@ -360,6 +161,7 @@ body {
   background-color: var(--color-gray-200);
 }
 
+/* ... Estilos de Título Navbar (mantidos) ... */
 .main-header .titulo-navbar > div:last-child {
   display: flex;
   flex-direction: column;
@@ -389,6 +191,7 @@ body {
   gap: 1rem;
 }
 
+/* Seção de Busca (Corrigida a estilização e responsividade) */
 .main-header .search-input-container {
   display: none;
 }
@@ -434,6 +237,7 @@ body {
   line-height: 1.5rem;
 }
 
+/* O resto da estilização de busca e botões (mantido) */
 .main-header .search-input-container input::placeholder {
   color: var(--color-text-secondary);
 }
@@ -477,7 +281,6 @@ body {
 }
 
 .main-header .search-buttons .mobile-search-button {
-  /* md-hidden */
   display: block;
 }
 
@@ -492,9 +295,7 @@ body {
   padding: 1rem;
 }
 
-
-/*  LOGO TENANT RESPONSIVA  */
-
+/* LOGO TENANT RESPONSIVA  */
 .logo-image {
     width: 3rem;         
     height: 3rem;
@@ -508,4 +309,295 @@ body {
     height: 100%;
     object-fit: cover;  
     border-radius: 50%; 
+}
+
+
+/* BOTÃO DE FECHAR (Visível apenas em Mobile) */
+.btn-close-sidebar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 70; /* Garante que está acima de tudo */
+    color: var(--color-text-primary);
+    display: none; /* Escondido por padrão (Desktop) */
+}
+
+.btn-close-sidebar .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+
+/* Mostra o botão apenas em telas de tablet e mobile */
+@media (max-width: 1023px) {
+    .btn-close-sidebar {
+        display: block; 
+    }
+}
+
+/* Charts */
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.chart-card.wide {
+  /* No Desktop, o gráfico ocupa 2 colunas do grid-3 */
+  grid-column: span 2; 
+}
+
+/* Container que envolve o elemento <canvas> do Chart.js */
+.chart-box {
+  position: relative;
+  width: 100%;
+  /* Altura base para Desktop */
+  height: 300px;
+}
+
+
+/* ==========================================================================
+   Responsividade (Ajustes Finais de Gráfico/Grid)
+   ========================================================================== */
+
+/* Telas de Tablet (max-width: 1023px) */
+@media (max-width: 1023px) {
+    /* ... outras regras ... */
+
+    /* Gráfico: Força o grid de gráficos para 1 coluna */
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* Ocupa a largura total (1 coluna) em telas menores */
+    .chart-card.wide {
+        grid-column: span 1; 
+    }
+    
+    .chart-box {
+        /* Reduz a altura do gráfico em tablets */
+        height: 250px; 
+    }
+}
+
+/* Telas de Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    /* ... outras regras ... */
+    
+    .chart-box {
+        /* Altura mínima do gráfico para mobile */
+        height: 200px; 
+    }
+}
+
+/* ========================================================================
+   FIX: CORPO DO CARD (Informações Gerais)
+   ======================================================================== */
+
+.tenant-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-wrap: wrap; /* <<< ESSENCIAL: Permite que os itens quebrem a linha */
+  gap: 1.5rem;
+}
+
+/* ========================================================================
+   FIX: GRUPO DE FORMULÁRIO (Nome, Domínio)
+   ======================================================================== */
+
+.form-group {
+  /* Isso diz ao item:
+     flex-grow: 1 (pode crescer)
+     flex-shrink: 1 (pode encolher)
+     flex-basis: 300px (tamanho base antes de crescer/encolher)
+  */
+  flex: 1 1 300px;
+
+  /* Largura mínima: Se for menor que isso, o 'flex-wrap' acima 
+     vai forçá-lo para a linha de baixo */
+  min-width: 280px;
+}
+
+/* Garante que os inputs ou os <p> em modo de "ver" 
+   ocupem 100% da coluna do .form-group */
+.form-group input,
+#tenant-domain,
+#tenant-name {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  height: auto; /* Remove altura fixa */
+  box-sizing: border-box; /* Garante que o padding não quebre o layout */
+}
+
+/* ========================================================================
+   FIX: PREVIEW DO LOGOTIPO
+   ======================================================================== */
+
+.logo-preview {
+  max-width: 300px;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+
+  /* <<< AS 3 REGRAS DE CENTRALIZAÇÃO >>> */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ajusta a imagem da logo para nunca estourar o container */
+.logo-preview img.logo-tenant {
+  width: auto;
+  max-width: 90%; /* Deixa uma margem interna */
+  height: auto;
+  max-height: 90%;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+/* ========================================================================
+   FIX: CAIXA DE COR (Esquema de Cores)
+   ======================================================================== */
+
+/* Isso garante que o label e a caixa de cor fiquem empilhados */
+.color-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Isso define um tamanho para a caixa de cor (modo de "ver" ou "editar") */
+.color-input input[type="color"],
+#colorPrimary {
+  width: 100px;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* ==========================================================================
+   BASE STYLES & GLOBAL UTILITIES
+   ========================================================================== */
+
+/* Mantido: Variáveis, Body, e Material Symbols */
+
+/* Main Wrapper */
+.main-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; /* Evita rolagem horizontal durante transição */
+}
+
+/* ==========================================================================
+   SIDEBAR STYLES: Push (Desktop) vs. Overlay (Mobile)
+   ========================================================================== */
+
+.sidebar {
+  flex-shrink: 0;
+  width: 16rem; /* Largura fixa do Sidebar */
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-card);
+  padding: 1rem;
+  border-right: 1px solid var(--color-border-color);
+  
+  /* Posição Fixa para Controlar o Estado (Fechado/Aberto) */
+  position: fixed; 
+  height: 100vh;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); 
+  z-index: 60; /* Z-index ALTO para estar na frente do Header e do Conteúdo */
+
+  /* Estado Aberto (Padrão para desktop) */
+  transform: translateX(0); 
+  transition: transform var(--transition-duration-300) var(--transition-timing-ease-in-out);
+}
+
+/* ESTADO FECHADO (via classe -ml-64 do Alpine/Tailwind) */
+.sidebar.-ml-64 {
+  transform: translateX(-100%); /* Desliza o sidebar para fora da tela */
+}
+
+/* Conteúdo Principal - Ajusta a margem para dar espaço ao sidebar */
+.main-content-area {
+  flex: 1 1 0%;
+  transition: margin-left var(--transition-duration-300) var(--transition-timing-ease-in-out);
+  min-width: 0;
+  
+  /* PUSH EFFECT (Desktop): Margem igual à largura do sidebar */
+  margin-left: 16rem; 
+}
+
+/* CORREÇÃO DO MAIN-CONTENT-AREA QUANDO O SIDEBAR FECHA */
+/* Se o sidebar está fechado (.-ml-64), a área de conteúdo volta a 0 de margem */
+.main-wrapper .sidebar.-ml-64 ~ .main-content-area {
+  margin-left: 0;
+}
+
+/* Estilos Mobile/Tablet (max-width: 1023px) */
+@media (max-width: 1023px) {
+  /* OVERLAY (Mobile/Tablet): Remove a margem no conteúdo principal */
+  /* O sidebar fixo agora age como um overlay */
+  .main-content-area {
+    margin-left: 0 !important; /* O !important garante que sobrescreve a regra de desktop */
+  }
+}
+
+/* ==========================================================================
+   HEADER STYLES
+   ========================================================================== */
+
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 50; /* Abaixo do sidebar */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border-color);
+  background-color: var(--color-card);
+}
+/* ... (Resto dos estilos do Header) ... */
+
+
+/* ========================================================================
+   REGRAS CHAVE PARA O SIDEBAR PUSH
+   ======================================================================== */
+
+/* Esta classe deve estar no elemento <main> que envolve todo o conteúdo da página */
+.main-content-area {
+  flex: 1 1 0%;
+  transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+  
+  /* CRUCIAL: Empurra o conteúdo para a direita (largura do sidebar) */
+  margin-left: 16rem; 
+}
+
+/* Regra para quando o sidebar está fechado (em desktop) */
+.main-wrapper .sidebar.-ml-64 ~ .main-content-area {
+  margin-left: 0;
+}
+
+/* Regra para mobile (overlay, sem push) */
+@media (max-width: 1023px) {
+  .main-content-area {
+    /* Força a margem a zero no celular, pois o sidebar é um overlay */
+    margin-left: 0 !important; 
+  }
 }
