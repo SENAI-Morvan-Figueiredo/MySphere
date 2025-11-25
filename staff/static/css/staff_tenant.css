@@ -1,82 +1,132 @@
+/* ========================================================================
+   RESETS E BASE
+   ======================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: "Be Vietnam Pro", sans-serif;
   background-color: #f6f7f8;
   color: #333;
 }
 
+/* ========================================================================
+   WRAPPER PRINCIPAL
+   ======================================================================== */
 .tenant-wrapper {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+  width: 100%;
 }
 
+/* ========================================================================
+   CABEÇALHO DA PÁGINA (TÍTULO + BOTÕES)
+   ======================================================================== */
 .tenant-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; /* <<< MODIFICADO: Alinha título e botão */
+  flex-wrap: wrap; /* <<< ADICIONADO: Permite quebra de linha */
+  gap: 1.5rem; /* <<< ADICIONADO: Espaçamento entre título e botão */
+  margin-bottom: 2rem; /* <<< MOVIDO: A margem fica no header todo */
+}
+
+.title-page {
+  flex: 1 1 300px; /* <<< ADICIONADO: Permite que o título cresça */
 }
 
 .tenant-header h1 {
-  font-size: 2rem;
+  /* <<< MELHORIA: Fonte fluida, se adapta à tela >>> */
+  font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
   font-weight: 900;
-  margin-bottom: 8px;
+  margin-bottom: 0.25rem;
   color: #000;
 }
 
 .tenant-header p {
   color: #6b7280;
   font-size: 1rem;
-  margin-bottom: 32px;
+  margin-bottom: 0; /* <<< REMOVIDO: A margem agora está no header */
 }
 
-/* --- Botões Form e Cancelar --- */
+.btn-form {
+  flex-shrink: 0; /* <<< ADICIONADO: Impede o botão de encolher */
+}
+
+/* ========================================================================
+   BOTÕES DE AÇÃO (EDITAR, CANCELAR, SALVAR)
+   ======================================================================== */
 .btn-edit,
-.btn-cancel, 
+.btn-cancel,
 .btn-save {
-  display: inline-block; 
-  padding: 10px 15px;
-  margin-left: 10px; 
-  text-decoration: none; 
-  border-radius: 5px; 
-  font-weight: bold;
+  display: inline-block;
+  padding: 10px 20px; /* <<< MELHORIA: Mais padding */
+  margin-left: 10px;
+  text-decoration: none;
+  border-radius: 8px; /* <<< MELHORIA: Mais arredondado */
+  font-weight: 600; /* <<< MELHORIA: Levemente mais forte */
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease; 
+  transition: all 0.2s ease;
   text-align: center;
+  border: 1px solid transparent; /* <<< ADICIONADO: Base para borda */
 }
 
-.btn-edit, .btn-save {
-  background-color: #007bff; 
-  color: #ffffff; 
-  border: 1px solid #007bff;
+.btn-edit,
+.btn-save {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #007bff;
 }
 
-.btn-edit:hover, .btn-save:hover {
-  background-color: #0056b3; 
-  transform: translateY(-1px);
+.btn-edit:hover,
+.btn-save:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-2px); /* <<< MELHORIA: Interação mais clara */
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
 .btn-cancel {
-  background-color: #f8f9fa; 
-  color: #343a40; 
-  border: 1px solid #ced4da; 
+  background-color: #f8f9fa;
+  color: #343a40;
+  border-color: #ced4da;
 }
 
 .btn-cancel:hover {
-  background-color: #e2e6ea; 
-  transform: translateY(-1px); 
+  background-color: #e2e6ea;
+  border-color: #adb5bd;
+  transform: translateY(-2px);
 }
 
-/* Cards gerais */
+/* ========================================================================
+   SEÇÕES E CARDS
+   ======================================================================== */
+
+.tenant-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* <<< ADICIONADO: Espaço entre todos os cards */
+}
+
+/* <<< MELHORIA: Estilos de Card unificados >>> */
 .tenant-card {
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */ /* <<< REMOVIDO: 'gap' do .tenant-sections cuida disso */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  overflow: hidden; /* <<< ADICIONADO: Garante que o card contenha o conteúdo */
 }
 
 .tenant-card-header {
-  padding: 0 1rem;
+  padding: 1.25rem 1.5rem; /* <<< MELHORIA: Padding consistente */
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -84,130 +134,119 @@ body {
   font-size: 1.125rem;
   font-weight: 700;
   color: #000;
+  margin: 0;
 }
 
 .tenant-card-header p {
   color: #6b7280;
   margin-top: 4px;
+  font-size: 0.9rem;
 }
 
 .tenant-card-body {
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
+  flex-wrap: wrap; /* <<< ADICIONADO: A chave da responsividade interna */
+  gap: 1.5rem; /* <<< ADICIONADO: Espaçamento entre os campos */
 }
 
+/* ========================================================================
+   CAMPOS DE FORMULÁRIO (INPUTS)
+   ======================================================================== */
 .form-group {
-  width: 50%;
+  /* width: 50%; */ /* <<< REMOVIDO: Largura fixa é ruim */
+  /* <<< MELHORIA: Layout fluido >>> */
+  flex: 1 1 300px; /* Cresce, encolhe, com base de 300px */
+  min-width: 280px; /* Largura mínima antes de quebrar */
 }
 
 .form-group label {
   display: block;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 6px;
+  font-weight: 600; /* <<< MELHORIA: Mais legível */
+  color: #374151; /* <<< MELHORIA: Cor mais escura */
+  margin-bottom: 8px;
 }
 
-.form-group input, 
-#tenant-domain, #tenant-name {
-  width: 85%;
-  padding: 10px;
+.form-group input,
+#tenant-domain,
+#tenant-name {
+  width: 100%; /* <<< MODIFICADO: Ocupa 100% do .form-group */
+  padding: 12px; /* <<< MELHORIA: Input mais alto */
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.95rem;
-  height: 1.25rem;
+  /* height: 1.25rem; */ /* <<< REMOVIDO: Altura era muito pequena e fixa */
+  height: auto;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-.input-with-prefix {
-  display: flex;
-  align-items: center;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.input-with-prefix span {
-  background-color: #f3f4f6;
-  color: #6b7280;
-  padding: 10px;
-  border-right: 1px solid #d1d5db;
-  font-size: 0.9rem;
-}
-
-.input-with-prefix input {
-  flex: 1;
-  border: none;
+/* <<< MELHORIA: Foco mais claro nos inputs >>> */
+.form-group input:focus {
   outline: none;
-  padding: 10px;
-  font-size: 0.95rem;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
-/* Upload de logo */
+/* ... (Estilos de .input-with-prefix permanecem os mesmos) ... */
+
+/* ========================================================================
+   UPLOAD DE LOGO
+   ======================================================================== */
 .logo-upload-section {
   display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap; /* <<< ADICIONADO: Permite quebrar em telas pequenas */
+  width: 100%;
 }
 
 .logo-preview {
-  width: 300px;
+  /* width: 300px; */ /* <<< REMOVIDO */
+  max-width: 300px; /* <<< ADICIONADO: Limite máximo */
+  width: 100%; /* <<< ADICIONADO: Ocupa o espaço, mas é flexível */
   height: 150px;
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   overflow: hidden;
-  border: 1px solid #eee; 
-}
-
-
-.logo-preview .material-symbols-outlined {
-  color: #9ca3af;
-  font-size: 32px;
-}
-
-.logo-upload-actions button {
-  background-color: #111827;
-  color: white;
-  border: none;
+  border: 2px dashed #e5e7eb; /* <<< MELHORIA: Aparência de "soltar arquivo" */
   border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
+  background-color: #f9fafb;
 }
 
-.logo-upload-actions button:hover {
-  background-color: #1f2937;
+.logo-preview img.logo-tenant {
+  width: auto; /* <<< MODIFICADO */
+  max-width: 100%; /* <<< ADICIONADO */
+  height: auto; /* <<< MODIFICADO */
+  max-height: 100%; /* <<< ADICIONADO */
+  border-radius: 4px; /* <<< MELHORIA: Leve arredondamento */
+  object-fit: contain; /* <<< ADICIONADO: Garante que a logo caiba */
 }
 
-.logo-upload-actions p {
+.logo-preview p {
   color: #6b7280;
-  font-size: 0.85rem;
-  margin-top: 4px;
 }
 
-/* Esquema de cores */
+.logo-upload-actions {
+  flex: 1 1 200px; /* <<< MELHORIA: Permite crescer */
+}
+
+/* ... (Estilos de .logo-upload-actions p, button, etc) ... */
+
+/* ========================================================================
+   ESQUEMA DE CORES
+   ======================================================================== */
 .color-settings {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
+  width: 100%;
 }
-
-.color-input,
-.color-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.color-input p,
-.color-preview p {
-  font-weight: 500;
-  color: #000;
-  font-size: 0.9rem;
-}
-
-.color-input input[type="color"], #colorPrimary {
-  width: 80px;
+/* ... (Estilos de .color-input, .color-preview, etc) ... */
+.color-input input[type="color"],
+#colorPrimary {
+  width: 100%; /* <<< MELHORIA: Ocupa o container */
+  max-width: 100px; /* <<< MELHORIA: Mas não fica gigante */
   height: 40px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -215,94 +254,190 @@ body {
   background: transparent;
 }
 
-.preview-boxes {
-  display: flex;
-  gap: 8px;
-}
-
-.preview-boxes div {
-  width: 40px;
+.color-box {
+  width: 100px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
-/* Botões */
-.tenant-actions {
+/* ========================================================================
+   LAYOUT EM LINHA (LOGO + CORES)
+   ======================================================================== */
+.tenant-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; /* <<< MODIFICADO: Mesmo gap do .tenant-sections */
+}
+
+/* ========================================================================
+   AÇÕES DO FORMULÁRIO (FINAL)
+   ======================================================================== */
+.form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Alinha botões à direita */
+  flex-wrap: wrap; /* <<< ADICIONADO: Permite quebra em telas pequenas */
   gap: 12px;
   border-top: 1px solid #e5e7eb;
   padding-top: 24px;
   margin-top: 24px;
 }
 
-.btn-light {
-  background-color: #e5e7eb;
-  color: #374151;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
+/* ========================================================================
+   RESPONSIVIDADE (MEDIA QUERIES)
+   ======================================================================== */
 
-.btn-light:hover {
-  background-color: #d1d5db;
-}
-
-.btn-primary {
-  background-color: #13a4ec;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background-color: #0d8ed6;
-}
-
-/* LINHA DE LOGOTIPO E CORES   */
-
-.tenant-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.tenant-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  padding: 1rem;
-}
-
-.tenant-card-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.logo-tenant {
-  width: 120px;
-  height: auto;
-  border-radius: 8px;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.color-box {
-  width: 80px;
-  height: 40px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
+/* Tablet e abaixo (empilha a linha de Logo/Cores) */
 @media (max-width: 900px) {
   .tenant-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Empilha as duas colunas */
   }
+}
+
+/* Celular (empilha o header e botões) */
+@media (max-width: 768px) {
+  .tenant-header {
+    flex-direction: column; /* Empilha título e botão */
+    align-items: flex-start; /* Alinha tudo à esquerda */
+    gap: 1rem;
+  }
+
+  .btn-form {
+    width: 100%; /* Botão no header ocupa 100% */
+  }
+
+  .btn-edit,
+  .btn-cancel {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  /* Faz os botões do fim do formulário ocuparem 100% */
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn-save,
+  .form-actions .btn-cancel {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  /* Reduz padding dos cards em telas menores */
+  .tenant-card-header {
+    padding: 1.25rem;
+  }
+
+  .tenant-card-body {
+    padding: 1.25rem;
+  }
+}
+
+/* Celulares pequenos (ajustes finos) */
+@media (max-width: 480px) {
+  .tenant-card-header {
+    padding: 1rem;
+  }
+
+  .tenant-card-body {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .logo-preview {
+    height: 120px; /* Preview de logo menor */
+  }
+}
+
+/* ========================================================================
+   FIX: CORPO DO CARD (Informações Gerais)
+   ======================================================================== */
+
+.tenant-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-wrap: wrap; /* <<< ESSENCIAL: Permite que os itens quebrem a linha */
+  gap: 1.5rem;
+}
+
+/* ========================================================================
+   FIX: GRUPO DE FORMULÁRIO (Nome, Domínio)
+   ======================================================================== */
+
+.form-group {
+  /* Isso diz ao item:
+     flex-grow: 1 (pode crescer)
+     flex-shrink: 1 (pode encolher)
+     flex-basis: 300px (tamanho base antes de crescer/encolher)
+  */
+  flex: 1 1 300px;
+
+  /* Largura mínima: Se for menor que isso, o 'flex-wrap' acima 
+     vai forçá-lo para a linha de baixo */
+  min-width: 280px;
+}
+
+/* Garante que os inputs ou os <p> em modo de "ver" 
+   ocupem 100% da coluna do .form-group */
+.form-group input,
+#tenant-domain,
+#tenant-name {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  height: auto; /* Remove altura fixa */
+  box-sizing: border-box; /* Garante que o padding não quebre o layout */
+}
+
+/* ========================================================================
+   FIX: PREVIEW DO LOGOTIPO
+   ======================================================================== */
+
+.logo-preview {
+  max-width: 300px;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+
+  /* <<< AS 3 REGRAS DE CENTRALIZAÇÃO >>> */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ajusta a imagem da logo para nunca estourar o container */
+.logo-preview img.logo-tenant {
+  width: auto;
+  max-width: 90%; /* Deixa uma margem interna */
+  height: auto;
+  max-height: 90%;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+/* ========================================================================
+   FIX: CAIXA DE COR (Esquema de Cores)
+   ======================================================================== */
+
+/* Isso garante que o label e a caixa de cor fiquem empilhados */
+.color-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Isso define um tamanho para a caixa de cor (modo de "ver" ou "editar") */
+.color-input input[type="color"],
+#colorPrimary {
+  width: 100px;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
 }
