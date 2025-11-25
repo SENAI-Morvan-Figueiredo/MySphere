@@ -247,3 +247,47 @@
   align-items: center;
 }
 
+/* Container dos botões */
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* espaço entre o editar e o deletar */
+}
+
+/* Remove form quebrando layout */
+.action-buttons form {
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo geral dos botões */
+.action-buttons a,
+.action-buttons button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background 0.2s ease-in-out;
+}
+
+/* Ícone Edit */
+.action-buttons a span {
+    color: #007bff; /* azul */
+    font-size: 20px;
+}
+
+/* Ícone Delete */
+.action-buttons button span {
+    color: #dc3545; /* vermelho */
+    font-size: 20px;
+}
+
+/* Hover */
+.action-buttons a:hover,
+.action-buttons button:hover {
+    background-color: #e5e5e5;
+}

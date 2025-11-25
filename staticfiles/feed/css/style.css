@@ -339,7 +339,19 @@ body {
   align-items: center;
   margin-bottom: 12px;
 }
+.btn-staff {
+    background: #2563eb;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+}
 
+.btn-staff:hover {
+    background: #1d4ed8;
+}
 .post-author {
   display: flex;
   gap: 12px;

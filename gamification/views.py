@@ -17,15 +17,22 @@ class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, ListView):
     model = Points
     context_object_name = 'points'
 
+    def get_queryset(self):
+        tenant = self.request.user.tenant
+        return Points.objects.filter(tenant=tenant)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         tenant = self.request.user.tenant
+
+        context['points'] = Points.objects.filter(tenant=tenant)
         context['tasks'] = Task.objects.filter(tenant=tenant)
         context['user_tasks'] = User_Task.objects.filter(task__tenant=tenant)
         context['conquistas'] = Conquista.objects.filter(tenant=tenant)
 
         return context
+
 
 
 # VIEW QUE RENDERIZA PONTOS E TASKS DO USER
@@ -54,7 +61,7 @@ class GameHomeView(TenantAccessMixin, ListView):
                     order_by=F('points_total').desc()
 
                 )
-            ).order_by('-points_total')
+            ).order_by('-points_atual')
 
             top5 = ranking[:5]
             user_line = ranking.filter(user=user).first()
