@@ -82,7 +82,7 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
 @require_POST
 @login_required
 def concluir_tarefa(request, task_id):
-    user_task = get_object_or_404(User_Task, id=task_id, user=request.user)
+    user_task = get_object_or_404(User_Task, task_id=task_id, user=request.user)
 
     if user_task.concluido:
         return redirect('game_home')
@@ -120,14 +120,23 @@ class TaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
     success_url = reverse_lazy('game_staff')
     
 class UserTaskCreateView(OnlyIsStaff, TenantAccessMixin, CreateView):
-    model = User_Task
     form_class = UserTaskForm
     template_name = "gamification/gamification_users_tasks_form.html"
     success_url = reverse_lazy('game_staff')
 
     def form_valid(self, form):
-        form.instance.atribuido_por = self.request.user 
-        return super().form_valid(form)
+        task = form.cleaned_data['task']
+        users = form.cleaned_data['users']
+        atribuido_por = self.request.user
+
+        for user in users:
+            User_Task.objects.get_or_create(
+                user=user,
+                task=task,
+                defaults={'atribuido_por': atribuido_por}
+            )
+
+        return redirect(self.success_url)
 
 # VIEWS - UPDATE 
 

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Task, User_Task, Conquista
+from accounts.models import User
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -20,9 +21,20 @@ class TaskForm(forms.ModelForm):
 
         
 class UserTaskForm(forms.ModelForm):
+    users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple, 
+        label="Atribuir para"
+    )
+    task = forms.ModelChoiceField(
+        queryset=Task.objects.all(),
+        label="Tarefa"
+    )
+
     class Meta:
-        model = User_Task
-        fields = ['user', 'task']
+        model = User_Task          
+        fields = ['users', 'task'] 
+
 
 class ConquistaForm(forms.ModelForm):
     class Meta:
