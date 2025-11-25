@@ -9,13 +9,20 @@
   padding: 2rem;
 }
 
+/* Ajuste o padding do main para mobile/tablet */
+@media (max-width: 1023px) {
+    .dashboard-main {
+        padding: 1rem; 
+    }
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Header */
+/* Header (mantido) */
 .header-card {
   background-color: #fff;
   padding: 1.5rem 2rem;
@@ -37,13 +44,18 @@
   gap: 1.5rem;
 }
 
+/* Grid 4 (Métricas) */
 .grid-4 {
+  /* Padrão: 4 colunas em desktop, mínimo de 200px por coluna */
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
+/* Grid 3 (Gráficos) */
 .grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* Padrão: Mínimo de 300px por coluna, mas com 3 colunas base para telas maiores */
+  grid-template-columns: repeat(3, minmax(300px, 1fr)); 
 }
+
 
 /* Cards */
 .card {
@@ -53,44 +65,14 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Metrics */
-.metric-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1rem;
-}
-
-.metric-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.metric-icon {
-  font-size: 2rem;
-  color: #6366f1; /* Indigo-500 */
-}
-
-.metric-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1e293b;
-}
-
-.metric-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0.5rem 0;
-}
-
-.metric-sub {
-  font-size: 0.875rem;
-}
-
-.metric-sub.green {
-  color: #16a34a; /* Verde */
-}
+/* Metrics (mantido) */
+.metric-card { display: flex; flex-direction: column; justify-content: space-between; padding: 1rem; }
+.metric-header { display: flex; align-items: center; gap: 0.75rem; }
+.metric-icon { font-size: 2rem; color: #6366f1; }
+.metric-title { font-size: 1.25rem; font-weight: 600; color: #1e293b; }
+.metric-value { font-size: 1.5rem; font-weight: 700; margin: 0.5rem 0; }
+.metric-sub { font-size: 0.875rem; }
+.metric-sub.green { color: #16a34a; }
 
 /* Charts */
 .chart-card {
@@ -100,7 +82,7 @@
 }
 
 .chart-card.wide {
-  grid-column: span 2;
+  grid-column: span 2; /* Em desktop, ocupa 2/3 da largura */
 }
 
 .chart-title {
@@ -118,16 +100,46 @@
 .chart-box {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 300px; /* Altura padrão para desktop */
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .grid-4 {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
+/* ==========================================================================
+   Responsividade (Ajustes Finais de Gráfico/Grid)
+   ========================================================================== */
 
-  .grid-3 {
-    grid-template-columns: 1fr;
-  }
+/* Telas de Tablet (max-width: 1024px) */
+@media (max-width: 1023px) {
+    
+    /* Métrica: Passa para 2 colunas */
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Gráfico: Passa para 1 coluna */
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* Ocupa a largura total (1 coluna) em telas menores */
+    .chart-card.wide {
+        grid-column: span 1; 
+    }
+    
+    .chart-box {
+        height: 250px; 
+    }
 }
+
+/* Telas de Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    /* Métrica: Passa para 1 coluna */
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-box {
+        height: 200px; 
+    }
+}
+

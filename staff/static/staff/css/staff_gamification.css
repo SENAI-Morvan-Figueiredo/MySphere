@@ -1,293 +1,443 @@
 /* ========================================================================
-   HERDA AS VARIÁVEIS DO ARQUIVO PRINCIPAL
+   VARIÁVEIS & RESET
    ======================================================================== */
 :root {
   --color-zinc-50: #fafafa;
   --color-zinc-100: #f4f4f5;
   --color-zinc-200: #e4e4e7;
   --color-zinc-300: #d4d4d8;
+  --color-zinc-500: #71717a;
   --color-zinc-700: #3f3f46;
   --color-zinc-900: #18181b;
   --color-white: #ffffff;
+  
+  /* Cores de destaque baseadas no botão existente */
+  --color-primary: #624BFF;
+  --color-primary-hover: #5535ff;
+  --color-primary-light: #eeebff; /* Fundo suave */
+  
+  --color-success: #10b981;
+  --color-success-bg: #d1fae5;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fee2e2;
 
   --rounded-default: 0.25rem;
   --rounded-lg: 0.5rem;
-  --rounded-xl: 0.75rem;
+  --rounded-xl: 1rem;
 
-  --transition-duration-200: 200ms;
-  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+* { box-sizing: border-box; }
 
 /* ========================================================================
    LAYOUT GERAL
    ======================================================================== */
-   
 .container-all {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Melhor para scroll */
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: var(--color-zinc-50);
 }
 
 .main-content {
-  background-color: rgba(250, 250, 250, 0.6);
+  background-color: var(--color-white);
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   border-radius: var(--rounded-xl);
   padding: 2rem;
+  box-shadow: var(--shadow-md);
+  /* Sutil borda para destacar do fundo */
+  border: 1px solid rgba(255, 255, 255, 0.5); 
 }
 
 /* ========================================================================
-   TÍTULO E INTRODUÇÃO
+   CABEÇALHO & BOTÕES
    ======================================================================== */
-
-.cabecalho {
+.cabecalho-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-.title-page {
-  margin-bottom: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .title-page h1 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
   color: var(--color-zinc-900);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.025em;
 }
 
 .title-page p {
-  color: var(--color-zinc-700);
-  margin: 0;
-}
-
-/* ========================================================================
-   CARD PRINCIPAL
-   ======================================================================== */
-.card {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-zinc-200);
-  border-radius: var(--rounded-xl);
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* ========================================================================
-   TABELA DE TAREFAS
-   ======================================================================== */
-.table-wrap {
-  overflow-y: auto;
-  height: 55.5vh;
-  background-color: var(--color-white);
-  border-radius: 0 var(--rounded-lg) var(--rounded-lg) var(--rounded-lg);
-}
-
-.tasks-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
-}
-
-.tasks-table thead {
-  background-color: var(--color-zinc-100);
-}
-
-.tasks-table th {
-  text-align: left;
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--color-zinc-700);
-  border-bottom: 1px solid var(--color-zinc-200);
-}
-
-.tasks-table td {
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--color-zinc-700);
-  border-bottom: 1px solid var(--color-zinc-200);
-}
-
-.tasks-table tr:hover {
-  background-color: var(--color-zinc-50);
-  transition: background-color var(--transition-duration-200) var(--transition-ease);
-}
-
-/* Alinhamento de colunas */
-.center {
-  text-align: center;
-}
-
-.empty {
-  text-align: center;
   color: var(--color-zinc-500);
-  font-style: italic;
+  margin: 0;
+  font-size: 0.95rem;
 }
-
-/* ========================================================================
-   RESPONSIVIDADE
-   ======================================================================== */
-@media (max-width: 768px) {
-  .main-content {
-    padding: 1rem;
-  }
-
-  .tasks-table {
-    font-size: 0.8rem;
-    min-width: 100%;
-  }
-}
-
-/* ========================================================================
-   TABS - BARRA DE NAVEGAÇÃO
-   ======================================================================== */
-   
-.tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  border-bottom: 1px solid var(--color-zinc-200);
-  margin-bottom: 1.25rem;
-}
-
-.tab {
-  cursor: pointer;
-  padding: 0.6rem 1.25rem;
-  border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
-  background-color: var(--color-zinc-100);
-  color: var(--color-zinc-700);
-  transition: all var(--transition-duration-200) var(--transition-ease);
-}
-
-.tab:hover {
-  background-color: var(--color-zinc-200);
-}
-
-.tab.active {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-zinc-200);
-  border-bottom: none;
-  font-weight: 700;
-  color: var(--color-zinc-900);
-}
-
-/* ========================================================================
-   CONTEÚDO DE CADA ABA
-   ======================================================================== */
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* ========================================================================
-    BOTÃO DO FORMS
-   ======================================================================== */
-
-.btn-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
 
 .btn-form {
   display: inline-flex;
   align-items: center;
-  gap: 6px;                  
-  background-color: #624BFF;
+  gap: 8px;                  
+  background-color: var(--color-primary);
   color: white;
   border: none;
-  padding: 10px 20px;        
-  border-radius: 10px;       
-  font-size: 15px;
-  font-weight: 250;
+  padding: 0.75rem 1.5rem;        
+  border-radius: var(--rounded-lg);       
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;     
-  transition: 0.2s ease-in-out;
-  box-shadow: 0px 2px 6px rgba(98, 75, 255, 0.25);
-  margin-bottom: 1rem;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);
 }
 
 .btn-form:hover {
-  background-color: #5535ff;
-  box-shadow: 0px 3px 9px rgba(98, 75, 255, 0.35);
-  transform: translateY(-1px);
+  background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(98, 75, 255, 0.3);
 }
 
-/* ==========================
-   USERS
-========================== */
+/* ========================================================================
+   NAVEGAÇÃO (TABS)
+   ======================================================================== */
+.tabs-container {
+  /* Permite scroll horizontal em mobile sem quebrar layout */
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 5px; /* Espaço para scrollbar sutil */
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--color-zinc-100);
+  min-width: max-content; /* Garante que tabs não quebrem */
+}
+
+.tab {
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--rounded-lg) var(--rounded-lg) 0 0;
+  color: var(--color-zinc-500);
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+  font-size: 0.95rem;
+}
+
+.tab:hover {
+  color: var(--color-primary);
+  background-color: var(--color-zinc-50);
+}
+
+.tab.active {
+  color: var(--color-primary);
+  font-weight: 700;
+  background-color: transparent; /* Remove background cinza antigo */
+}
+
+/* Linha indicadora animada abaixo da tab ativa */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ========================================================================
+   TABELA & ESTRUTURA DE DADOS
+   ======================================================================== */
+.table-wrap {
+  width: 100%;
+  /* Removemos altura fixa para deixar a página fluir naturalmente */
+  overflow: visible; 
+  background-color: transparent;
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: separate; /* Permite border-radius nas rows */
+  border-spacing: 0;
+}
+
+.tasks-table thead {
+  background-color: var(--color-zinc-50);
+}
+
+.tasks-table th {
+  text-align: left;
+  padding: 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--color-zinc-500);
+  border-bottom: 2px solid var(--color-zinc-100);
+}
+
+.tasks-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-zinc-700);
+  border-bottom: 1px solid var(--color-zinc-100);
+  vertical-align: middle;
+}
+
+.tasks-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tasks-table tr:hover td {
+  background-color: var(--color-zinc-50);
+}
+
+/* Coluna de ações fixada à direita em desktop se desejar, mas simples aqui */
+.th-actions {
+  text-align: right;
+}
+
+/* ========================================================================
+   ELEMENTOS INTERNOS (IMAGENS, BADGES, STATUS)
+   ======================================================================== */
+   
+/* Imagens */
+.table-img {
+  display: block;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--shadow-sm);
+}
 
 .profile-avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 12px;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 0 0 1px var(--color-zinc-200);
 }
 
-.default-avatar,
 .default-avatar-large {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  font-weight: 600;
+  border-radius: 50%;
+  font-size: 0.8rem;
 }
 
 .perfil-user {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  gap: 0.75rem;
 }
 
-/* Container dos botões */
+.username-text {
+  font-weight: 500;
+  color: var(--color-zinc-900);
+}
+
+/* Badges de Status */
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status.done {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.status.pending {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* Badge de Pontos */
+.badge-points {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* User Info Cell (Pontos) */
+.user-info-cell {
+  display: flex;
+  flex-direction: column;
+}
+.u-name { font-weight: 600; color: var(--color-zinc-900); }
+.u-id { font-size: 0.75rem; color: var(--color-zinc-500); }
+
+/* Botões de Ação */
 .action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem; /* espaço entre o editar e o deletar */
+  display: flex;
+  justify-content: flex-end; /* Alinha a direita no desktop */
+  gap: 0.5rem;
 }
 
-/* Remove form quebrando layout */
-.action-buttons form {
-    margin: 0;
-    padding: 0;
-}
-
-/* Estilo geral dos botões */
 .action-buttons a,
 .action-buttons button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rounded-lg);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.action-buttons a:hover { background-color: var(--color-primary-light); }
+.action-buttons button:hover { background-color: var(--color-danger-bg); }
+
+.action-buttons a span { color: var(--color-primary); font-size: 1.2rem; }
+.action-buttons button span { color: var(--color-danger); font-size: 1.2rem; }
+
+
+/* ========================================================================
+   RESPONSIVIDADE FORA DA CAIXA (TABLE TO CARDS)
+   ======================================================================== */
+   
+/* Tab Content logic */
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  
+  .main-content {
+    padding: 1rem;
+    background-color: transparent; /* Remove fundo branco no mobile para parecer nativo */
+    box-shadow: none;
     border: none;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background 0.2s ease-in-out;
-}
+  }
+  
+  .container-all {
+    padding: 0.5rem;
+  }
 
-/* Ícone Edit */
-.action-buttons a span {
-    color: #007bff; /* azul */
-    font-size: 20px;
-}
+  /* Cabeçalho mais compacto */
+  .cabecalho-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  
+  .btn-container {
+    width: 100%;
+  }
+  
+  .btn-form {
+    width: 100%;
+    justify-content: center;
+  }
 
-/* Ícone Delete */
-.action-buttons button span {
-    color: #dc3545; /* vermelho */
-    font-size: 20px;
-}
+  /* ---- A MÁGICA DOS CARDS ---- */
+  
+  .tasks-table, 
+  .tasks-table tbody, 
+  .tasks-table tr, 
+  .tasks-table td {
+    display: block;
+    width: 100%;
+  }
 
-/* Hover */
-.action-buttons a:hover,
-.action-buttons button:hover {
-    background-color: #e5e5e5;
+  .tasks-table thead {
+    display: none; /* Esconde cabeçalho da tabela */
+  }
+
+  .tasks-table tr {
+    background-color: var(--color-white);
+    margin-bottom: 1rem;
+    border-radius: var(--rounded-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-zinc-200);
+    padding: 1rem;
+    position: relative;
+  }
+
+  .tasks-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--color-zinc-200);
+  }
+  
+  .tasks-table td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 0.5rem;
+    justify-content: center; /* Centraliza ações no card */
+  }
+
+  /* Pseudo-elemento para criar o label baseado no HTML data-label */
+  .tasks-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-zinc-500);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-right: 1rem;
+    text-align: left;
+  }
+
+  /* Ajustes específicos para mobile */
+  .action-buttons {
+    width: 100%;
+    justify-content: center;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+  }
+  
+  .action-buttons a, 
+  .action-buttons button {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-zinc-50); /* Fundo sutil nos botões mobile */
+  }
+  
+  /* Layout específico da imagem no card */
+  .tasks-table td[data-label="Foto"] {
+    justify-content: space-between;
+  }
+  
+  .empty {
+    text-align: center;
+    font-style: italic;
+    background: none;
+    box-shadow: none;
+    border: none !important;
+  }
 }

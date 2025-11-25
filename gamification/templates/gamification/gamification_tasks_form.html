@@ -1,29 +1,34 @@
 {% extends 'staff/staff_home.html' %} 
 {% load static %} 
-{% comment %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'gamification/css/gamification_tasks_form.css' %}">
 {% endblock %} 
-{% endcomment %}
+
 {% block content %}
 
-<main class="wrap">
-  <header class="page-header">
-    <div class="title-block">
-      <h1>Criar Task</h1>
-      <p class="subtitle">Defina uma nova tarefa para o sistema de gamificação</p>
-    </div>
-  </header>
+<div class="container-all">
+  <main class="main-content">
+    
+    <header class="page-header">
+      <div class="title-page">
+        <h1>Nova Task</h1>
+        <p class="subtitle">Defina os detalhes, pontuação e requisitos da nova tarefa.</p>
+      </div>
+    </header>
 
-  <section class="card">
-    <form method="post" class="task-form">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      
       {{ form.as_p }}
+
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'game_staff' %}" class="btn btn-ghost">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Criar Task</button>
       </div>
     </form>
-    <a href="{% url 'game_staff' %}">Voltar</a>
-  </section>
-</main>
+    
+  </main>
+</div>
+
 {% endblock content %}
