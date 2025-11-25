@@ -76,10 +76,7 @@
                     <a href="{% url 'game_home' %}" class="menu-item">
                         <span class="icon">🏅</span> Gamificação
                     </a>
-                    <a href="#" class="menu-item">
-                        <span class="icon">🏆</span> Conquistas
-                    </a>
-                    <a href="{% url 'listar_eventos_compacto' %}" class="menu-item active">
+                    <a href="{% url 'listar_eventos' %}" class="menu-item active">
                         <span class="icon">🗓️</span> Eventos
                     </a>
                     <a href="{% url 'chat' %}" class="menu-item">
@@ -245,7 +242,7 @@
                 </svg>
                 <span>Gamif.</span>
             </a>
-            <a href="{% url 'listar_eventos_compacto' %}" class="bottom-nav-item active" aria-label="Eventos" aria-current="page">
+            <a href="{% url 'listar_eventos' %}" class="bottom-nav-item active" aria-label="Eventos" aria-current="page">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
