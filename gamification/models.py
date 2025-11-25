@@ -81,6 +81,10 @@ class Points(models.Model):
         self.refresh_from_db()
         self.atualizar_nivel()
 
+    def add_task_points(self, amount):
+        self.points_total = F('points_total') + amount
+        self.save()
+
 
 class User_Conquista(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="conquists_received")

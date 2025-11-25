@@ -13,7 +13,7 @@ urlpatterns = [
     path('usertask/<int:pk>/delete/', UserTaskDeleteView.as_view(), name='user_task_delete'),
 
     path('', GameHomeView.as_view(), name='game_home'), 
-    path('usertask/<int:task_id>/concluir/', concluir_tarefa, name='concluir_tarefa'),
+    path("usertask/<int:usertask_id>/concluir/", concluir_tarefa, name="concluir_tarefa"),
 
     path('conquista/', ConquistaListView.as_view(), name='conquista_list'),
     

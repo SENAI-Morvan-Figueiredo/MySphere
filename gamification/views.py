@@ -30,7 +30,7 @@ class StaffGamificationView(OnlyIsStaff, TenantAccessMixin, ListView):
 
 # VIEW QUE RENDERIZA PONTOS E TASKS DO USER
 
-class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
+class GameHomeView(TenantAccessMixin, ListView):
     model = Points
     template_name = 'gamification/gamification_points_user.html'
     context_object_name = 'points'
@@ -81,34 +81,14 @@ class GameHomeView(OnlyIsStaff, TenantAccessMixin, ListView):
 
 @require_POST
 @login_required
-def concluir_tarefa(request, task_id):
-    user_task = get_object_or_404(User_Task, task_id=task_id, user=request.user)
+def concluir_tarefa(request, usertask_id):
+    user_task = get_object_or_404(User_Task, id=usertask_id, user=request.user)
 
     if user_task.concluido:
         return redirect('game_home')
 
     user_task.concluido = True
     user_task.save()
-
-    pontos_user, created = Points.objects.get_or_create(
-        user=request.user,
-        defaults={
-            'tenant': request.user.tenant,
-            'points_atual': 0,
-            'points_total': 0,
-            'nivel': 'Iniciante'
-        }
-    )
-
-    if user_task.task.pontos > 0:
-        pontos_user.add_points(user_task.task.pontos)
-
-    if user_task.task.conquista:
-        User_Conquista.objects.get_or_create(
-            user=request.user,
-            conquista=user_task.task.conquista
-        )
-
     return redirect('game_home')
 
 # VIEWS - CREATE
