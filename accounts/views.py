@@ -118,14 +118,12 @@ class Users(ListView):
 
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'  
-    redirect_authenticated_user = True     
         
     def get_success_url(self):
         user = self.request.user
         if user.is_superuser:
             return reverse('tenant_list')
-        elif user.tenant:
-            return reverse('feed:feed')
+        return reverse('feed:feed')
     
 ROOT_URLCONF = 'MySphere.urls'
 
