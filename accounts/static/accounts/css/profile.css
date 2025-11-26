@@ -271,7 +271,7 @@
     justify-content: center;
     gap: 8px;
     padding: 12px;
-    color: #2563eb;
+    color: #fff;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s;
@@ -483,7 +483,7 @@
 }
 
 .auth-form-footer a {
-    color: #2563eb;
+    color: #ffffff;
     font-weight: 600;
     text-decoration: none;
 }
@@ -873,4 +873,11 @@
         margin: 0;
         box-sizing: border-box;
     }
+}
+
+.main-content-message {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    width: 100%;
 }
