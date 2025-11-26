@@ -199,7 +199,8 @@
             <thead>
               <tr>
                 <th>Usuário</th>
-                <th>Pontos</th>
+                <th>Pontos Atuais</th>
+                <th>Pontos Totais</th>
                 <th>Nível</th>
                 <th>Última atualização</th>
                 <th>Tenant</th>
@@ -214,14 +215,15 @@
                     <span class="u-id">ID: {{ p.user.id }}</span>
                   </div>
                 </td>
-                <td data-label="Pontos"><span class="badge-points gold">{{ p.pontos }}</span></td>
+                <td data-label="Pontos"><span class="badge-points gold">{{ p.points_atual }}</span></td>
+                <td data-label="Pontos"><span class="badge-points gold">{{ p.points_total }}</span></td>
                 <td data-label="Nível">{{ p.nivel }}</td>
                 <td data-label="Última atualização">{{ p.ultima_atualizacao }}</td>
                 <td data-label="Tenant">{{ p.tenant }}</td>
               </tr>
               {% empty %}
               <tr>
-                <td colspan="5" class="empty">
+                <td colspan="6" class="empty">
                   Nenhum registro de pontos encontrado.
                 </td>
               </tr>
