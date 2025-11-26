@@ -6,6 +6,9 @@ class UserFormTenant(forms.ModelForm): # add user via staff
     class Meta:
         model = User
         fields = ['username', 'email', 'data_nascimento', 'role', 'foto', 'is_staff']
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'})
+        }
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -26,6 +29,9 @@ class UserFormStaff(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'data_nascimento', 'role', 'foto']
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'})
+        }
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -46,3 +52,6 @@ class UserEditFormStaff(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'data_nascimento', 'role', 'foto']
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'})
+        }
