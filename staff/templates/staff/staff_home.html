@@ -67,12 +67,6 @@
                 >
                 <p>Gamificação</p>
               </a>
-              <a class="nav-item group" href="#">
-                <span class="material-symbols-outlined group-hover-fill-1"
-                  >calendar_month</span
-                >
-                <p>Eventos</p>
-              </a>
               <a class="nav-item group" href="{% url 'tenant_staff' %}">
                 <span class="material-symbols-outlined group-hover-fill-1"
                   >business</span
@@ -82,12 +76,15 @@
             </nav>
           </div>
           <div class="footer-section">
-            <a class="footer-link group" href="#">
-              <span class="material-symbols-outlined group-hover-fill-1"
-                >logout</span
-              >
-              <p>Sair</p>
+            <a class="footer-link group" href="#"
+              onclick="document.getElementById('logout-form').submit(); return false;">
+                <span class="material-symbols-outlined group-hover-fill-1">logout</span>
+                <p>Sair</p>
             </a>
+
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                {% csrf_token %}
+            </form>
           </div>
         </div>
       </aside>
