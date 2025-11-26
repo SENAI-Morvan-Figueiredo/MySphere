@@ -1,132 +1,263 @@
+/* ========================================================================
+   gamification_forms.css
+   Estilos unificados para formulários de gamificação (Tasks, Users, Conquistas)
+   Baseado em staff_gamification.css
+   ======================================================================== */
+
 :root {
-  --bg: #F5F7FB;
-  --card-bg: #FFFFFF;
-  --primary: #4C6FFF;
-  --text: #1F2937;
-  --muted: #6B7280;
-  --border: #E6E9F2;
-  --radius: 12px;
-  --soft-shadow: 0 6px 18px rgba(33, 41, 61, 0.06);
-  --max-width: 700px;
+  /* Herança de variáveis do staff_gamification.css para consistência */
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-500: #71717a;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-900: #18181b;
+  --color-white: #ffffff;
+  
+  --color-primary: #624BFF;
+  --color-primary-hover: #5535ff;
+  --color-primary-light: #eeebff;
+  
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+
+  --rounded-default: 0.25rem;
+  --rounded-lg: 0.5rem;
+  --rounded-xl: 1rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { box-sizing: border-box; }
+/* Reutilizando estrutura do layout principal */
+.container-all {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: var(--color-zinc-50);
+}
 
-body {
+.main-content {
+  background-color: var(--color-white);
+  width: 100%;
+  max-width: 800px; /* Mais estreito que a tabela para focar no formulário */
+  border-radius: var(--rounded-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin-top: 2rem;
+}
+
+/* Cabeçalho da Página */
+.page-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-zinc-100);
+  padding-bottom: 1.5rem;
+}
+
+.title-page h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-zinc-900);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.title-page .subtitle {
+  color: var(--color-zinc-500);
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-.wrap {
-  max-width: var(--max-width);
-  margin: 48px auto;
-  padding: 24px;
+/* Estilização do Formulário Django (form.as_p) */
+form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.25rem;
 }
 
-.page-header {
+/* Wrapper de cada campo (Django renderiza em <p>) */
+form p {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.title-block h1 {
+  flex-direction: column;
+  gap: 0.5rem;
   margin: 0;
-  font-size: 1.6rem;
 }
 
-.subtitle {
-  margin-top: 6px;
-  color: var(--muted);
+/* Labels */
+form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-zinc-700);
+}
+
+/* Inputs, Selects, Textareas */
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="password"],
+form input[type="url"],
+form input[type="date"],
+form input[type="datetime-local"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-zinc-300);
+  border-radius: var(--rounded-lg);
+  background-color: var(--color-white);
+  font-family: inherit;
   font-size: 0.95rem;
+  color: var(--color-zinc-900);
+  transition: var(--transition);
+  outline: none;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Input de Arquivo (File Upload) */
+form input[type="file"] {
+  padding: 0.5rem;
+  border: 1px dashed var(--color-zinc-300);
+  background-color: var(--color-zinc-50);
+  width: 100%;
+  border-radius: var(--rounded-lg);
+  cursor: pointer;
+}
+form input[type="file"]::file-selector-button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--rounded-default);
+  border: none;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+form input[type="file"]::file-selector-button:hover {
+  background-color: var(--color-zinc-200);
+}
+
+/* Checkboxes */
+form p:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+form input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+/* Ajusta o label do checkbox para não ser bold/block */
+form p:has(input[type="checkbox"]) label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Mensagens de Ajuda (help_text) */
+.helptext {
+  font-size: 0.8rem;
+  color: var(--color-zinc-500);
+  margin-top: -0.25rem;
+}
+
+/* Botões de Ação */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-zinc-100);
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--rounded-lg);
+  font-weight: 600;
   font-size: 0.95rem;
-  padding: 10px 16px;
-  border-radius: 10px;
-  transition: all .2s ease;
+  cursor: pointer;
   text-decoration: none;
+  transition: var(--transition);
+  border: none;
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: #fff;
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25);
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background-color: var(--color-primary-hover);
   transform: translateY(-2px);
-  box-shadow: var(--soft-shadow);
+  box-shadow: 0 6px 16px rgba(98, 75, 255, 0.35);
 }
 
 .btn-ghost {
-  background: transparent;
-  border: 1px solid rgba(76,111,255,0.2);
-  color: var(--primary);
+  background-color: transparent;
+  color: var(--color-zinc-500);
 }
 
 .btn-ghost:hover {
-  box-shadow: var(--soft-shadow);
+  background-color: var(--color-zinc-100);
+  color: var(--color-zinc-900);
 }
 
-.card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--soft-shadow);
-  padding: 24px;
-  border: 1px solid var(--border);
-}
+/* ========================================================================
+   RESPONSIVIDADE
+   ======================================================================== */
+@media (max-width: 640px) {
+  .container-all {
+    padding: 0; /* Full width no mobile */
+  }
 
-.user-task-form p {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 18px;
-}
+  .main-content {
+    border-radius: 0; /* Remove bordas arredondadas no full mobile */
+    box-shadow: none;
+    border: none;
+    margin-top: 0;
+    padding: 1.5rem;
+    min-height: 100vh;
+  }
 
-.user-task-form label {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 0.95rem;
-}
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .title-page h1 {
+    font-size: 1.5rem;
+  }
 
-.user-task-form input,
-.user-task-form select,
-.user-task-form textarea {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-family: inherit;
-  transition: border-color .2s;
-}
+  .form-actions {
+    flex-direction: column-reverse; /* Salvar em cima, Voltar embaixo */
+    gap: 0.75rem;
+  }
 
-.user-task-form input:focus,
-.user-task-form select:focus,
-.user-task-form textarea:focus {
-  border-color: var(--primary);
-  outline: none;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-@media (max-width: 600px) {
-  .wrap { padding: 16px; margin: 20px; }
-  .user-task-form p { margin-bottom: 14px; }
+  .btn {
+    width: 100%;
+  }
 }

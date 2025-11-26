@@ -6,12 +6,13 @@
 {% block content %}
 <div class="container-all">
   <main class="main-content">
-    <div>
+    <div class="cabecalho-wrapper">
       <div class="cabecalho">
         <div class="title-page">
           <h1>Gestão de Gamificação</h1>
           <p>Administre tarefas, pontos e o ranking de usuários.</p>
         </div>
+      </div> 
       <div class="btn-container"
           data-url-task="{% url 'task_create' %}"
           data-url-user-task="{% url 'user_task_create' %}"
@@ -21,15 +22,17 @@
               Nova Tarefa
           </a>
       </div>
-      </div> 
+    </div>
+
+    <div class="tabs-container">
       <div class="tabs">
         <div class="tab active" data-tab="tarefas">Tarefas</div>
         <div class="tab" data-tab="conquistas">Conquistas</div>
         <div class="tab" data-tab="tarefas_user">Atribuição</div>
         <div class="tab" data-tab="pontos">Pontos</div>
       </div>
+    </div>
 
-      <!-- INICIO DAS TASKS -->
       <section id="tarefas" class="tab-content active"> 
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks do sistema">
@@ -40,26 +43,26 @@
                 <th>Pontos</th>
                 <th>Criado por</th>
                 <th>Criada em</th>
-                <th></th>
+                <th class="th-actions">Ações</th>
               </tr>
             </thead>
             <tbody>
               {% for task in tasks %}
               <tr>
-                <td>{{ task.titulo }}</td>
-                <td>{{ task.descricao|truncatechars:80 }}</td>
-                <td>{{ task.pontos }}</td>
-                <td>{{ task.criado_por.username }}</td>
-                <td>{{ task.criado_em |date:"d/m/Y" }}</td>
-                <td>
+                <td data-label="Título">{{ task.titulo }}</td>
+                <td data-label="Descrição">{{ task.descricao|truncatechars:80 }}</td>
+                <td data-label="Pontos"><span class="badge-points">{{ task.pontos }} XP</span></td>
+                <td data-label="Criado por">{{ task.criado_por.username }}</td>
+                <td data-label="Criada em">{{ task.criado_em |date:"d/m/Y" }}</td>
+                <td data-label="Ações">
                   <div class="action-buttons">
-                    <a href="{% url 'task_edit' task.pk %}">
+                    <a href="{% url 'task_edit' task.pk %}" title="Editar">
                         <span class="material-symbols-outlined">edit</span>
                     </a>
 
                     <form method="post" action="{% url 'task_delete' task.pk %}">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">
+                      <button type="submit" class="btn btn-danger" title="Excluir">
                         <span class="material-symbols-outlined">delete</span>
                       </button>
                     </form>
@@ -75,44 +78,41 @@
           </table>
         </div>
       </section>
-      <!-- FIM DAS TASKS -->
-      <!-- INICIO DAS CONQUISTAS -->
       <section id="conquistas" class="tab-content"> 
         <div class="table-wrap">
-          <table class="tasks-table" aria-label="Lista de tasks do sistema">
+          <table class="tasks-table" aria-label="Lista de conquistas">
             <thead>
                 <tr>
                     <th>Conquista</th>
                     <th>Foto</th>
                     <th>Descrição</th>
                     <th>Data</th>
-                    <th></th>
+                    <th class="th-actions">Ações</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for c in conquistas %}
                 <tr>
-                    <td>{{ c.nome }}</td>
-                    <td>
+                    <td data-label="Conquista"><strong>{{ c.nome }}</strong></td>
+                    <td data-label="Foto">
                       {% if c.imagem %}
-                        <img src="{{ c.imagem.url }}" alt="{{ c.nome }}"
-                        style="display: block; margin: 0 auto; max-width: 60px; height: 50px; ">
+                        <img src="{{ c.imagem.url }}" alt="{{ c.nome }}" class="table-img">
                       {% else %}
-                        <p>Não Possui imagem</p>
+                        <span class="no-img">Sem img</span>
                       {% endif %}
                     </td>
-                    <td>{{ c.descricao }}</td>
-                    <td>{{ c.criado_em |date:"d/m/Y" }}</td>
-                    <td>
+                    <td data-label="Descrição">{{ c.descricao }}</td>
+                    <td data-label="Data">{{ c.criado_em |date:"d/m/Y" }}</td>
+                    <td data-label="Ações">
                       <div class="action-buttons">
-                        <a href="{% url 'conquista_edit' c.pk %}">
+                        <a href="{% url 'conquista_edit' c.pk %}" title="Editar">
                             <span class="material-symbols-outlined">edit</span>
                         </a>
 
                         <form method="post" action="{% url 'conquista_delete' c.pk %}">
                           {% csrf_token %}
-                          <button type="submit" class="btn btn-danger">
+                          <button type="submit" class="btn btn-danger" title="Excluir">
                             <span class="material-symbols-outlined">delete</span>
                           </button>
                         </form>
@@ -121,15 +121,13 @@
                 </tr>    
                 {% empty %}
                 <tr>
-                    <td colspan="5">Você ainda não possui conquistas.</td>
+                    <td colspan="5" class="empty">Você ainda não possui conquistas.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         </div>
       </section>
-      <!-- FIM DAS CONQUISTAS -->
-      <!-- ATRIBUIÇÃO DE USERS -->
       <section id="tarefas_user" class="tab-content">
         <div class="table-wrap">
           <table class="tasks-table" aria-label="Lista de tasks de usuários">
@@ -140,13 +138,13 @@
                 <th>Atribuído por</th>
                 <th>Concluído</th>
                 <th>Concluído em</th>
-                <th></th>
+                <th class="th-actions">Ações</th>
               </tr>
             </thead>
             <tbody>
               {% for ut in user_tasks %}
               <tr>
-                <td>
+                <td data-label="Usuário">
                     <div class="perfil-user">
                     {% if ut.user.foto %}
                     <img src="{{ ut.user.foto.url }}" alt="{{ ut.user.username }}" class="profile-avatar" />
@@ -155,29 +153,29 @@
                         {{ ut.user.username|slice:":1"|upper }}
                     </div>
                     {% endif %}
-                    <div>{{ ut.user.username }}</div>
+                    <span class="username-text">{{ ut.user.username }}</span>
                     </div>
                 </td>
-                <td>{{ ut.task.titulo }}</td>
-                <td>
+                <td data-label="Task">{{ ut.task.titulo }}</td>
+                <td data-label="Atribuído por">
                   {% if ut.atribuido_por %}
                   {{ ut.atribuido_por.username }}
                   {%else %}—{% endif %}
                 </td>
-                <td>
+                <td data-label="Concluído">
                   {% if ut.concluido %}<span class="status done">Sim</span>
                   {%else %}<span class="status pending">Não</span>{% endif %}
                 </td>
-                <td>{{ ut.concluido_em|default:"—" }}</td>
-                <td>
+                <td data-label="Concluído em">{{ ut.concluido_em|default:"—" }}</td>
+                <td data-label="Ações">
                   <div class="action-buttons">
-                    <a href="{% url 'user_task_edit' ut.pk %}">
+                    <a href="{% url 'user_task_edit' ut.pk %}" title="Editar">
                         <span class="material-symbols-outlined">edit</span>
                     </a>
 
                     <form method="post" action="{% url 'user_task_delete' ut.pk %}">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">
+                      <button type="submit" class="btn btn-danger" title="Excluir">
                         <span class="material-symbols-outlined">delete</span>
                       </button>
                     </form>
@@ -195,11 +193,9 @@
           </table>
         </div>
       </section>
-      <!-- FIM TASKS_USER -->
-      <!-- PONTOS DOS USUARIOS -->
       <section id="pontos" class="tab-content">
         <div class="table-wrap">
-          <table class="tasks-table" claaria-label="Tabela de pontos de usuários">
+          <table class="tasks-table" aria-label="Tabela de pontos de usuários">
             <thead>
               <tr>
                 <th>Usuário</th>
@@ -212,14 +208,16 @@
             <tbody>
               {% for p in points %}
               <tr>
-                <td>
-                  <div>{{ p.user.username }}</div>
-                  <div>ID: {{ p.user.id }}</div>
+                <td data-label="Usuário">
+                  <div class="user-info-cell">
+                    <span class="u-name">{{ p.user.username }}</span>
+                    <span class="u-id">ID: {{ p.user.id }}</span>
+                  </div>
                 </td>
-                <td>{{ p.pontos }}</td>
-                <td>{{ p.nivel }}</td>
-                <td>{{ p.ultima_atualizacao }}</td>
-                <td>{{ p.tenant }}</td>
+                <td data-label="Pontos"><span class="badge-points gold">{{ p.pontos }}</span></td>
+                <td data-label="Nível">{{ p.nivel }}</td>
+                <td data-label="Última atualização">{{ p.ultima_atualizacao }}</td>
+                <td data-label="Tenant">{{ p.tenant }}</td>
               </tr>
               {% empty %}
               <tr>
@@ -232,8 +230,7 @@
           </table>
         </div>
       </section>
-      <!-- FIM DOS PONTOS -->
-    </div>
+      </div>
   </main>
 </div>
 <script src="{% static 'staff/js/staff_gamification.js' %}"></script>
