@@ -875,6 +875,103 @@
     }
 }
 
+/* ========================================
+   MOBILE RESPONSIVE & BOTTOMNAVIGATION
+   ======================================== */
+
+/* Bottom Navigation - Hidden on Desktop */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 1) 100%);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bottom-nav-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 4px;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #65676b;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+  max-width: 80px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  border-radius: 12px;
+}
+
+.bottom-nav-item svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bottom-nav-item.active {
+  color: #1877f2;
+  background: rgba(24, 119, 242, 0.08);
+}
+
+.bottom-nav-item.active svg {
+  stroke: #1877f2;
+  transform: scale(1.1);
+}
+
+.bottom-nav-item:hover:not(.active) {
+  color: #1877f2;
+  background: rgba(24, 119, 242, 0.05);
+}
+
+.bottom-nav-item:active {
+  transform: scale(0.95);
+}
+
+.bottom-nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: block;
+  }
+
+  .main-content {
+    padding-bottom: 80px;
+  }
+}
+
 .main-content-message {
     max-width: 1400px;
     margin: 20px auto;

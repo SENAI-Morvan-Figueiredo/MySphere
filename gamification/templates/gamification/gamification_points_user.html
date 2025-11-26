@@ -4,7 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Pontos - {{ user.username }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamificação - {{ user.username }}</title>
     <link rel="stylesheet" href="{% static 'gamification/css/style.css' %}">
 </head>
 
@@ -16,11 +17,10 @@
             </div>
         </div>
 
-        <div class="header-center">
-            <h1>Gamificação</h1>
-        </div>
-
         <div class="header-right">
+            {% if user.is_staff %}
+            <a href="{% url 'game_staff' %}" class="btn-staff">Staff</a>
+            {% endif %}
             <div class="user-info">
                 {% if user.foto %}
                     <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small">
@@ -29,159 +29,507 @@
                         {{ user.username|slice:":1"|upper }}
                     </div>
                 {% endif %}
-                <span><a href="{% url 'home' %}" style="text-decoration: none;">{{ user.username }}</a></span>
+                <span><a href="{% url 'home' %}">{{ user.username }}</a></span>
             </div>
         </div>
     </header>
 
-    <section class="pontuacao">
-        <h2>Meus Pontos</h2>
+    <div class="main-wrapper">
+        <aside class="sidebar-left">
+            <div class="profile-card">
+                {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar-large">
+                {% else %}
+                    <div class="default-avatar-large">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+                
+                <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                <p class="profile-username">@{{ user.username }}</p>
 
-        {% if points %}
-            {% for point in points %}
-            <article class="card">
-                <p><strong>Pontos Atuais:</strong> {{ point.points_atual }}</p>
-                <p><strong>Pontos Totais:</strong> {{ point.points_total }}</p>
-                <p><strong>Nível:</strong> {{ point.nivel }}</p>
-            </article>
-            {% endfor %}
-        {% else %}
-            <p class="vazio">Você ainda não possui pontos registrados.</p>
-        {% endif %}
-    </section>
-
-    <div class="tabs">
-        <div class="tab active" data-tab="tarefas">Tarefas</div>
-        <div class="tab" data-tab="ranking">Ranking</div>
-        <div class="tab" data-tab="conquistas">Conquistas</div>
-        <div class="tab" data-tab="ranking_geral">Ranking Geral</div>
-    </div>
-
-    <main class="container">
-
-        <!-- TAREFAS -->
-        <section id="tarefas" class="tab-content active">
-            <h2>Minhas Tarefas</h2>
-
-            {% if user_tasks %}
-                {% for user_task in user_tasks %}
-                <article class="task-card">
-                    <p><strong>Título:</strong> {{ user_task.task.titulo }}</p>
-                    <p><strong>Descrição:</strong> {{ user_task.task.descricao }}</p>
-                    <p><strong>Valor de Pontos:</strong> {{ user_task.task.pontos }}</p>
-
-                    <p>Status:
-                        {% if user_task.concluido %}
-                            ✅ Concluída
-                        {% else %}
-                            ❌ Pendente
-                            <form method="POST" action="{% url 'concluir_tarefa' user_task.id %}">
-                                {% csrf_token %}
-                                <button type="submit">Concluir</button>
-                            </form>
-                        {% endif %}
-                    </p>
-                    {% if user_task.task.conquista %}
-                        <p>Recompensa Conquista: {{ user_task.task.conquista.nome }}</p>
-                    {% endif %}
-                </article>
-                {% endfor %}
-            {% else %}
-                <p class="vazio">Você ainda não possui tarefas atribuídas.</p>
-            {% endif %}
-        </section>
-
-        <!-- RANKING -->
-        <section id="ranking" class="tab-content">
-            <h2>Ranking</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Usuário</th>
-                        <th>Pontos Totais do Mês</th>
-                        <th>Nível</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for r in ranking %}
-                    <tr {% if r.user == request.user %} style="font-weight: bold; background-color: #e8eaff;" {% endif %}>
-                        <td>{{ r.posicao }}</td>
-                        <td>{{ r.user.username }}</td>
-                        <td>{{ r.points_atual }}</td>
-                        <td>{{ r.nivel }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            {% if user_line and user_line.posicao > 5 %}
-            <p>
-                <strong>Sua posição:</strong> {{ user_line.posicao }}º lugar 
-                com {{ user_line.points_total }} pontos.
-            </p>
-            {% endif %}
-        </section>
-
-        <!-- CONQUISTAS -->
-        <section id="conquistas" class="tab-content">
-            <h2>Suas Conquistas</h2>
-
-            <div class="conquistas-grid">
-                {% for c in conquistas %}
-                <div class="conquista-card">
-                    <div class="conquista-icon">
-                        {% if c.conquista.imagem %}
-                        <img src="{{ c.conquista.imagem.url }}" alt="{{ c.conquista.nome }}">
-                        {% endif %}
+                {% if points %}
+                    {% for point in points %}
+                    <div class="points-display">
+                        <div class="points-current">{{ point.points_atual }}</div>
+                        <div class="points-label">Pontos Atuais</div>
                     </div>
 
-                    <h3>{{ c.conquista.nome }}</h3>
-                    <p>{{ c.conquista.descricao }}</p>
-                    <small>Obtida em: {{ c.recebido_em | date:"d/m/Y" }}</small>
+                    <div class="level-badge">
+                        Nível {{ point.nivel }}
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ point.points_total }}</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ user_tasks|length }}</div>
+                            <div class="stat-label">Tarefas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ conquistas|length }}</div>
+                            <div class="stat-label">Conquistas</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="points-display">
+                        <div class="points-current">0</div>
+                        <div class="points-label">Pontos Atuais</div>
+                    </div>
+                    <div class="level-badge">
+                        Nível Iniciante
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ user_tasks|length }}</div>
+                            <div class="stat-label">Tarefas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ conquistas|length }}</div>
+                            <div class="stat-label">Conquistas</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Navegação Principal - Desktop Only -->
+            <nav class="sidebar-menu desktop-only">
+                <a href="{% url 'feed:feed' %}" class="menu-item">
+                    <span class="icon">📅</span> Feed
+                </a>
+                <a href="{% url 'home' %}" class="menu-item">
+                    <span class="icon">👤</span> Perfil
+                </a>
+                <a href="{% url 'game_home' %}" class="menu-item active">
+                    <span class="icon">🏅</span> Gamificação
+                </a>
+                <a href="{% url 'listar_eventos' %}" class="menu-item">
+                    <span class="icon">🗓️</span> Eventos
+                </a>
+                <a href="{% url 'chat' %}" class="menu-item">
+                    <span class="icon">💬</span> Chat
+                </a>
+            </nav>
+
+            <div class="quick-actions">
+                <h4>Navegação Rápida</h4>
+                <div class="action-item active" data-tab-link="tarefas">
+                    <div class="action-icon">📋</div>
+                    <span>Minhas Tarefas</span>
+                </div>
+                <div class="action-item" data-tab-link="ranking">
+                    <div class="action-icon">🏆</div>
+                    <span>Ranking Mensal</span>
+                </div>
+                <div class="action-item" data-tab-link="conquistas">
+                    <div class="action-icon">🎖️</div>
+                    <span>Conquistas</span>
+                </div>
+                <div class="action-item" data-tab-link="ranking_geral">
+                    <div class="action-icon">🌍</div>
+                    <span>Ranking Geral</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-center">
+            <div class="mobile-stats">
+                <div class="mobile-stats-header">
+                    {% if user.foto %}
+                        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="mobile-stats-avatar">
+                    {% else %}
+                        <div class="mobile-stats-avatar-default">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+                    <div class="mobile-stats-info">
+                        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p>@{{ user.username }}</p>
+                    </div>
+                </div>
+                <div class="mobile-stats-grid">
+                    {% if points %}
+                        {% for point in points %}
+                        <div class="mobile-stat-item">
+                            <div class="mobile-stat-value">{{ point.points_atual }}</div>
+                            <div class="mobile-stat-label">Pontos</div>
+                        </div>
+                        <div class="mobile-stat-item">
+                            <div class="mobile-stat-value">{{ point.nivel }}</div>
+                            <div class="mobile-stat-label">Nível</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="mobile-stat-item">
+                            <div class="mobile-stat-value">0</div>
+                            <div class="mobile-stat-label">Pontos</div>
+                        </div>
+                        <div class="mobile-stat-item">
+                            <div class="mobile-stat-value">1</div>
+                            <div class="mobile-stat-label">Nível</div>
+                        </div>
+                    {% endif %}
+                    <div class="mobile-stat-item">
+                        <div class="mobile-stat-value">{{ conquistas|length }}</div>
+                        <div class="mobile-stat-label">Conquistas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tab active" data-tab="tarefas">
+                    <span class="tab-icon">📋</span>
+                    <span>Tarefas</span>
+                </div>
+                <div class="tab" data-tab="ranking">
+                    <span class="tab-icon">🏆</span>
+                    <span>Ranking</span>
+                </div>
+                <div class="tab" data-tab="conquistas">
+                    <span class="tab-icon">🎖️</span>
+                    <span>Conquistas</span>
+                </div>
+                <div class="tab" data-tab="ranking_geral">
+                    <span class="tab-icon">🌍</span>
+                    <span>Geral</span>
+                </div>
+            </div>
+
+            <section id="tarefas" class="tab-content active">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Minhas Tarefas</h2>
+                        <p>Complete tarefas para ganhar pontos e subir no ranking</p>
+                    </div>
+                    <div class="section-stats">
+                        <div class="section-stat">
+                            <div class="section-stat-value">{{ user_tasks|length }}</div>
+                            <div class="section-stat-label">Total</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tasks-grid">
+                    {% if user_tasks %}
+                        {% for user_task in user_tasks %}
+                        <article class="task-card {% if user_task.concluido %}completed{% else %}pending{% endif %}">
+                            <div class="task-header">
+                                <div class="task-title">
+                                    {{ user_task.task.titulo }}
+                                </div>
+                                <div class="task-points">
+                                    {{ user_task.task.pontos }} pts
+                                </div>
+                            </div>
+                            
+                            <div class="task-description">
+                                {{ user_task.task.descricao }}
+                            </div>
+                            
+                            <div class="task-footer">
+                                <div class="task-status {% if user_task.concluido %}done{% else %}pending{% endif %}">
+                                    {% if user_task.concluido %}Concluída{% else %}Pendente{% endif %}
+                                </div>
+
+                                {% if user_task.task.conquista %}
+                                <div class="task-reward">
+                                    Recompensa: {{ user_task.task.conquista.nome }}
+                                </div>
+                                {% endif %}
+
+                                {% if not user_task.concluido %}
+                                <form method="POST" action="{% url 'concluir_tarefa' user_task.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-complete">
+                                        Concluir Tarefa
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </article>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <h3>Nenhuma tarefa atribuída</h3>
+                            <p>Você ainda não possui tarefas. Entre em contato com um administrador para receber novas missões!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section id="ranking" class="tab-content">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Ranking Mensal</h2>
+                        <p>Veja quem está liderando este mês</p>
+                    </div>
+                </div>
+
+                <div class="ranking-container">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Usuário</th>
+                                <th>Pontos do Mês</th>
+                                <th>Nível</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in ranking %}
+                            <tr class="{% if r.user == request.user %}current-user{% endif %}">
+                                <td>
+                                    <span class="position-badge {% if r.posicao == 1 %}gold{% elif r.posicao == 2 %}silver{% elif r.posicao == 3 %}bronze{% else %}normal{% endif %}">
+                                        {{ r.posicao }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        {% if r.user.foto %}
+                                            <img src="{{ r.user.foto.url }}" alt="{{ r.user.username }}">
+                                        {% else %}
+                                            <div class="default-avatar-small">{{ r.user.username|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                        <span>{{ r.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="points-cell">{{ r.points_atual }} pts</td>
+                                <td>
+                                    <span class="level-cell">
+                                        Nível {{ r.nivel }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">🏆</div>
+                                        <h3>Nenhum dado de ranking</h3>
+                                        <p>O ranking ainda não possui participantes este mês.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if user_line and user_line.posicao > 5 %}
+                    <div class="user-position-summary">
+                        <p>
+                            <strong>Sua posição:</strong> {{ user_line.posicao }}º lugar com {{ user_line.points_atual }} pontos este mês.
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section id="conquistas" class="tab-content">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Suas Conquistas</h2>
+                        <p>Medalhas e recompensas que você desbloqueou</p>
+                    </div>
+                    <div class="section-stats">
+                        <div class="section-stat">
+                            <div class="section-stat-value">{{ conquistas|length }}</div>
+                            <div class="section-stat-label">Conquistas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievements-grid">
+                    {% for c in conquistas %}
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            {% if c.conquista.imagem %}
+                                <img src="{{ c.conquista.imagem.url }}" alt="{{ c.conquista.nome }}">
+                            {% else %}
+                                <span class="placeholder-icon">🏅</span>
+                            {% endif %}
+                        </div>
+                        <h3>{{ c.conquista.nome }}</h3>
+                        <p>{{ c.conquista.descricao }}</p>
+                        <div class="achievement-date">
+                            Obtida em {{ c.recebido_em | date:"d/m/Y" }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <div class="empty-icon">🎖️</div>
+                        <h3>Nenhuma conquista ainda</h3>
+                        <p>Complete tarefas para desbloquear conquistas incríveis!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="ranking_geral" class="tab-content">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Ranking Geral</h2>
+                        <p>Classificação de todos os tempos</p>
+                    </div>
+                </div>
+
+                <div class="ranking-container">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Usuário</th>
+                                <th>Pontos Totais</th>
+                                <th>Nível</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in ranking_geral %}
+                            <tr class="{% if r.user == request.user %}current-user{% endif %}">
+                                <td>
+                                    <span class="position-badge {% if r.posicao == 1 %}gold{% elif r.posicao == 2 %}silver{% elif r.posicao == 3 %}bronze{% else %}normal{% endif %}">
+                                        {{ r.posicao }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        {% if r.user.foto %}
+                                            <img src="{{ r.user.foto.url }}" alt="{{ r.user.username }}">
+                                        {% else %}
+                                            <div class="default-avatar-small">{{ r.user.username|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                        <span>{{ r.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="points-cell">{{ r.points_total }} pts</td>
+                                <td>
+                                    <span class="level-cell">
+                                        Nível {{ r.nivel }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">🌍</div>
+                                        <h3>Nenhum dado de ranking</h3>
+                                        <p>O ranking geral ainda não possui participantes.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if user_line_geral and user_line_geral.posicao > 5 %}
+                    <div class="user-position-summary">
+                        <p>
+                            <strong>Sua posição geral:</strong> {{ user_line_geral.posicao }}º lugar com {{ user_line_geral.points_total }} pontos no total.
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="leaderboard-preview">
+                <h3>Top 5 do Mês</h3>
+                {% for r in ranking|slice:":5" %}
+                <div class="leaderboard-item {% if forloop.first %}top-1{% endif %}">
+                    <span class="leaderboard-position {% if forloop.first %}gold{% endif %}">{{ r.posicao }}º</span>
+                    {% if r.user.foto %}
+                        <img src="{{ r.user.foto.url }}" alt="{{ r.user.username }}" class="leaderboard-avatar">
+                    {% else %}
+                        <div class="leaderboard-avatar-default">{{ r.user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">{{ r.user.username }}</div>
+                        <div class="leaderboard-points">{{ r.points_atual }} pts</div>
+                    </div>
                 </div>
                 {% empty %}
-                <p>Você ainda não possui conquistas.</p>
+                <p style="text-align: center; color: #65676b; padding: 20px;">Nenhum participante ainda</p>
                 {% endfor %}
             </div>
-        </section>
 
-        <!-- RANKING GERAL -->
-        <section id="ranking_geral" class="tab-content">
-            <h2>Ranking Geral</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Usuário</th>
-                        <th>Pontos Totais</th>
-                        <th>Nível</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for r in ranking_geral %}
-                    <tr {% if r.user == request.user %} style="font-weight: bold; background-color: #e8eaff;" {% endif %}>
-                        <td>{{ r.posicao }}</td>
-                        <td>{{ r.user.username }}</td>
-                        <td>{{ r.points_total }}</td>
-                        <td>{{ r.nivel }}</td>
-                    </tr>
+            <div class="progress-card">
+                <h3>Seu Progresso</h3>
+                {% if points %}
+                    {% for point in points %}
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Nível {{ point.nivel }}</span>
+                            <strong>{{ point.points_atual }}/{{ point.nivel|add:1|stringformat:"d" }}00 pts</strong>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {% widthratio point.points_atual point.nivel|add:1 100 %}%"></div>
+                        </div>
+                    </div>
                     {% endfor %}
-                </tbody>
-            </table>
+                {% else %}
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Nível Iniciante</span>
+                            <strong>0/100 pts</strong>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
 
-            {% if user_line_geral and user_line_geral.posicao > 5 %}
-            <p>
-                <strong>Sua posição geral:</strong> {{ user_line_geral.posicao }}º lugar
-                com {{ user_line_geral.points_total }} pontos.
-            </p>
-            {% endif %}
-        </section>
+            <div class="tips-card">
+                <h3>Dica</h3>
+                <p>Complete suas tarefas diárias para subir no ranking e desbloquear conquistas exclusivas!</p>
+            </div>
+        </aside>
+    </div>
 
-
-    </main>
+    <!-- Bottom Navigation for Mobile -->
+    <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+      <div class="bottom-nav-container">
+        <a href="{% url 'feed:feed' %}" class="bottom-nav-item" aria-label="Feed">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>Feed</span>
+        </a>
+        <a href="{% url 'home' %}" class="bottom-nav-item" aria-label="Perfil">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <span>Perfil</span>
+        </a>
+        <a href="{% url 'game_home' %}" class="bottom-nav-item active" aria-label="Gamificação" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Gamif.</span>
+        </a>
+        <a href="{% url 'listar_eventos' %}" class="bottom-nav-item" aria-label="Eventos">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span>Eventos</span>
+        </a>
+        <a href="{% url 'chat' %}" class="bottom-nav-item" aria-label="Chat">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          <span>Chat</span>
+        </a>
+      </div>
+    </nav>
 
     <script src="{% static 'gamification/js/gamification_script.js' %}"></script>
 </body>

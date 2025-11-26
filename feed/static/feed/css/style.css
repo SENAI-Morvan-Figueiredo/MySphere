@@ -1114,6 +1114,45 @@ body {
 .bottom-nav-item svg {
   width: 24px;
   height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bottom-nav-item:hover {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.bottom-nav-item.active {
+  color: #2563eb;
+}
+
+.bottom-nav-item.active svg {
+  stroke: #2563eb;
+}
+
+.bottom-nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: block;
+  }
+  
+  .main-content {
+    padding-bottom: 80px;
+  }
+}
+
+.bottom-nav-item svg {
+  width: 24px;
+  height: 24px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2;
@@ -1123,29 +1162,18 @@ body {
 }
 
 .bottom-nav-item.active {
-  color: #2563eb;
-}
-
-.bottom-nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 24px;
-  height: 3px;
-  background: #2563eb;
-  border-radius: 0 0 3px 3px;
+  color: #1877f2;
+  background: rgba(24, 119, 242, 0.08);
 }
 
 .bottom-nav-item.active svg {
-  transform: translateY(-2px);
-  stroke-width: 2.5;
+  stroke: #1877f2;
+  transform: scale(1.1);
 }
 
-.bottom-nav-item:hover {
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.05);
+.bottom-nav-item:hover:not(.active) {
+  color: #1877f2;
+  background: rgba(24, 119, 242, 0.05);
 }
 
 .bottom-nav-item:active {
@@ -1351,7 +1379,7 @@ body {
   }
 
   .bottom-nav {
-    padding: 6px 0 env(safe-area-inset-bottom);
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
   }
 
   .bottom-nav-item {
