@@ -1,208 +1,354 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel do Usuário</title>
-  <link rel="stylesheet" href="{% static 'accounts/css/user_home.css' %}" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Perfil - MySphere</title>
+    <link rel="stylesheet" href="{% static 'feed/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}" />
 </head>
-
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo">{{user.tenant.nome}}</span></div>
-    {% if user.is_authenticated %}
-    <div class="user-info">
-      <div class="user-info">
-        {% if user.foto %}
-        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small" />
-        {% else %}
-        <div class="user-avatar-small default-avatar">
-          {{ user.username|slice:":1"|upper }}
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <h1>{{user.tenant.nome}}</h1>
+                </div>
+            </div>
+            <div class="header-right">
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard_staff' %}" class="btn-staff">Staff</a>
+                {% endif %}
+                <div class="user-info">
+                    {% if user.foto %}
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small" />
+                    {% else %}
+                    <div class="user-avatar-small default-avatar">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Sidebar - Profile -->
+            <aside class="sidebar-left">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        {% if user.foto %}
+                        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                        {% else %}
+                        <div class="profile-avatar default-avatar-large">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        {% endif %}
+                        <h3>{{ user.get_full_name|default:user.username }}</h3>
+                        <p class="profile-username">@{{ user.username }}</p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-number">{{ user.posts_authored.count }}</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-menu">
+                    <a href="{% url 'feed:feed' %}" class="menu-item">
+                        <span class="icon">📅</span> Feed
+                    </a>
+                    <a href="{% url 'home' %}" class="menu-item active">
+                        <span class="icon">👤</span> Perfil
+                    </a>
+                    <a href="{% url 'game_home' %}" class="menu-item">
+                        <span class="icon">🏅</span> Gamificação
+                    </a>
+                    <a href="{% url 'listar_eventos' %}" class="menu-item">
+                        <span class="icon">🗓️</span> Eventos
+                    </a>
+                    <a href="{% url 'chat' %}" class="menu-item">
+                        <span class="icon">💬</span> Chat
+                    </a>
+                </nav>
+
+                <div class="pages-section">
+                    <h4>PAGES YOU LIKE</h4>
+                    <div class="page-item">
+                        <div class="page-icon">UI</div>
+                        <span>UI/UX Community</span>
+                    </div>
+                    <div class="page-item">
+                        <div class="page-icon">WD</div>
+                        <span>Web Designer</span>
+                    </div>
+                    <div class="page-item">
+                        <div class="page-icon">DR</div>
+                        <span>Dribbble Community</span>
+                    </div>
+                    <div class="page-item">
+                        <div class="page-icon">BE</div>
+                        <span>Behance</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Content - Profile -->
+            <main class="feed-center">
+                <!-- Profile Info Card -->
+                <div class="profile-info-card">
+                    <div class="profile-cover">
+                        <div class="profile-photo-large">
+                            {% if profile_user.foto %}
+                            <img src="{{ profile_user.foto.url }}" alt="{{ profile_user.username }}" />
+                            {% else %}
+                            <div class="profile-avatar-xl default-avatar-large">
+                                {{ profile_user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <h2>{{ profile_user.get_full_name|default:profile_user.username }}</h2>
+                        <p class="profile-email">{{ profile_user.email }}</p>
+                        
+                        {% if profile_user.role or profile_user.data_nascimento %}
+                        <div class="profile-meta">
+                            {% if profile_user.role %}
+                            <div class="meta-item">
+                                <span class="meta-icon">💼</span>
+                                <span>{{ profile_user.role }}</span>
+                            </div>
+                            {% endif %}
+                            {% if profile_user.data_nascimento %}
+                            <div class="meta-item">
+                                <span class="meta-icon">🎂</span>
+                                <span>{{ profile_user.data_nascimento|date:"d/m/Y" }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="profile-actions">
+                            <a href="{% url 'password_change' %}" class="btn-profile-action">
+                                <span class="icon">🔒</span> Alterar Senha
+                            </a>
+                            <a href="{% url 'password_reset' %}" class="btn-profile-action">
+                                <span class="icon">🔄</span> Resetar Senha
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div class="post-card" id="sobre-container">
+                    <div class="card-header">
+                        <h3>Sobre</h3>
+                        <button id="editar-sobre" class="btn-edit">
+                            <span class="icon">✏️</span> Editar
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <p id="sobre-texto">{{ user.sobre_mim|default:"Ainda não há descrição. Clique em editar para adicionar informações sobre você." }}</p>
+                        <textarea id="sobre-textarea" style="display: none" placeholder="Conte um pouco sobre você..."></textarea>
+                        <button id="salvar-sobre" style="display: none" class="btn-post">Salvar</button>
+                    </div>
+                </div>
+
+                <!-- Posts Section -->
+                <div class="posts-header">
+                    <h3>Minhas Postagens</h3>
+                    <span class="posts-count">{{ posts|length }} post{{ posts|length|pluralize:"s" }}</span>
+                </div>
+
+                {% for post in posts %}
+                <article class="post-card" data-post-id="{{ post.post_id }}">
+                    <div class="post-header">
+                        <div class="post-author">
+                            {% if post.user.foto %}
+                            <img src="{{ post.user.foto.url }}" alt="{{ post.user.username }}" class="user-avatar-small" />
+                            {% else %}
+                            <div class="user-avatar-small default-avatar">
+                                {{ post.user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                            <div class="author-info">
+                                <h4>{{ post.user.get_full_name|default:post.user.username }}</h4>
+                                <p class="post-time">{{ post.criado_em|date:"d M 'às' H:i" }}</p>
+                            </div>
+                        </div>
+                        <button class="post-menu">⋮</button>
+                    </div>
+
+                    <div class="post-content">
+                        <p>{{ post.conteudo_formatado|safe }}</p>
+                    </div>
+
+                    {% if post.imagem %}
+                    <div class="post-media">
+                        <img src="{{ post.imagem.url }}" alt="Post image" />
+                    </div>
+                    {% endif %}
+                    
+                    {% if post.video %}
+                    <div class="post-media">
+                        <video controls>
+                            <source src="{{ post.video.url }}" type="video/mp4" />
+                        </video>
+                    </div>
+                    {% endif %}
+                    
+                    {% if post.arquivo %}
+                    <div class="post-file">
+                        <a href="{{ post.arquivo.url }}" download class="file-link">
+                            <span class="icon">📎</span> {{ post.arquivo.name|slice:"6:" }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="post-stats">
+                        <span class="post-likes">❤️ <span class="likes-count">{{ post.total_likes }}</span> Like{{ post.total_likes|pluralize:"s" }}</span>
+                        <span><span class="comments-count">{{ post.total_comments }}</span> Comentário{{ post.total_comments|pluralize:"s" }}</span>
+                        <span><span class="shares-count">{{ post.total_shares }}</span> Compartilhamento{{ post.total_shares|pluralize:"s" }}</span>
+                    </div>
+
+                    <div class="post-actions-bar">
+                        <button class="action-btn like-btn {% if post.user_has_liked %}liked{% endif %}" data-post-id="{{ post.post_id }}">
+                            <span class="icon">❤️</span> Like
+                        </button>
+                        <button class="action-btn comment-btn" onclick="toggleCommentBox({{ post.post_id }})">
+                            <span class="icon">💬</span> Comentar
+                        </button>
+                        <button class="action-btn share-btn" data-post-id="{{ post.post_id }}">
+                            <span class="icon">🔗</span> Compartilhar
+                        </button>
+                    </div>
+
+                    <div class="comments-section" id="comments-{{ post.post_id }}" style="display: none">
+                        <div class="comments-list">
+                            {% for comment in post.comments.all %}
+                            <div class="comment">
+                                <div class="comment-author">
+                                    {% if comment.user.foto %}
+                                    <img src="{{ comment.user.foto.url }}" alt="{{ comment.user.username }}" class="user-avatar-tiny" />
+                                    {% else %}
+                                    <div class="user-avatar-tiny default-avatar">
+                                        {{ comment.user.username|slice:":1"|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="comment-content">
+                                    <h5>{{ comment.user.username }}</h5>
+                                    <p>{{ comment.conteudo }}</p>
+                                    <span class="comment-time">{{ comment.criado_em|date:"d/m/Y H:i" }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <form class="comment-form" data-post-id="{{ post.post_id }}">
+                            {% csrf_token %}
+                            <input type="text" name="conteudo" placeholder="Escreva um comentário..." />
+                            <button type="submit">Enviar</button>
+                        </form>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="no-posts-card">
+                    <div class="no-posts-icon">📝</div>
+                    <h3>Nenhuma postagem ainda</h3>
+                    <p>Suas postagens aparecerão aqui. Vá para o Feed e comece a compartilhar!</p>
+                    <a href="{% url 'feed:feed' %}" class="btn-post">Ir para o Feed</a>
+                </div>
+                {% endfor %}
+
+                <!-- Logout Button -->
+                <form method="post" action="{% url 'logout' %}" class="logout-form-card">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <span class="icon">🚪</span> Sair da Conta
+                    </button>
+                </form>
+            </main>
+
+            <!-- Right Sidebar - Empty for now, can add suggestions later -->
+            <aside class="sidebar-right">
+                <div class="suggestions-card">
+                    <h4>CONFIGURAÇÕES</h4>
+                    <a href="{% url 'password_change' %}" class="suggestion-item">
+                        <span class="icon">🔒</span>
+                        <span>Alterar Senha</span>
+                    </a>
+                    <a href="{% url 'password_reset' %}" class="suggestion-item">
+                        <span class="icon">🔄</span>
+                        <span>Resetar Senha</span>
+                    </a>
+                </div>
+
+                <div class="suggestions-card">
+                    <h4>ESTATÍSTICAS</h4>
+                    <div class="stat-item">
+                        <span class="stat-label">Posts</span>
+                        <span class="stat-value">{{ posts|length }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Likes Recebidos</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Comentários</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+            </aside>
         </div>
-        {% endif %}
-        <span>{{ user.username }}</span>
-      </div>
-    </div>
-    {% endif %}
-  </nav>
 
-  <!-- Conteúdo principal -->
-
-  <main class="profile-container">
-    {% if user.is_authenticated %}
-
-    <section class="profile-header">
-      <div class="foto-de-perfil">
-        {% if profile_user.foto %}
-        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-photo" />
-        {% else %}
-        <div class="profile-avatar default-avatar-large">
-          {{ profile_user.username|slice:":1"|upper }}
-        </div>
-        {% endif %}
-      </div>
-      <h2>{{ profile_user.username }}</h2>
-      <p class="user-email">{{ profile_user.email }}</p>
-      <a href="{% url 'password_change' %}">Trocar a Senha</a>
-      <a href="{% url 'password_reset' %}">Resetar a Senha</a>
-    </section>
-
-    <section class="profile-info">
-      {% if user.role %}
-      <p><strong>Função:</strong> {{ user.role }}</p>
-      {% endif %} {% if user.data_nascimento %}
-      <p><strong>Data de Nascimento:</strong> {{ user.data_nascimento }}</p>
-      {% endif %}
-    </section>
-
-    <!-- Seção de sobre__________________________________________________________ -->
-    <div id="sobre-container">
-      <h3>Sobre</h3>
-      <p id="sobre-texto">
-        {{ user.sobre_mim|default:"Ainda não há descrição." }}
-      </p>
-
-      <textarea id="sobre-textarea" style="display: none"></textarea>
-
-      <button id="editar-sobre">editar</button>
-      <button id="salvar-sobre" style="display: none">salvar</button>
+        <!-- Mobile Bottom Navigation -->
+        <nav class="bottom-nav" role="navigation" aria-label="Mobile navigation">
+            <div class="bottom-nav-container">
+                <a href="{% url 'feed:feed' %}" class="bottom-nav-item" aria-label="Feed">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span>Feed</span>
+                </a>
+                <a href="{% url 'home' %}" class="bottom-nav-item active" aria-label="Perfil" aria-current="page">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span>Perfil</span>
+                </a>
+                <a href="{% url 'game_home' %}" class="bottom-nav-item" aria-label="Gamificação">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Gamif.</span>
+                </a>
+                <a href="{% url 'listar_eventos' %}" class="bottom-nav-item" aria-label="Eventos">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Eventos</span>
+                </a>
+                <a href="{% url 'chat' %}" class="bottom-nav-item" aria-label="Chat">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    <span>Chat</span>
+                </a>
+            </div>
+        </nav>
     </div>
 
     {% load static %}
     <script>
-      // Variáveis globais injetadas pelo Django
-      const atualizarSobreURL = "{% url 'atualizar_sobre' %}"; // Usaremos este!
-      const csrfToken = "{{ csrf_token }}"; // Usaremos este!
+        const atualizarSobreURL = "{% url 'atualizar_sobre' %}";
+        const csrfToken = "{{ csrf_token }}";
     </script>
-
-    <!--____________________________________________________________________________________-->
-
-    <!-- Seção de Postagens -->
-    <section class="feed-section">
-      <h3>Postagens Recentes</h3>
-
-      <div class="feed-container">
-        {% for post in posts %}
-        <article class="post-card" data-post-id="{{ post.post_id }}">
-          <div class="post-header">
-            <div class="post-author">
-              {% if post.user.foto %}
-              <img src="{{ post.user.foto.url }}" alt="{{ post.user.username }}" class="user-avatar-small" />
-              {% else %}
-              <div class="user-avatar-small default-avatar">
-                {{ post.user.username|slice:":1"|upper }}
-              </div>
-              {% endif %}
-              <div class="author-info">
-                <h4>
-                  {{ post.user.get_full_name|default:post.user.username }}
-                </h4>
-                <p class="post-time">
-                  {{ post.criado_em|date:"d M 'p.m.' H:i" }}
-                </p>
-              </div>
-            </div>
-            <button class="post-menu">⋮</button>
-          </div>
-
-          <div class="post-content">
-            <p>{{ post.conteudo_formatado|safe }}</p>
-          </div>
-
-          {% if post.imagem %}
-          <div class="post-media">
-            <img src="{{ post.imagem.url }}" alt="Post image" />
-          </div>
-          {% endif %} {% if post.video %}
-          <div class="post-media">
-            <video controls>
-              <source src="{{ post.video.url }}" type="video/mp4" />
-            </video>
-          </div>
-          {% endif %} {% if post.arquivo %}
-          <div class="post-file">
-            <a href="{{ post.arquivo.url }}" download class="file-link">
-              <span class="icon">📎</span> {{ post.arquivo.name|slice:"6:" }}
-            </a>
-          </div>
-          {% endif %}
-
-          <div class="post-stats">
-            <span class="post-likes">❤️
-              <span class="likes-count">{{ post.total_likes }}</span>
-              Like</span>
-            <span><span class="comments-count">{{ post.total_comments }}</span>
-              Comment</span>
-            <span><span class="shares-count">{{ post.total_shares }}</span>
-              Share</span>
-          </div>
-
-          <div class="post-actions-bar">
-            <button class="action-btn like-btn {% if post.user_has_liked %}liked{% endif %}"
-              data-post-id="{{ post.post_id }}">
-              <span class="icon">❤️</span> Like
-            </button>
-            <button class="action-btn comment-btn" onclick="toggleCommentBox({{ post.post_id }})">
-              <span class="icon">💬</span> Comment
-            </button>
-            <button class="action-btn share-btn" data-post-id="{{ post.post_id }}">
-              <span class="icon">🔗</span> Share
-            </button>
-          </div>
-
-          <div class="comments-section" id="comments-{{ post.post_id }}" style="display: none">
-            <div class="comments-list">
-              {% for comment in post.comments.all %}
-              <div class="comment">
-                <div class="comment-author">
-                  {% if comment.user.foto %}
-                  <img src="{{ comment.user.foto.url }}" alt="{{ comment.user.username }}" class="user-avatar-tiny" />
-                  {% else %}
-                  <div class="user-avatar-tiny default-avatar">
-                    {{ comment.user.username|slice:":1"|upper }}
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="comment-content">
-                  <h5>{{ comment.user.username }}</h5>
-                  <p>{{ comment.conteudo }}</p>
-                  <span class="comment-time">{{ comment.criado_em|date:"d/m/Y H:i" }}</span>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-
-            <form class="comment-form" data-post-id="{{ post.post_id }}">
-              {% csrf_token %}
-              <input type="text" name="conteudo" placeholder="Write a comment..." />
-              <button type="submit">Send</button>
-            </form>
-          </div>
-        </article>
-        {% empty %}
-        <div class="no-posts">
-          <p>Nenhum post ainda. Seja o primeiro a postar!</p>
-        </div>
-        {% endfor %}
-
-        <form method="post" action="{% url 'logout' %}" class="logout-form">
-          {% csrf_token %}
-          <button type="submit" class="logout-btn">Sair</button>
-        </form>
-
-        {% else %}
-        <div class="not-logged">
-          <h2>Você não está logado</h2>
-          <a href="{% url 'login' %}" class="login-link">Entrar</a>
-        </div>
-        {% endif %}
-  </main>
-
-  <script src="{% static 'accounts/js/feed_home.js' %}"></script>
-
+    <script src="{% static 'accounts/js/feed_home.js' %}"></script>
 </body>
-
 </html>

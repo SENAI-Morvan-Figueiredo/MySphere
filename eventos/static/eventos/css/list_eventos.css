@@ -1,0 +1,78 @@
+/* GRID PRINCIPAL */
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+    padding: 10px;
+}
+
+/* CARD */
+.evento-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.evento-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* IMAGEM */
+.evento-img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+}
+
+.placeholder {
+    background: #dcdcdc;
+}
+
+/* TEXTO */
+.evento-info {
+    padding: 10px 12px;
+}
+
+.evento-titulo {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.evento-datas {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* AÇÕES */
+.evento-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.btn-acao {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.editar:hover {
+    color: #e6b800;
+}
+
+.excluir:hover {
+    color: #d9534f;
+}
+
+form {
+    margin: 0;
+}

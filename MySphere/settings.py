@@ -23,10 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev', 'https://*.repl.co']
-
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = True
+# DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 env = environ.Env()
@@ -55,6 +53,7 @@ INSTALLED_APPS = [
     'gamification',
     'staff', 
     'colorfield',
+    'eventos',
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -110,6 +109,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "tenants.context_processors.tenant_context",
             ],
         },
     },

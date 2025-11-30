@@ -2,31 +2,33 @@
 {% load static %} 
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/gamification_users_tasks_form.css' %}">
+<link rel="stylesheet" href="{% static 'gamification/css/gamification_tasks_form.css' %}">
 {% endblock %} 
 
 {% block content %}
 
-<main class="wrap">
-  <header class="page-header">
-    <div class="title-block">
-      <h1>Criar Conquista</h1>
-      <p class="subtitle">Defina uma nova conquista (medalha/badge) para o sistema</p>
-    </div>
-  </header>
-
-  <section class="card">
-    <form method="POST" enctype="multipart/form-data" class="user-task-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-    </form>
+<div class="container-all">
+  <main class="main-content">
     
-    <a href="{% url 'game_staff' %}" style="display: inline-block; margin-top: 15px;">Voltar</a>
-  </section>
-</main>
+    <header class="page-header">
+      <div class="title-page">
+        <h1>Nova Conquista</h1>
+        <p class="subtitle">Crie medalhas e recompensas para engajar os usuários.</p>
+      </div>
+    </header>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      {{ form.as_p }}
+
+      <div class="form-actions">
+        <a href="{% url 'game_staff' %}" class="btn btn-ghost">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Salvar Conquista</button>
+      </div>
+    </form>
+
+  </main>
+</div>
 
 {% endblock content %}

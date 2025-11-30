@@ -1,104 +1,179 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Home Staff</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/staff.css' %}" />
-    {% block extra_css %} 
-    {% endblock %}
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'staff/css/staff_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'staff/css/staff.css' %}" />
+    {% block extra_css %} {% endblock %}
+  </head>
 
-<body>
+  <body>
     <div class="main-wrapper" x-data="{ sidebarOpen: true }">
-        <!-- INICIO DO HAMBURGUER -->
-        <aside :class="{'-ml-64': !sidebarOpen}" class="sidebar">
-            <div class="sidebar-inner">
-                <div class="logo-section">
-                    <div class="logo-info">
-                        <div class="logo-image">
-                            <!-- {% if tenant.logo_url %}
-                                <img src="{{ tenant.logo_url.url }}" alt="{{ tenant.nome }}" class="logo-tenant">
-                            {% else %}
-                                <p>Nenhum logotipo definido.</p>
-                            {% endif %} -->
-                        </div>
-                        
-                        <div class="logo-text">
-                            <h1>{{ user.tenant.nome }}</h1>
-                        </div>
-                    </div>
-                    <nav>
-                        <a class="nav-item" href="{% url 'dashboard_staff' %}">
-                            <span class="material-symbols-outlined material-symbols-outlined-fill">dashboard</span>
-                            <p>Dashboard</p>
-                        </a>
-                        <a class="nav-item group" href="{% url 'users_staff' %}">
-                            <span class="material-symbols-outlined group-hover-fill-1">group</span>
-                            <p>Usuários</p>
-                        </a>
-                        <a class="nav-item group" href="{% url 'game_staff' %}">
-                            <span class="material-symbols-outlined group-hover-fill-1">trophy</span>
-                            <p>Gamificação</p>
-                        </a>
-                        <a class="nav-item group" href="#">
-                            <span class="material-symbols-outlined group-hover-fill-1">calendar_month</span>
-                            <p>Eventos</p>
-                        </a>
-                        <a class="nav-item group" href="{% url 'tenant_staff' %}">
-                            <span class="material-symbols-outlined group-hover-fill-1">business</span>
-                            <p>Empresa</p>
-                        </a>
-                    </nav>
-                </div>
-                <div class="footer-section">
-                    <a class="footer-link group" href="#">
-                        <span class="material-symbols-outlined group-hover-fill-1">logout</span>
-                        <p>Sair</p>
-                    </a>
-                </div>
+      <aside :class="{'-ml-64': !sidebarOpen}" class="sidebar">
+        <div class="sidebar-inner">
+            <button @click="sidebarOpen = false" class="btn-close-sidebar">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+            
+          <div class="logo-section">
+            <div class="logo-info">
+              <div class="logo-image">
+                {% if tenant.logo_url %}
+                <img
+                  src="{{ tenant.logo_url.url }}"
+                  alt="{{ tenant.nome }}"
+                  class="logo-tenant"
+                />
+                {% else %}
+                <p>NÃO TEM</p>
+                {% endif %}
+              </div>
+              <div class="logo-text">
+                <h1>
+                  <a href="{% url 'feed:feed' %}" style="text-decoration: none"
+                    >{{ user.tenant.nome }}</a
+                  >
+                </h1>
+              </div>
             </div>
-        </aside>
-        <!-- FIM DO HAMBURGUER -->
+            <nav>
+              <a class="nav-item" href="{% url 'dashboard_staff' %}">
+                <span
+                  class="material-symbols-outlined material-symbols-outlined-fill"
+                  >dashboard</span
+                >
+                <p>Dashboard</p>
+              </a>
+              <a class="nav-item group" href="{% url 'users_staff' %}">
+                <span class="material-symbols-outlined group-hover-fill-1"
+                  >group</span
+                >
+                <p>Usuários</p>
+              </a>
+              <a class="nav-item group" href="{% url 'game_staff' %}">
+                <span class="material-symbols-outlined group-hover-fill-1"
+                  >trophy</span
+                >
+                <p>Gamificação</p>
+              </a>
+              <a class="nav-item group" href="{% url 'tenant_staff' %}">
+                <span class="material-symbols-outlined group-hover-fill-1"
+                  >business</span
+                >
+                <p>Empresa</p>
+              </a>
+            </nav>
+          </div>
+          <div class="footer-section">
+            <a class="footer-link group" href="#"
+              onclick="document.getElementById('logout-form').submit(); return false;">
+                <span class="material-symbols-outlined group-hover-fill-1">logout</span>
+                <p>Sair</p>
+            </a>
 
-        <main class="main-content-area">
-            <!-- INICIO DO HEADER -->
-            <header class="main-header">
-                <div class="titulo-navbar">
-                    <button @click="sidebarOpen = !sidebarOpen" class="btn-hamburguer"><span class="material-symbols-outlined">menu</span></button>
-                    <div>
-                        <h1>Olá, Staff {{request.user.username }}!</h1>
-                        <p>O que deseja fazer hoje.</p>
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                {% csrf_token %}
+            </form>
+          </div>
+        </div>
+      </aside>
+      <main class="main-content-area">
+        <header class="main-header">
+          <div class="titulo-navbar">
+            <button @click="sidebarOpen = !sidebarOpen" class="btn-hamburguer">
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+              <h1>Olá, Staff {{request.user.username }}!</h1>
+              <p>O que deseja fazer hoje.</p>
+            </div>
+          </div>
+          <div class="header-right-section">
+            <div class="search-input-container">
+              <label>
+              </label>
+            </div>
+          </div>
+        </header>
+        <div class="dashboard-content-container">
+          {% block content %}
+            <div class="dashboard-wrapper">
+            <main class="dashboard-main">
+                <div class="dashboard-container">
+
+               
+
+                <div class="grid grid-4">
+
+                    <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="material-symbols-outlined metric-icon">group</span>
+                        <h2 class="metric-title">Usuários</h2>
+                    </div>
+                    <p class="metric-value">{{ total_users }}</p>
+                    </div>
+
+                    <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="material-symbols-outlined metric-icon">article</span>
+                        <h2 class="metric-title">Posts</h2>
+                    </div>
+                    <p class="metric-value">{{ total_posts }}</p>
+                    </div>
+
+                    <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="material-symbols-outlined metric-icon">comment</span>
+                        <h2 class="metric-title">Comentários</h2>
+                    </div>
+                    <p class="metric-value">{{ total_comments }}</p>
+                    </div>
+
+                    <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="material-symbols-outlined metric-icon">tag</span>
+                        <h2 class="metric-title">Hashtags</h2>
+                    </div>
+                    <p class="metric-value">{{ total_hashtags }}</p>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="card chart-card wide">
+                    <h3 class="chart-title">Posts por Dia</h3>
+                    <p class="chart-subtitle">Últimos 7 dias</p>
+
+                    <div class="chart-box">
+
+                        {{ posts_labels|json_script:"labels-data" }}
+                        {{ posts_counts|json_script:"counts-data" }}
+                        <canvas id="postsChart" data-labels='{{ posts_labels|safe }}' data-counts='{{ posts_counts|safe }}'>
+                        </canvas>
+                    </div>
                     </div>
                 </div>
-                <div class="header-right-section">
-                    <div class="search-input-container">
-                        <label>
-                            <div>
-                                <input placeholder="Buscar usuários, posts..." value="" />
-                                <button class="search-icon"><span class="material-symbols-outlined">search</span></button>
-                            </div>
-                        </label>
-                    </div>
+
                 </div>
-            </header>
-            <!-- FIM DO HEADER -->
-            <div class="dashboard-content-container">
-              {% block content %}
-              {% endblock content %}
+            </main>
             </div>
 
-        </main>
+            <script src="{% static '/staff/js/staff_dashboard.js' %}"></script>
+          {% endblock content %}
+        </div>
+      </main>
     </div>
     <script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
-</body>
-
+  </body>
 </html>

@@ -6,6 +6,9 @@ class FormAddUsersStaff(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'data_nascimento', 'role', 'foto']
         help_texts = {'username': ''}
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'})
+        }
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -19,4 +22,4 @@ class FormAddUsersStaff(forms.ModelForm):
 
         if commit:
             user.save()
-        return user 
+        return user

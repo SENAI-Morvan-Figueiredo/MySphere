@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from tenants.models import Tenant
 from accounts.models import User
 from django.core.exceptions import ValidationError
@@ -75,7 +76,6 @@ class Points(models.Model):
             self.save(update_fields=['nivel'])
 
     def add_points(self, pontos):
-        self.points_total = F('points_total') + pontos
         self.points_atual = F('points_atual') + pontos
         self.save()
         self.refresh_from_db()

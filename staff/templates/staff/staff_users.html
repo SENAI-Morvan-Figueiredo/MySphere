@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/staff_users.css' %}">
+<link rel="stylesheet" href="{% static 'staff/css/staff_users.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -69,11 +69,13 @@
                         </td>  -->
                         <td>
                           <div>
-                            <a href="{% url 'edit_user_staff' user.pk %}"><span class="material-symbols-outlined">edit</span></a>
-                              <form method="post" action="{% url 'delete_user_staff' user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button>
-                              </form>
+                            {% if not request.user.id == user.id %}
+                              <a href="{% url 'edit_user_staff' user.pk %}"><span class="material-symbols-outlined">edit</span></a>
+                                <form method="post" action="{% url 'delete_user_staff' user.pk %}">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn btn-danger"><span class="material-symbols-outlined">delete</span></button>
+                                </form>
+                            {% endif %}
                           </div>
                         </td>
                       </tr>

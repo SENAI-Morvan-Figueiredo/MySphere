@@ -8,14 +8,18 @@ from accounts.models import User
 from chat.models import Chat
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from eventos.models import Evento
+from django.utils import timezone
 
 @login_required
 def feed_view(request):
-    posts = Post.objects.filter(tenant=request.user.tenant).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags')
-    
+    posts = Post.objects.filter(
+        tenant=request.user.tenant
+    ).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags')
+
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
-    
+
     chats = Chat.objects.filter(
         Q(user1=request.user) | Q(user2=request.user),
         messages__isnull=False
@@ -23,12 +27,30 @@ def feed_view(request):
         ultima_msg=Max('messages__criado_em')
     ).order_by('-ultima_msg')[:5]
 
+    # 🔹 Aqui busca os eventos do mesmo tenant do usuário
+    eventos = Evento.objects.filter(
+        tenant=request.user.tenant
+    ).order_by('inicio')
+
+    # 🔹 Se quiser, restringe aos próximos eventos:
+    hoje = timezone.now()
+    eventos = (
+        Evento.objects.filter(fim__gte=hoje)  # só os que ainda vão acontecer
+        .order_by('fim')                      # ordena do mais próximo pro mais distante
+    )[:3]  # limita aos 5 primeiros
+    
+
+    pode_gerenciar = request.user.is_staff or request.user.groups.filter(name='Organizadores').exists()
+
     context = {
         'posts': posts,
         'chats': chats,
+        'eventos': eventos,
+        'pode_gerenciar': pode_gerenciar,
         'user': request.user,
     }
     return render(request, 'feed/feed.html', context)
+
 
 @login_required
 def atualizar_chats(request):

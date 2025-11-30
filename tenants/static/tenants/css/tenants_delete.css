@@ -1,0 +1,120 @@
+:root {
+  --bg: #F5F7FB;
+  --card-bg: #FFFFFF;
+  --text: #1F2937;
+  --muted: #6B7280;
+  --border: #E6E9F2;
+  --primary: #4C6FFF; 
+  --danger: #4C6FFF; 
+  --danger-hover: #3e5ae5;
+  --soft-shadow: 0 6px 18px rgba(33, 41, 61, 0.06);
+  --radius: 12px;
+  --max-width: 520px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  box-shadow: var(--soft-shadow);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+/* Título */
+h2 {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--danger); 
+}
+
+/* Texto */
+p {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 26px;
+}
+
+/* Botões */
+form {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Botão cancelar */
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+.btn-secondary:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Botão excluir */
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: var(--soft-shadow);
+}
+.btn-danger:hover {
+  background: var(--danger-hover);
+  transform: translateY(-2px);
+}
+
+/* Responsivo */
+@media (max-width: 560px) {
+  .container {
+    padding: 28px 22px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

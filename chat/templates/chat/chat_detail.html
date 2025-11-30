@@ -26,7 +26,7 @@
     <div class="mensagens" id="mensagens" role="log" aria-live="polite">
         {% if mensagens %}
             {% for msg in mensagens %}
-                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}"
+                <div class="mensagem {% if msg.remetente == request.user %}remetente{% else %}destinatario{% endif %}" id="{{ msg.id }}"
                     role="article"
                     aria-label="Mensagem de {{ msg.remetente.username }}">
                     <div class="mensagem-header">
@@ -164,6 +164,7 @@
 </div>
 
 <script>
+const atualizarMensagensURL = "{% url 'atualizar_mensagens' chat.id %}";
 document.addEventListener("DOMContentLoaded", () => {
     // Campos principais
     const imagemInput = document.getElementById("imagem-upload");
@@ -174,6 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewContent = document.getElementById("preview-content");
     const cancelPreview = document.getElementById("cancel-preview");
     const mensagensDiv = document.getElementById("mensagens");
+    
 
     // *** MUDANÇA: Função de formatação de tamanho de arquivo ***
     function formatBytes(bytes, decimals = 2) {
@@ -301,5 +303,145 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("load", () => scrollToBottom(false));
 });
+
+// ===== LONG POLLING DE MENSAGENS ===== //
+
+let lastMessageId = 0;
+
+function longPollingMensagens() {
+    fetch(`${atualizarMensagensURL}?after=${lastMessageId}`)
+        .then(r => r.json())
+        .then(data => {
+
+            if (data.mensagens.length > 0) {
+                atualizarMensagensNaTela(data.mensagens);
+                lastMessageId = data.mensagens[data.mensagens.length - 1].id;
+            }
+
+            longPollingMensagens(); // continua
+        })
+        .catch(() => {
+            setTimeout(longPollingMensagens, 1500);
+        });
+}
+
+function atualizarMensagensNaTela(mensagens) {
+    const mensagensDiv = document.getElementById("mensagens");
+    
+    // 🟢 CRÍTICO: Se não houver mensagens ou se a última mensagem já foi vista, não faz nada
+    if (mensagens.length === 0) return;
+
+    // Filtra apenas as mensagens que são novas (ID > lastMessageId)
+    const novasMensagens = mensagens.filter(msg => msg.id > lastMessageId);
+
+    if (novasMensagens.length === 0) {
+        // Nenhuma nova mensagem.
+        return; 
+    }
+
+    // Pega o ID da última mensagem para a próxima verificação
+    lastMessageId = novasMensagens[novasMensagens.length - 1].id; 
+    
+    // 🟢 Determina se o usuário estava no final para rolar (evita pular)
+    // Se a diferença entre a altura total e o scroll atual for menor que a altura visível (com margem)
+    const shouldScroll = mensagensDiv.scrollHeight - mensagensDiv.scrollTop <= mensagensDiv.clientHeight + 50; 
+
+    novasMensagens.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("mensagem");
+        div.id = msg.id; // Adiciona o ID ao elemento
+        
+        if (msg.meu) div.classList.add("remetente");
+        else div.classList.add("destinatario");
+
+        let conteudoHtml = '';
+
+        // 🟢 Reconstrução da Lógica de Conteúdo com os novos campos (imagem_url, etc.)
+        if (msg.conteudo) {
+            conteudoHtml += `<p>${msg.conteudo}</p>`;
+        }
+        
+        if (msg.imagem_url) {
+            conteudoHtml += `
+                <figure class="media-card">
+                    <img src="${msg.imagem_url}" class="msg-media-img" alt="${msg.imagem_nome || ''}">
+                    ${msg.imagem_nome ? `<figcaption class="media-caption">${msg.imagem_nome}</figcaption>` : ''}
+                </figure>
+            `;
+        }
+
+        if (msg.video_url) {
+            conteudoHtml += `
+                <figure class="media-card">
+                    <video controls class="msg-media-video" aria-label="${msg.video_nome || ''}">
+                        <source src="${msg.video_url}" type="video/mp4">
+                    </video>
+                    ${msg.video_nome ? `<figcaption class="media-caption">${msg.video_nome}</figcaption>` : ''}
+                </figure>
+            `;
+        }
+
+        if (msg.arquivo_url) {
+            conteudoHtml += `
+                <div class="file-card">
+                    <div class="file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </div>
+                    <div class="file-mid">
+                        <div class="file-name">${msg.arquivo_nome || 'Arquivo'}</div>
+                        ${msg.arquivo_tamanho ? `<div class="file-meta">${msg.arquivo_tamanho}</div>` : ''}
+                    </div>
+                    <div class="file-right">
+                        <a href="${msg.arquivo_url}" download class="msg-file">Baixar</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (!msg.conteudo && !msg.imagem_url && !msg.video_url && !msg.arquivo_url) {
+             conteudoHtml += '<p class="msg-corrompida">&lt;mensagem corrompida&gt;</p>';
+        }
+
+        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+        let horaLocal = '';
+        if (msg.hora_utc) {
+            horaLocal = new Date(msg.hora_utc).toLocaleTimeString(navigator.language, options);
+        }
+
+        let html = `
+            <div class="mensagem-header">
+                <span class="mensagem-autor">${msg.autor}</span>
+            </div>
+            <div class="mensagem-conteudo">
+                ${conteudoHtml}
+            </div>
+            <div class="mensagem-footer">
+                <span class="mensagem-hora">${horaLocal}</span>
+                ${msg.meu ? '<span class="check-icon">✓✓</span>' : ''}
+            </div>
+        `;
+
+        div.innerHTML = html;
+        mensagensDiv.appendChild(div); // 🟢 Apenas adiciona ao final
+    });
+
+    // Rola para o final APENAS se o usuário estava no final
+    if (shouldScroll) {
+        mensagensDiv.scrollTo({ top: mensagensDiv.scrollHeight, behavior: "smooth" });
+    }
+}
+
+// 🟢 Adicionar a lógica de inicialização (No fim do script):
+document.addEventListener("DOMContentLoaded", () => {
+    // Inicializa lastMessageId com o ID da última mensagem renderizada pelo template
+    const allMessages = document.querySelectorAll(".mensagem");
+    if (allMessages.length > 0) {
+        const lastMsgElement = allMessages[allMessages.length - 1];
+        lastMessageId = parseInt(lastMsgElement.id || 0);
+    }
+    
+    longPollingMensagens();
+});
+
 </script>
 {% endblock content %}

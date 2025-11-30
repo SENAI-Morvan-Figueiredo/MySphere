@@ -21,6 +21,7 @@ from django.urls import reverse
 from .models import Chat, Message, User
 from .forms import MessageForm
 from django.contrib import messages
+import os
 
 @login_required
 @require_POST
@@ -128,27 +129,34 @@ def chat_detail(request, chat_id):
 def visualizar_arquivo(request, msg_id, tipo):
     try:
         msg = Message.objects.get(id=msg_id)
+
         if request.user not in [msg.chat.user1, msg.chat.user2]:
             raise Http404("Acesso negado")
 
-        # Seleciona o campo correto
         file_field = getattr(msg, tipo, None)
+
         if not file_field:
             raise Http404("Arquivo não encontrado")
 
-        # Descriptografa
+        # Caminho real do arquivo
+        file_path = file_field.path
+
+        # ❗ Se não existe no filesystem → NÃO joga 500
+        if not os.path.exists(file_path):
+            raise Http404("Arquivo físico não encontrado")
+
         decrypted_file = msg.get_decrypted_file(file_field)
+
         if decrypted_file is None:
             raise Http404("Erro ao descriptografar")
 
-        # Define tipo de mídia
-        content_type = "application/octet-stream"
-        if tipo == "imagem":
-            content_type = "image/jpeg"
-        elif tipo == "video":
-            content_type = "video/mp4"
+        content_type = {
+            "imagem": "image/jpeg",
+            "video": "video/mp4",
+        }.get(tipo, "application/octet-stream")
 
         return FileResponse(decrypted_file, content_type=content_type)
+
     except Message.DoesNotExist:
         raise Http404("Mensagem não encontrada")
 
@@ -184,3 +192,38 @@ def atualizar_chats(request):
         })
 
     return JsonResponse({'chats': chat_list})
+
+@login_required
+@login_required
+def atualizar_mensagens(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if request.user not in [chat.user1, chat.user2]:
+        return JsonResponse({'erro': 'acesso negado'}, status=403)
+
+    after = request.GET.get("after")
+
+    if after:
+        mensagens = chat.messages.filter(id__gt=after).order_by("criado_em")
+    else:
+        mensagens = chat.messages.order_by("criado_em")
+
+    def get_view_url(field_name, msg_obj):
+        if getattr(msg_obj, field_name):
+            return reverse("visualizar_arquivo", args=[msg_obj.id, field_name])
+        return None
+
+    msgs_json = []
+    for msg in mensagens:
+        msgs_json.append({
+            "id": msg.id,
+            "autor": msg.remetente.username,
+            "conteudo": msg.conteudo or "",
+            "imagem_url": get_view_url("imagem", msg),
+            "video_url": get_view_url("video", msg),
+            "arquivo_url": get_view_url("arquivo", msg),
+            "hora_utc": msg.criado_em.isoformat(),
+            "meu": msg.remetente == request.user,
+        })
+
+    return JsonResponse({"mensagens": msgs_json})

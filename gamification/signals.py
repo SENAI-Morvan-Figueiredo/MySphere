@@ -21,7 +21,6 @@ def criar_registro_de_pontos(sender, instance, created, **kwargs):
         else:
             print("Usuário criado sem tenant:", instance.username)
 
-# ADICIONA PONTOS E CONQUISTAS AO CONCLUIR UMA TAREFA
 @receiver(pre_save, sender=User_Task)
 def add_points_and_conquista(sender, instance, **kwargs):
 
@@ -29,9 +28,7 @@ def add_points_and_conquista(sender, instance, **kwargs):
         return
 
     previous = User_Task.objects.get(pk=instance.pk)
-
     if not previous.concluido and instance.concluido:
-
         task = instance.task
         user = instance.user  
         points_obj, _ = Points.objects.get_or_create(
@@ -45,8 +42,7 @@ def add_points_and_conquista(sender, instance, **kwargs):
         )
 
         points_obj.points_atual = F('points_atual') + task.pontos
-        points_obj.points_total = F('points_total') + task.pontos
-        points_obj.save(update_fields=['points_atual', 'points_total'])
+        points_obj.save(update_fields=['points_atual'])
 
         if task.conquista:
             User_Conquista.objects.get_or_create(

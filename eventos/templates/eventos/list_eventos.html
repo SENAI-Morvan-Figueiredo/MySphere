@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventos - Compacto</title>
+    <link rel="stylesheet" href="{% static 'css/list_eventos.css' %}">
+</head>
+<body>
+
+<div class="eventos-grid">
+    {% for evento in eventos %}
+        {% include "components/evento_card.html" with evento=evento pode_gerenciar=pode_gerenciar %}
+    {% endfor %}
+</div>
+
+</body>
+</html>

@@ -29,6 +29,7 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('game/', include('gamification.urls')),
     path('staff/', include('staff.urls')),
+    path('eventos/', include('eventos.urls')),
 ]
 
 if settings.DEBUG:

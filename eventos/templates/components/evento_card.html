@@ -1,0 +1,25 @@
+<div class="evento-card">
+    {% if evento.foto %}
+        <img src="{{ evento.foto.url }}" class="evento-img" alt="Imagem do evento">
+    {% else %}
+        <div class="evento-img placeholder"></div>
+    {% endif %}
+
+    <div class="evento-info">
+        <h4 class="evento-titulo">{{ evento.titulo }}</h4>
+
+        <div class="evento-datas">
+            <span>{{ evento.inicio|date:"d/m H:i" }} → {{ evento.fim|date:"d/m H:i" }}</span>
+        </div>
+
+        {% if pode_gerenciar %}
+        <div class="evento-acoes">
+            <a href="{% url 'editar_evento' evento.id %}" class="btn-acao editar">✏️</a>
+            <form action="{% url 'excluir_evento' evento.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn-acao excluir" onclick="return confirm('Excluir?')">🗑️</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
