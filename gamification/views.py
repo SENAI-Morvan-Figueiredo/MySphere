@@ -58,8 +58,7 @@ class GameHomeView(TenantAccessMixin, ListView):
             ).annotate(
                 posicao=Window(
                     expression=RowNumber(),
-                    order_by=F('points_total').desc()
-
+                    order_by=[F('points_atual').desc()]
                 )
             ).order_by('-points_atual')
 

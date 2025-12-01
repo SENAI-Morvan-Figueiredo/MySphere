@@ -111,6 +111,7 @@ body {
   font-size: 0.95rem;
   font-family: inherit;
   transition: border-color .2s;
+  width: 100%; /* ADICIONADO: Garante que os inputs de formulário sempre usem 100% */
 }
 
 .user-task-form input:focus,
@@ -129,4 +130,13 @@ body {
 @media (max-width: 600px) {
   .wrap { padding: 16px; margin: 20px; }
   .user-task-form p { margin-bottom: 14px; }
+  
+  /* ADICIONADO: Responsividade para botões */
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .form-actions .btn {
+    width: 100%;
+  }
 }
