@@ -13,4 +13,5 @@ urlpatterns = [
     path('search/', views.search_view, name='search'),
     path('autocomplete/', views.autocomplete_view, name='autocomplete'),
     path('atualizar_chats/', views.atualizar_chats, name='atualizar_chats'),
+    path('check_new_posts/', views.check_new_posts, name='check_new_posts'),
 ]

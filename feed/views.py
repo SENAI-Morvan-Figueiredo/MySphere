@@ -10,6 +10,13 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from eventos.models import Evento
 from django.utils import timezone
+import time
+from django.conf import settings
+from django.template.loader import render_to_string
+
+# Define o tempo máximo de espera (em segundos)
+LONG_POLLING_TIMEOUT = 10 # 10 segundos de espera
+CHECK_INTERVAL = 1 # Verificar a cada 1 segundo
 
 @login_required
 def feed_view(request):
@@ -41,6 +48,8 @@ def feed_view(request):
     
 
     pode_gerenciar = request.user.is_staff or request.user.groups.filter(name='Organizadores').exists()
+    latest_post = Post.objects.filter(tenant=request.user.tenant).first()
+    latest_post_id = latest_post.post_id if latest_post else 0
 
     context = {
         'posts': posts,
@@ -48,6 +57,7 @@ def feed_view(request):
         'eventos': eventos,
         'pode_gerenciar': pode_gerenciar,
         'user': request.user,
+        'latest_post_id': latest_post_id, # 👈 Adicionado o ID do post mais recente
     }
     return render(request, 'feed/feed.html', context)
 
@@ -280,3 +290,55 @@ def autocomplete_view(request):
             } for hashtag in hashtags]
     
     return JsonResponse(results, safe=False)
+
+@login_required
+def check_new_posts(request):
+    """View para o Long Polling do feed."""
+    # Obtém o ID do último post visto pelo cliente
+    last_post_id = request.GET.get('last_post_id', 0)
+    try:
+        last_post_id = int(last_post_id)
+    except ValueError:
+        last_post_id = 0
+
+    start_time = time.time()
+    
+    # Loop de Long Polling
+    while time.time() - start_time < LONG_POLLING_TIMEOUT:
+        # Busca por posts mais novos que o último ID
+        new_posts = Post.objects.filter(
+            tenant=request.user.tenant,
+            post_id__gt=last_post_id
+        ).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags').order_by('-criado_em')
+        
+        if new_posts.exists():
+            # Se houver novos posts, renderiza-os e retorna
+            
+            # Garante que as propriedades dinâmicas (ex: user_has_liked) são setadas
+            for post in new_posts:
+                post.user_has_liked = post.likes.filter(user=request.user).exists()
+                # ❗ Importante: É necessário um template específico para renderizar posts individualmente
+                # Vamos assumir que você criará um `feed/post_card.html` ou usar a própria estrutura de `feed.html`
+                # para isolar a renderização do post. 
+                # Para simplificar AQUI, vamos retornar JSON e montar no JS, mas a renderização ideal seria no backend.
+            
+            # Encontra o ID do post mais recente para o próximo polling
+            latest_post_id = new_posts.first().post_id
+
+            # Renderiza os novos posts para o cliente
+            rendered_posts = render_to_string(
+                'feed/new_posts.html', # 👈 Você precisará criar este template
+                {'posts': new_posts, 'request': request}
+            )
+
+            return JsonResponse({
+                'new_posts_html': rendered_posts,
+                'latest_post_id': latest_post_id,
+                'status': 'updated'
+            })
+        
+        # Espera um pouco antes de verificar novamente
+        time.sleep(CHECK_INTERVAL)
+
+    # Se o timeout for atingido, retorna sem novos posts
+    return JsonResponse({'status': 'timeout', 'latest_post_id': last_post_id})

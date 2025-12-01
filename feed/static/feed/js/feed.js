@@ -357,3 +357,72 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(atualizarChats, 1000);
 });
 
+function startLongPolling() {
+    const feedCenter = document.querySelector('.feed-center');
+    if (!feedCenter) return;
+
+    let latestPostId = feedCenter.dataset.latestPostId || 0;
+
+    // 👇 Verifique se a URL está assim (sem /feed/ no início):
+    const checkUrl = `/check_new_posts/?last_post_id=${latestPostId}`;
+
+    fetch(checkUrl, {
+        method: 'GET',
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Erro na resposta do Long Polling");
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'updated') {
+            console.log('Novos posts recebidos.');
+            // Atualiza o ID do último post para a próxima chamada
+            feedCenter.dataset.latestPostId = data.latest_post_id;
+            
+            // Insere os novos posts no topo do feed
+            const newPostsContainer = document.createElement('div');
+            newPostsContainer.innerHTML = data.new_posts_html;
+            
+            // Encontra o primeiro elemento filho de feedCenter que não seja o create-post-card
+            const createPostCard = document.querySelector('.create-post-card');
+            
+            // Insere o novo HTML logo após a área de criação de posts
+            createPostCard.insertAdjacentElement('afterend', newPostsContainer);
+            
+            // Remove a mensagem 'Nenhum post ainda' se ela existir
+            const noPostsMessage = document.querySelector('.no-posts');
+            if (noPostsMessage) {
+                noPostsMessage.remove();
+            }
+
+            // ⚠️ NOTA: Funções como `like-btn` e `share-btn` precisarão ser re-vinculadas 
+            // aos novos elementos HTML inseridos.
+            
+            // Você pode adicionar uma animação sutil aqui.
+
+        } else if (data.status === 'timeout') {
+            console.log('Timeout atingido, sem novos posts.');
+        }
+        
+        // Repete o polling após um breve delay, independentemente do status
+        setTimeout(startLongPolling, 1000); // 1 segundo de espera entre as chamadas (ou timeout)
+    })
+    .catch(error => {
+        console.error('Erro no Long Polling:', error);
+        // Tenta novamente após um tempo maior em caso de erro
+        setTimeout(startLongPolling, 5000); 
+    });
+}
+
+// Inicia o Long Polling após o carregamento da página
+document.addEventListener("DOMContentLoaded", function () {
+    // ... (código do chat existente)
+
+    // Inicia o Long Polling do feed
+    startLongPolling();
+});
+
+// ⚠️ Importante: A função toggleCommentBox precisa estar disponível globalmente
+// para que o HTML dinâmico dos novos posts a chame.
+window.toggleCommentBox = toggleCommentBox;
+
