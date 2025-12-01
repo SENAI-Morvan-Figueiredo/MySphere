@@ -357,72 +357,209 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(atualizarChats, 1000);
 });
 
+function createPostHTML(p) {
+    return `
+    <article class="post-card" data-post-id="${p.id}">
+        <div class="post-header">
+            <div class="post-author">
+                ${p.user.foto ? `
+                    <img src="${p.user.foto}" class="user-avatar-small">
+                ` : `
+                    <div class="user-avatar-small default-avatar">${p.user.username[0].toUpperCase()}</div>
+                `}
+                <div class="author-info">
+                    <a href="/perfil/${p.user.id}">
+                        <h4>${p.user.nome}</h4>
+                    </a>
+                    <p class="post-time">${p.criado_em}</p>
+                </div>
+            </div>
+            <button class="post-menu">⋮</button>
+        </div>
+
+        <div class="post-content">
+            <p>${p.conteudo}</p>
+        </div>
+
+        ${p.imagem ? `
+        <div class="post-media">
+            <img src="${p.imagem}">
+        </div>` : ''}
+
+        ${p.video ? `
+        <div class="post-media">
+            <video controls>
+                <source src="${p.video}">
+            </video>
+        </div>` : ''}
+
+        ${p.arquivo ? `
+        <div class="post-file">
+            <a href="${p.arquivo}" download class="file-link">
+                <span class="icon">📎</span> ${p.arquivo_nome}
+            </a>
+        </div>` : ''}
+
+        <div class="post-stats">
+            <span class="post-likes">
+                ❤️ <span class="likes-count">${p.likes}</span> Like
+            </span>
+            <div class="post-interactions">
+                <span><span class="comments-count">${p.comments}</span> Comment</span>
+                <span><span class="shares-count">${p.shares}</span> Share</span>
+            </div>
+        </div>
+
+        <div class="post-actions-bar">
+            <button class="action-btn like-btn ${p.user_has_liked ? "liked" : ""}" data-post-id="${p.id}">
+                <span class="icon">❤️</span> Like
+            </button>
+            <button class="action-btn comment-btn" onclick="toggleCommentBox(${p.id})">
+                <span class="icon">💬</span> Comment
+            </button>
+            <button class="action-btn share-btn" data-post-id="${p.id}">
+                <span class="icon">🔗</span> Share
+            </button>
+        </div>
+
+        <div class="comments-section" id="comments-${p.id}" style="display:none">
+            <div class="comments-list"></div>
+            <form class="comment-form" data-post-id="${p.id}">
+                <input type="text" name="conteudo" placeholder="Write a comment...">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </article>`;
+}
+
+
 function startLongPolling() {
     const feedCenter = document.querySelector('.feed-center');
     if (!feedCenter) return;
 
     let latestPostId = feedCenter.dataset.latestPostId || 0;
-
-    // 👇 Verifique se a URL está assim (sem /feed/ no início):
     const checkUrl = `/check_new_posts/?last_post_id=${latestPostId}`;
 
-    fetch(checkUrl, {
-        method: 'GET',
-    })
+    fetch(checkUrl, { method: 'GET' })
     .then(response => {
         if (!response.ok) throw new Error("Erro na resposta do Long Polling");
         return response.json();
     })
     .then(data => {
+
         if (data.status === 'updated') {
-            console.log('Novos posts recebidos.');
-            // Atualiza o ID do último post para a próxima chamada
+            console.log("NOVOS POSTS!");
+
+            // Atualiza o último ID
             feedCenter.dataset.latestPostId = data.latest_post_id;
-            
-            // Insere os novos posts no topo do feed
-            const newPostsContainer = document.createElement('div');
-            newPostsContainer.innerHTML = data.new_posts_html;
-            
-            // Encontra o primeiro elemento filho de feedCenter que não seja o create-post-card
+
             const createPostCard = document.querySelector('.create-post-card');
-            
-            // Insere o novo HTML logo após a área de criação de posts
-            createPostCard.insertAdjacentElement('afterend', newPostsContainer);
-            
-            // Remove a mensagem 'Nenhum post ainda' se ela existir
-            const noPostsMessage = document.querySelector('.no-posts');
-            if (noPostsMessage) {
-                noPostsMessage.remove();
-            }
 
-            // ⚠️ NOTA: Funções como `like-btn` e `share-btn` precisarão ser re-vinculadas 
-            // aos novos elementos HTML inseridos.
-            
-            // Você pode adicionar uma animação sutil aqui.
+            // Adiciona cada novo post no topo
+            data.posts.forEach(p => {
+                const postHTML = createPostHTML(p);
 
-        } else if (data.status === 'timeout') {
-            console.log('Timeout atingido, sem novos posts.');
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = postHTML;
+
+                createPostCard.insertAdjacentElement('afterend', wrapper.firstElementChild);
+            });
+
+            // remove msg "nenhum post"
+            const noPosts = document.querySelector('.no-posts');
+            if (noPosts) noPosts.remove();
+
+            // reativar botões nos novos posts
+            rebindPostEvents();
         }
-        
-        // Repete o polling após um breve delay, independentemente do status
-        setTimeout(startLongPolling, 1000); // 1 segundo de espera entre as chamadas (ou timeout)
+
+        // sempre repete
+        setTimeout(startLongPolling, 1000);
+
     })
-    .catch(error => {
-        console.error('Erro no Long Polling:', error);
-        // Tenta novamente após um tempo maior em caso de erro
-        setTimeout(startLongPolling, 5000); 
+    .catch(err => {
+        console.error("Erro long polling:", err);
+        setTimeout(startLongPolling, 5000);
     });
 }
 
-// Inicia o Long Polling após o carregamento da página
-document.addEventListener("DOMContentLoaded", function () {
-    // ... (código do chat existente)
 
-    // Inicia o Long Polling do feed
+function likeHandler(e) {
+    e.preventDefault();
+    const postId = this.dataset.postId;
+
+    fetch(`/post/${postId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        card.querySelector('.likes-count').textContent = data.total_likes;
+
+        if (data.liked) this.classList.add("liked");
+        else this.classList.remove("liked");
+    });
+}
+
+function shareHandler(e) {
+    e.preventDefault();
+    const postId = this.dataset.postId;
+
+    fetch(`/post/${postId}/share/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrftoken }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        card.querySelector('.shares-count').textContent = data.total_shares;
+    });
+}
+
+function commentHandler(e) {
+    e.preventDefault();
+    const postId = this.dataset.postId;
+    const conteudo = this.querySelector("input").value;
+
+    if (!conteudo.trim()) return;
+
+    fetch(`/post/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `conteudo=${encodeURIComponent(conteudo)}`
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            const list = this.closest('.comments-section').querySelector('.comments-list');
+
+            list.innerHTML += `
+                <div class="comment">
+                    <div class="comment-author">
+                        <div class="user-avatar-tiny default-avatar">${data.comment.user[0].toUpperCase()}</div>
+                    </div>
+                    <div class="comment-content">
+                        <h5>${data.comment.user}</h5>
+                        <p>${data.comment.conteudo}</p>
+                        <span class="comment-time">${data.comment.criado_em}</span>
+                    </div>
+                </div>
+            `;
+
+            const card = document.querySelector(`[data-post-id="${postId}"]`);
+            card.querySelector('.comments-count').textContent = data.total_comments;
+
+            this.querySelector("input").value = "";
+        }
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Iniciando long polling...");
     startLongPolling();
 });
-
-// ⚠️ Importante: A função toggleCommentBox precisa estar disponível globalmente
-// para que o HTML dinâmico dos novos posts a chame.
-window.toggleCommentBox = toggleCommentBox;
-

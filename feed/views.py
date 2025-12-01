@@ -293,8 +293,7 @@ def autocomplete_view(request):
 
 @login_required
 def check_new_posts(request):
-    """View para o Long Polling do feed."""
-    # Obtém o ID do último post visto pelo cliente
+    print("📡 Check_new_posts foi chamado!")
     last_post_id = request.GET.get('last_post_id', 0)
     try:
         last_post_id = int(last_post_id)
@@ -302,43 +301,48 @@ def check_new_posts(request):
         last_post_id = 0
 
     start_time = time.time()
-    
-    # Loop de Long Polling
+
     while time.time() - start_time < LONG_POLLING_TIMEOUT:
-        # Busca por posts mais novos que o último ID
         new_posts = Post.objects.filter(
             tenant=request.user.tenant,
             post_id__gt=last_post_id
         ).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags').order_by('-criado_em')
-        
+
         if new_posts.exists():
-            # Se houver novos posts, renderiza-os e retorna
-            
-            # Garante que as propriedades dinâmicas (ex: user_has_liked) são setadas
-            for post in new_posts:
-                post.user_has_liked = post.likes.filter(user=request.user).exists()
-                # ❗ Importante: É necessário um template específico para renderizar posts individualmente
-                # Vamos assumir que você criará um `feed/post_card.html` ou usar a própria estrutura de `feed.html`
-                # para isolar a renderização do post. 
-                # Para simplificar AQUI, vamos retornar JSON e montar no JS, mas a renderização ideal seria no backend.
-            
-            # Encontra o ID do post mais recente para o próximo polling
             latest_post_id = new_posts.first().post_id
 
-            # Renderiza os novos posts para o cliente
-            rendered_posts = render_to_string(
-                'feed/new_posts.html', # 👈 Você precisará criar este template
-                {'posts': new_posts, 'request': request}
-            )
+            # Transformar posts em JSON
+            posts_json = []
+            for p in new_posts:
+                posts_json.append({
+                    "id": p.post_id,
+                    "conteudo": p.conteudo_formatado,
+                    "user": {
+                        "id": p.user.id,
+                        "username": p.user.username,
+                        "nome": p.user.get_full_name() or p.user.username,
+                        "foto": p.user.foto.url if p.user.foto else None
+                    },
+                    "criado_em": p.criado_em.strftime('%d %b at %H:%M'),
+                    "imagem": p.imagem.url if p.imagem else None,
+                    "video": p.video.url if p.video else None,
+                    "arquivo": p.arquivo.url if p.arquivo else None,
+                    "arquivo_nome": p.arquivo.name[6:] if p.arquivo else None,
+                    "likes": p.total_likes(),
+                    "comments": p.total_comments(),
+                    "shares": p.total_shares(),
+                    "user_has_liked": p.likes.filter(user=request.user).exists(),
+                })
 
             return JsonResponse({
-                'new_posts_html': rendered_posts,
+                'status': 'updated',
                 'latest_post_id': latest_post_id,
-                'status': 'updated'
+                'posts': posts_json
             })
-        
-        # Espera um pouco antes de verificar novamente
+
         time.sleep(CHECK_INTERVAL)
 
-    # Se o timeout for atingido, retorna sem novos posts
-    return JsonResponse({'status': 'timeout', 'latest_post_id': last_post_id})
+    return JsonResponse({
+        'status': 'timeout',
+        'latest_post_id': last_post_id
+    })
