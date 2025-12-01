@@ -20,9 +20,10 @@ CHECK_INTERVAL = 0.2 # Verificar a cada 1 segundo
 
 @login_required
 def feed_view(request):
+    # 1. 🟢 CORREÇÃO: Adicionado .order_by('-criado_em')
     posts = Post.objects.filter(
         tenant=request.user.tenant
-    ).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags')
+    ).order_by('-criado_em').select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags')
 
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
@@ -34,30 +35,25 @@ def feed_view(request):
         ultima_msg=Max('messages__criado_em')
     ).order_by('-ultima_msg')[:5]
 
-    # 🔹 Aqui busca os eventos do mesmo tenant do usuário
-    eventos = Evento.objects.filter(
-        tenant=request.user.tenant
-    ).order_by('inicio')
-
-    # 🔹 Se quiser, restringe aos próximos eventos:
     hoje = timezone.now()
     eventos = (
-        Evento.objects.filter(fim__gte=hoje)  # só os que ainda vão acontecer
-        .order_by('fim')                      # ordena do mais próximo pro mais distante
-    )[:3]  # limita aos 5 primeiros
+        Evento.objects.filter(fim__gte=hoje)
+        .order_by('fim')
+    )[:3]
     
-
     pode_gerenciar = request.user.is_staff or request.user.groups.filter(name='Organizadores').exists()
-    latest_post = Post.objects.filter(tenant=request.user.tenant).first()
-    latest_post_id = latest_post.post_id if latest_post else 0
+    
+    # 2. 🟢 CORREÇÃO: Pega o ID do post mais recente (o primeiro da lista)
+    #    sem precisar de uma nova consulta ao banco.
+    latest_post_id = posts[0].post_id if posts else 0
 
     context = {
-        'posts': posts,
+        'posts': posts, # A lista de posts agora está ordenada
         'chats': chats,
         'eventos': eventos,
         'pode_gerenciar': pode_gerenciar,
         'user': request.user,
-        'latest_post_id': latest_post_id, # 👈 Adicionado o ID do post mais recente
+        'latest_post_id': latest_post_id, # O ID inicial agora está correto
     }
     return render(request, 'feed/feed.html', context)
 
@@ -317,7 +313,7 @@ def check_new_posts(request):
     for p in new_posts:
         posts_json.append({
             "id": p.post_id,
-            "conteudo": p.conteudo_formatado,
+            "conteudo": p.conteudo,
             "user": {
                 "id": p.user.id,
                 "username": p.user.username,
