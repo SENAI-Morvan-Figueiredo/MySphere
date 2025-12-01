@@ -15,8 +15,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 
 # Define o tempo máximo de espera (em segundos)
-LONG_POLLING_TIMEOUT = 10 # 10 segundos de espera
-CHECK_INTERVAL = 1 # Verificar a cada 1 segundo
+LONG_POLLING_TIMEOUT = 1 # 10 segundos de espera
+CHECK_INTERVAL = 0.2 # Verificar a cada 1 segundo
 
 @login_required
 def feed_view(request):
@@ -295,54 +295,48 @@ def autocomplete_view(request):
 def check_new_posts(request):
     print("📡 Check_new_posts foi chamado!")
     last_post_id = request.GET.get('last_post_id', 0)
+
     try:
         last_post_id = int(last_post_id)
-    except ValueError:
+    except:
         last_post_id = 0
 
-    start_time = time.time()
+    # Apenas busca — sem loop, sem sleep → nunca trava Gunicorn
+    new_posts = Post.objects.filter(
+        tenant=getattr(request.user, "tenant", None),
+        post_id__gt=last_post_id
+    ).select_related("user").order_by("-criado_em")
 
-    while time.time() - start_time < LONG_POLLING_TIMEOUT:
-        new_posts = Post.objects.filter(
-            tenant=request.user.tenant,
-            post_id__gt=last_post_id
-        ).select_related('user').prefetch_related('likes', 'comments', 'shares', 'hashtags').order_by('-criado_em')
+    if not new_posts.exists():
+        return JsonResponse({
+            "status": "timeout",
+            "latest_post_id": last_post_id
+        })
 
-        if new_posts.exists():
-            latest_post_id = new_posts.first().post_id
-
-            # Transformar posts em JSON
-            posts_json = []
-            for p in new_posts:
-                posts_json.append({
-                    "id": p.post_id,
-                    "conteudo": p.conteudo_formatado,
-                    "user": {
-                        "id": p.user.id,
-                        "username": p.user.username,
-                        "nome": p.user.get_full_name() or p.user.username,
-                        "foto": p.user.foto.url if p.user.foto else None
-                    },
-                    "criado_em": p.criado_em.strftime('%d %b at %H:%M'),
-                    "imagem": p.imagem.url if p.imagem else None,
-                    "video": p.video.url if p.video else None,
-                    "arquivo": p.arquivo.url if p.arquivo else None,
-                    "arquivo_nome": p.arquivo.name[6:] if p.arquivo else None,
-                    "likes": p.total_likes(),
-                    "comments": p.total_comments(),
-                    "shares": p.total_shares(),
-                    "user_has_liked": p.likes.filter(user=request.user).exists(),
-                })
-
-            return JsonResponse({
-                'status': 'updated',
-                'latest_post_id': latest_post_id,
-                'posts': posts_json
-            })
-
-        time.sleep(CHECK_INTERVAL)
+    posts_json = []
+    for p in new_posts:
+        posts_json.append({
+            "id": p.post_id,
+            "conteudo": p.conteudo_formatado,
+            "user": {
+                "id": p.user.id,
+                "username": p.user.username,
+                "nome": p.user.get_full_name() or p.user.username,
+                "foto": p.user.foto.url if getattr(p.user, "foto", None) else None
+            },
+            "criado_em": p.criado_em.strftime("%d %b at %H:%M"),
+            "imagem": p.imagem.url if getattr(p, "imagem", None) else None,
+            "video": p.video.url if getattr(p, "video", None) else None,
+            "arquivo": p.arquivo.url if getattr(p, "arquivo", None) else None,
+            "arquivo_nome": p.arquivo.name.split("/")[-1] if getattr(p, "arquivo", None) else None,
+            "likes": p.total_likes(),
+            "comments": p.total_comments(),
+            "shares": p.total_shares(),
+            "user_has_liked": p.likes.filter(user=request.user).exists(),
+        })
 
     return JsonResponse({
-        'status': 'timeout',
-        'latest_post_id': last_post_id
+        "status": "updated",
+        "latest_post_id": new_posts.first().post_id,
+        "posts": posts_json,
     })
