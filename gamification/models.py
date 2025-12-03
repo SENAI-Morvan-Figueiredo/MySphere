@@ -50,8 +50,13 @@ class User_Task(models.Model):
     def __str__(self):
         return f"{self.user.username} completou {self.task.titulo}"
 
-
 class Points(models.Model):
+    
+    LEVELS = [
+        {"nome": "Iniciante", "min": 0},
+        {"nome": "Intermediário", "min": 500},
+        {"nome": "Avançado", "min": 1000},
+    ]
     points_id = models.AutoField(primary_key=True, unique=True)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="points")
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="points_owner")
@@ -64,16 +69,18 @@ class Points(models.Model):
         return f"{self.user.username} - {self.points_total} pontos, ({self.nivel})"
 
     def atualizar_nivel(self):
-        if self.points_total >= 1000:
-            novo = 'Avançado'
-        elif self.points_total >= 500:
-            novo = 'Intermediário'
-        else:
-            novo = 'Iniciante'
+        for level in reversed(self.LEVELS): 
+            if self.points_atual >= level["min"]:
+                if self.nivel != level["nome"]:
+                    self.nivel = level["nome"]
+                    self.save(update_fields=['nivel'])
+                break
 
-        if self.nivel != novo:
-            self.nivel = novo
-            self.save(update_fields=['nivel'])
+    def pontos_para_proximo_nivel(self):
+        for level in self.LEVELS:
+            if level["min"] > self.points_atual:
+                return level["min"]  
+
 
     def add_points(self, pontos):
         self.points_atual = F('points_atual') + pontos

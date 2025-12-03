@@ -16,7 +16,7 @@ def criar_registro_de_pontos(sender, instance, created, **kwargs):
                 tenant=tenant,
                 points_atual=0,
                 points_total=0,
-                nivel="Iniciante"
+                nivel=1
             )
         else:
             print("Usuário criado sem tenant:", instance.username)
@@ -25,25 +25,22 @@ def criar_registro_de_pontos(sender, instance, created, **kwargs):
 def add_points_and_conquista(sender, instance, **kwargs):
 
     if not instance.pk:
-        return
-
+        return 
     previous = User_Task.objects.get(pk=instance.pk)
+
     if not previous.concluido and instance.concluido:
         task = instance.task
-        user = instance.user  
+        user = instance.user
         points_obj, _ = Points.objects.get_or_create(
             user=user,
             tenant=user.tenant,
             defaults={
                 'points_atual': 0,
                 'points_total': 0,
-                'nivel': 'Iniciante'
+                'nivel': 1
             }
         )
-
-        points_obj.points_atual = F('points_atual') + task.pontos
-        points_obj.save(update_fields=['points_atual'])
-
+        points_obj.add_points(task.pontos)
         if task.conquista:
             User_Conquista.objects.get_or_create(
                 user=user,
