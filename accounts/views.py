@@ -14,9 +14,9 @@ from django.utils.decorators import method_decorator
 import json
 from django.views.decorators.http import require_POST
 from .forms import UserEditFormStaff
+from django.contrib.auth import views as auth_views
 
 # Create your views here.
-
 
 @login_required
 def feed_view(request, username=None):
@@ -275,3 +275,12 @@ class UserStaffEditView(UpdateView):
     form_class = UserEditFormStaff
     template_name = 'staff/staff_users_form.html'
     success_url = reverse_lazy('users_staff')
+ 
+# VIEW QUE ENVIA O EMAIL
+
+class ResetPasswordView(auth_views.PasswordResetView):
+    template_name = 'accounts/password_reset.html'
+    email_template_name = 'accounts/password_reset_email.html'
+    html_email_template_name = 'accounts/password_reset_email.html'
+    subject_template_name = 'accounts/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
