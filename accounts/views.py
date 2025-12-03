@@ -42,11 +42,17 @@ def feed_view(request, username=None):
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
 
-    context = {
-        'posts': posts,
-        'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
-        'user': request.user,
-    }
+        total_likes = Like.objects.filter(post__user=profile_user).count()
+        total_comments = Comment.objects.filter(post__user=profile_user).count()
+
+        context = {
+            'posts': posts,
+            'profile_user': profile_user,
+            'user': request.user,
+            'total_likes': total_likes,
+            'total_comments': total_comments,
+        }
+
 
     return render(request, 'accounts/account_home.html', context)
 
@@ -55,11 +61,9 @@ def feed_view(request, username=None):
 
 @login_required
 def feed_perfil_view(request, pk):
-    # Se for perfil de outro usuário
-    
+
     profile_user = get_object_or_404(User, id=pk)
 
-    # Filtra os posts do usuário específico dentro do mesmo tenant
     posts = (
         Post.objects.filter(
             tenant=profile_user.tenant,
@@ -70,13 +74,23 @@ def feed_perfil_view(request, pk):
         .order_by('-criado_em')
     )
 
+    # Likes recebidos
+    total_likes = Like.objects.filter(post__user=profile_user).count()
+
+    # Comentários recebidos
+    total_comments = Comment.objects.filter(post__user=profile_user).count()
+
     # Marca se o usuário atual curtiu cada post
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
 
     context = {
         'posts': posts,
-        'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
+        'profile_user': profile_user,
+
+        # novos campos
+        'total_likes': total_likes,
+        'total_comments': total_comments,
     }
 
     return render(request, 'accounts/account_perfil.html', context)

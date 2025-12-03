@@ -290,20 +290,24 @@
                 </div>
 
                 <div class="suggestions-card">
-                    <h4>ESTATÍSTICAS</h4>
-                    <div class="stat-item">
-                        <span class="stat-label">Posts</span>
-                        <span class="stat-value">{{ posts|length }}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Likes Recebidos</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Comentários</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                </div>
+    <h4>ESTATÍSTICAS</h4>
+
+    <div class="stat-item">
+        <span class="stat-label">Posts</span>
+        <span class="stat-value">{{ posts|length }}</span>
+    </div>
+
+    <div class="stat-item">
+        <span class="stat-label">Likes Recebidos</span>
+        <span class="stat-value">{{ total_likes }}</span>
+    </div>
+
+    <div class="stat-item">
+        <span class="stat-label">Comentários</span>
+        <span class="stat-value">{{ total_comments }}</span>
+    </div>
+</div>
+
             </aside>
         </div>
 
