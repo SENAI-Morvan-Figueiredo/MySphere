@@ -67,12 +67,16 @@ class GameHomeView(TenantAccessMixin, ListView):
             context['ranking'] = top5
             context['user_line'] = user_line
 
-        ranking_geral = Points.objects.annotate(
-            posicao=Window(
-                expression=RowNumber(),
-                order_by=F('points_total').desc()
+        ranking_geral = (
+            Points.objects.filter(tenant_id=tenant_id)
+            .annotate(
+                posicao=Window(
+                    expression=RowNumber(),
+                    order_by=[F('points_total').desc()]
+                )
             )
-        ).order_by('-points_total')
+            .order_by('-points_total')
+        )
 
         top10_geral = ranking_geral[:5]  
         user_line_geral = ranking_geral.filter(user=user).first()
