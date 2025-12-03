@@ -76,11 +76,23 @@ class Points(models.Model):
                     self.save(update_fields=['nivel'])
                 break
 
-    def pontos_para_proximo_nivel(self):
+    def proximo_nivel_min(self):
         for level in self.LEVELS:
             if level["min"] > self.points_atual:
-                return level["min"]  
+                return level["min"]
+        return None  
 
+    def pontos_faltando(self):
+        proximo = self.proximo_nivel_min()
+        if proximo:
+            return proximo - self.points_atual
+        return 0  
+    
+    def total_do_nivel_atual(self):
+        proximo = self.proximo_nivel_min()
+        if proximo:
+            return proximo
+        return self.points_atual 
 
     def add_points(self, pontos):
         self.points_atual = F('points_atual') + pontos

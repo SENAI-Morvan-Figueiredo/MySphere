@@ -87,6 +87,11 @@ class GameHomeView(TenantAccessMixin, ListView):
         context['user_tasks'] = User_Task.objects.filter(user=user)
         context['conquistas'] = User_Conquista.objects.filter(user=user)
 
+        points = context.get('points', [])
+        for p in points:
+            p.faltam = p.pontos_faltando()
+            p.total_nivel = p.total_do_nivel_atual()
+
         return context
 
 @require_POST

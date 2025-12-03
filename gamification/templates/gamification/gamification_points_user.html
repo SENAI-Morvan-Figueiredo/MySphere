@@ -463,18 +463,19 @@
                     <div class="progress-item">
                         <div class="progress-label">
                             <span>Nível {{ point.nivel }}</span>
+
                             {% if point.faltam > 0 %}
-                                <strong>{{ point.points_atual }}/{{ point.faltam }}</strong>
+                                <strong>{{ point.points_atual }}/{{ point.total_nivel }}</strong>
                             {% else %}
                                 <strong>{{ point.points_atual }}/MAX</strong>
                             {% endif %}
                         </div>
+
                         <div class="progress-bar">
                             {% if point.faltam > 0 %}
-                                {% with total=point.points_atual %}
-                                    <div class="progress-fill"
-                                        style="width: {% widthratio point.points_atual total 100 %}%"></div>
-                                {% endwith %}
+                                <div class="progress-fill"
+                                    style="width: {% widthratio point.points_atual point.total_nivel 100 %}%">
+                                </div>
                             {% else %}
                                 <div class="progress-fill" style="width: 100%"></div>
                             {% endif %}
