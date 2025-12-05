@@ -23,6 +23,9 @@ from .forms import MessageForm
 from django.contrib import messages
 import os
 
+
+
+
 @login_required
 @require_POST
 def criar_chat_ajax(request):
@@ -227,3 +230,51 @@ def atualizar_mensagens(request, chat_id):
         })
 
     return JsonResponse({"mensagens": msgs_json})
+
+
+
+
+@login_required
+def chat_detail(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id, tenant=request.user.tenant)
+
+    # Garantir que o user participa do chat
+    if request.user not in [chat.user1, chat.user2]:
+        return redirect("chat_list")  # ou 403
+    
+    messages = chat.messages.order_by("criado_em")
+
+    return render(request, "chat/chat_detail.html", {
+        "chat": chat,
+        "messages": messages,
+        "other_user": chat.user2 if chat.user1 == request.user else chat.user1
+    })
+
+
+
+@login_required
+def chat_with_user(request, user_id):
+    other_user = get_object_or_404(User, id=user_id, tenant=request.user.tenant)
+
+    # verifica se já existe chat (ordem dos usuários invertida também)
+    chat = (
+        Chat.objects.filter(
+            tenant=request.user.tenant
+        )
+        .filter(
+            models.Q(user1=request.user, user2=other_user) |
+            models.Q(user1=other_user, user2=request.user)
+        )
+        .first()
+    )
+
+    # se não existir, cria
+    if not chat:
+        chat = Chat.objects.create(
+            tenant=request.user.tenant,
+            user1=request.user,
+            user2=other_user
+        )
+
+    # redireciona para a view do chat
+    return redirect("chat_detail", chat_id=chat.id)

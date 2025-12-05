@@ -133,14 +133,11 @@
                         </div>
                         {% endif %}
 
-                        <!-- <div class="profile-actions">
-                            <button class="btn-profile-action btn-primary">
-                                <span class="icon">➕</span> Seguir
-                            </button>
-                            <button class="btn-profile-action">
+                        <div class="profile-actions">
+                            <button onclick="window.location.href='{% url 'open_chat' profile_user.id %}'" class="btn-profile-action">
                                 <span class="icon">💬</span> Mensagem
                             </button>
-                        </div> -->
+                        </div> 
                     </div>
                 </div>
 

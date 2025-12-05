@@ -16,4 +16,7 @@ urlpatterns = [
     path("atualizar_chats/", views.atualizar_chats, name="atualizar_chats"),
 
     path("<int:chat_id>/atualizar/", views.atualizar_mensagens, name="atualizar_mensagens"),
+    
+    path("com/<int:user_id>/", views.chat_with_user, name="chat_with_user"),
+    
 ]

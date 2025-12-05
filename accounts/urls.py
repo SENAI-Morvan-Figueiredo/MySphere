@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import Users, UserLoginView
+from .views import Users, UserLoginView, open_chat
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -16,6 +16,8 @@ urlpatterns = [
     path('home/<int:post_id>/like/', views.like_post_home, name='like_post'),
     path('home/<int:post_id>/comment/', views.comment_post_home, name='comment_post'),
     path('home/<int:post_id>/share/', views.share_post_home, name='share_post'),
+    path("chat/open/<int:user_id>/", open_chat, name="open_chat"),
+
     
     # TROCAR SENHA
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='accounts/password_change.html'), name='password_change'),
