@@ -9,6 +9,7 @@
     {% block css %}{% endblock %} 
     <link rel="stylesheet" href="{% static 'chat/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global_scrollbar.css' %}">
     <script src="{% static 'chat/js/script.js' %}"></script>
 </head>
 <body>
@@ -45,7 +46,7 @@
             <div class="chat-menu">
                 <h1>Chat</h1>
                 <input type="text" placeholder="Pesquisar..." class="chat-barra" id="chatSearch">
-                
+
                 <a class="add-btn">+ Novo Chat</a>
                 <div class="overlay" id="overlay"></div>
 
@@ -59,7 +60,7 @@
                     <p id="formMessage"></p>
                     <button class="close-btn" id="closeBtn">&times;</button>
                 </div>
-                
+
                 <hr>
             </div>
             <div class="chat-list">
@@ -137,7 +138,7 @@
                 if (!chatListContainer) return;
 
                 let newHtml = '';
-                
+
                 // Tenta determinar o ID do chat atualmente aberto (se estiver em chat_detail)
                 const pathParts = window.location.pathname.split('/');
                 // Procura um ID no caminho que se pareça com /chat/123/
@@ -150,12 +151,12 @@
                         // Verifica se é o chat ativo para adicionar a classe de estilo
                         const isCurrentChat = chat.id == currentChatId;
                         const activeClass = isCurrentChat ? ' active-chat' : '';
-                        
+
                         // 1. Determinar o avatar
                         const avatarHtml = chat.foto_url 
                             ? `<img src="${chat.foto_url}" alt="${chat.username}">`
                             : `<div class="default-avatar">${chat.username.charAt(0).toUpperCase()}</div>`;
-                        
+
                         // 2. Determinar a última mensagem
 
                         const options = { hour: '2-digit', minute: '2-digit', hour12: false };
@@ -163,7 +164,7 @@
                         if (chat.last_message_time_utc) {
                             lastMessageTime = new Date(chat.last_message_time_utc).toLocaleTimeString(navigator.language, options);
                         }
-                        
+
                         // 3. HTML para o bloco de chat (inclui o unread_count)
                         newHtml += `
                             <a class="clique${activeClass}" href="${chatDetailBaseUrl}${chat.id}/">
@@ -191,7 +192,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Substitui o conteúdo da lista, garantindo a atualização instantânea
                 chatListContainer.innerHTML = newHtml;
 
@@ -206,17 +207,17 @@
     // Inicializa a funcionalidade de pesquisa, para ser chamada após a atualização da lista
     function initializeSearch() {
         const searchInput = document.getElementById('chatSearch');
-        
+
         if (searchInput) {
             const searchTerm = searchInput.value.toLowerCase().trim();
             document.querySelectorAll('.clique').forEach(function(link) {
                 // Certifique-se de que o elemento existe antes de tentar acessar suas propriedades
                 const chatBlock = link.querySelector('.chat-block');
                 if (!chatBlock) return;
-                
+
                 const username = chatBlock.querySelector('strong').textContent.toLowerCase();
                 const preview = chatBlock.querySelector('.chat-preview').textContent.toLowerCase();
-                
+
                 if (username.includes(searchTerm) || preview.includes(searchTerm)) {
                     link.style.display = 'block';
                 } else {
@@ -233,7 +234,7 @@
         const isMobile = window.innerWidth <= 768;
         const container1 = document.querySelector('.container-1');
         const container2 = document.querySelector('.container-2');
-        
+
         if (!container1 || !container2) return;
 
         // Verifica se a URL é de um chat detalhado (ex: /chat/123/)
@@ -289,15 +290,15 @@
                 chatForm.reset();
             });
         }
-        
+
         // Intercepta o envio do formulário de novo chat
         if (chatForm) {
             chatForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 formMessage.textContent = "Criando chat...";
                 formMessage.style.color = "#3498db"; 
-                
+
                 fetch(criarChatUrl, {
                     method: 'POST',
                     body: new FormData(chatForm),
@@ -326,7 +327,7 @@
                 });
             });
         }
-        
+
         // Funcionalidade de pesquisa de chats (inicia o listener)
         if (searchInput) {
             searchInput.addEventListener('input', initializeSearch);
@@ -346,7 +347,7 @@
         // 🟢 INICIA O POLLING PARA ATUALIZAÇÃO AUTOMÁTICA
         // Chamada inicial para carregar/atualizar a lista
         fetchAndRenderChats();
-        
+
         // Define o intervalo de polling (a cada 5 segundos)
         setInterval(fetchAndRenderChats, 1000); 
 

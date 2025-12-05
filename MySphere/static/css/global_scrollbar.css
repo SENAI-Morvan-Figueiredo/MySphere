@@ -1,0 +1,86 @@
+
+
+/* ========================================
+   GLOBAL SCROLLBAR CUSTOMIZATION
+   ======================================== */
+
+/* Scrollbar para navegadores Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f2f5;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+    border: 2px solid #f0f2f5;
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8;
+    border-color: #e4e6eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #1e40af;
+}
+
+/* Scrollbar para Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #2563eb #f0f2f5;
+}
+
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #2563eb #f0f2f5;
+}
+
+/* Animação suave ao rolar */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estilo específico para o body principal */
+body::-webkit-scrollbar {
+    width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #f0f2f5;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+    border: 2px solid #f0f2f5;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
+}
+
+/* Responsivo - scrollbar mais fino em mobile */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-width: 1px;
+    }
+}
+
