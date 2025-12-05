@@ -387,7 +387,6 @@
                                 <th>Posição</th>
                                 <th>Usuário</th>
                                 <th>Pontos Totais</th>
-                                <th>Nível</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -409,11 +408,7 @@
                                     </div>
                                 </td>
                                 <td class="points-cell">{{ r.points_total }} pts</td>
-                                <td>
-                                    <span class="level-cell">
-                                        Nível {{ r.nivel }}
-                                    </span>
-                                </td>
+                                
                             </tr>
                             {% empty %}
                             <tr>
@@ -468,10 +463,22 @@
                     <div class="progress-item">
                         <div class="progress-label">
                             <span>Nível {{ point.nivel }}</span>
-                            <strong>{{ point.points_atual }}/{{ point.nivel|add:1|stringformat:"d" }}00 pts</strong>
+
+                            {% if point.faltam > 0 %}
+                                <strong>{{ point.points_atual }}/{{ point.total_nivel }}</strong>
+                            {% else %}
+                                <strong>{{ point.points_atual }}/MAX</strong>
+                            {% endif %}
                         </div>
+
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: {% widthratio point.points_atual point.nivel|add:1 100 %}%"></div>
+                            {% if point.faltam > 0 %}
+                                <div class="progress-fill"
+                                    style="width: {% widthratio point.points_atual point.total_nivel 100 %}%">
+                                </div>
+                            {% else %}
+                                <div class="progress-fill" style="width: 100%"></div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}

@@ -44,7 +44,8 @@ class Command(BaseCommand):
 
             Points.objects.filter(tenant=tenant).update(
                 points_total=F('points_total') + F('points_atual'),
-                points_atual=0
+                points_atual=0,
+                nivel='Iniciante'
             )
 
             self.stdout.write("Pontos transferidos e zerados.\n")
