@@ -142,7 +142,7 @@
                 {% endif %}
                 <textarea
                   name="conteudo"
-                  placeholder="What's on your mind?"
+                  placeholder="No que você está pensando?"
                   rows="2"
                 ></textarea>
               </div>
@@ -227,7 +227,7 @@
                   {% endif %}
  {% comment %} ____________filtro de perfil_________________________________________________  {% endcomment %}
                   <p class="post-time">
-                    {{ post.criado_em|date:"d M 'at' H:i" }}
+                    {{ post.criado_em|date:"d/m/Y H:i" }}
                   </p>
                 </div>
               </div>
