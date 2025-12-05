@@ -141,6 +141,13 @@
                                 <span class="icon">🔄</span> Resetar Senha
                             </a>
                         </div>
+                        <!-- Logout Button -->
+                        <form method="post" action="{% url 'logout' %}" class="logout-form-card">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-logout">
+                                <span class="icon">🚪</span> Sair da Conta
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -266,13 +273,6 @@
                 </div>
                 {% endfor %}
 
-                <!-- Logout Button -->
-                <form method="post" action="{% url 'logout' %}" class="logout-form-card">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-logout">
-                        <span class="icon">🚪</span> Sair da Conta
-                    </button>
-                </form>
             </main>
 
             <!-- Right Sidebar - Empty for now, can add suggestions later -->
@@ -290,23 +290,23 @@
                 </div>
 
                 <div class="suggestions-card">
-    <h4>ESTATÍSTICAS</h4>
+                    <h4>ESTATÍSTICAS</h4>
 
-    <div class="stat-item">
-        <span class="stat-label">Posts</span>
-        <span class="stat-value">{{ posts|length }}</span>
-    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Posts</span>
+                        <span class="stat-value">{{ posts|length }}</span>
+                    </div>
 
-    <div class="stat-item">
-        <span class="stat-label">Likes Recebidos</span>
-        <span class="stat-value">{{ total_likes }}</span>
-    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Likes Recebidos</span>
+                        <span class="stat-value">{{ total_likes }}</span>
+                    </div>
 
-    <div class="stat-item">
-        <span class="stat-label">Comentários</span>
-        <span class="stat-value">{{ total_comments }}</span>
-    </div>
-</div>
+                    <div class="stat-item">
+                        <span class="stat-label">Comentários</span>
+                        <span class="stat-value">{{ total_comments }}</span>
+                    </div>
+                </div>
 
             </aside>
         </div>

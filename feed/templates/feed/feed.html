@@ -74,14 +74,6 @@
                 <span class="stat-number">{{ user.posts_authored.count }}</span>
                 <span class="stat-label">Post</span>
               </div>
-              <div class="stat">
-                <span class="stat-number">235</span>
-                <span class="stat-label">Following</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">2.3k</span>
-                <span class="stat-label">Follower</span>
-              </div>
             </div>
           </div>
 
@@ -273,11 +265,11 @@
               <div class="post-interactions">
                 <span
                   ><span class="comments-count">{{ post.total_comments }}</span>
-                  Comment</span
+                  Comentários</span
                 >
                 <span
                   ><span class="shares-count">{{ post.total_shares }}</span>
-                  Share</span
+                  Compartilhamentos</span
                 >
               </div>
             </div>
@@ -293,13 +285,13 @@
                 class="action-btn comment-btn"
                 onclick="toggleCommentBox({{ post.post_id }})"
               >
-                <span class="icon">💬</span> Comment
+                <span class="icon">💬</span> Comentar
               </button>
               <button
                 class="action-btn share-btn"
                 data-post-id="{{ post.post_id }}"
               >
-                <span class="icon">🔗</span> Share
+                <span class="icon">🔗</span> Compartilhar
               </button>
             </div>
 
