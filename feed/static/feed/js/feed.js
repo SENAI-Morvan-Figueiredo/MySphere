@@ -404,7 +404,7 @@ function createPostHTML(p) {
                     <div class="user-avatar-small default-avatar">${p.user.username[0].toUpperCase()}</div>
                 `}
                 <div class="author-info">
-                    <a href="/perfil/${p.user.id}">
+                    <a href="${p.user.profile_url}">
                         <h4>${p.user.nome}</h4>
                     </a>
                     <p class="post-time">${p.criado_em}</p>

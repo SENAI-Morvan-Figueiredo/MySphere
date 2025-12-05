@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from eventos.models import Evento
 from django.utils import timezone
+from django.urls import reverse
 import time
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -311,6 +312,14 @@ def check_new_posts(request):
 
     posts_json = []
     for p in new_posts:
+        # 🟢 2. CÁLCULO DA URL CORRETA (ADICIONE ESTE BLOCO)
+        if p.user == request.user:
+            # Se o post é meu, o link vai para a Home (igual ao template)
+            profile_url = reverse('home') 
+        else:
+            # Se é de outro, vai para o perfil, usando a função reverse para pegar o caminho certo
+            profile_url = reverse('perfil', args=[p.user.pk])
+
         posts_json.append({
             "id": p.post_id,
             "conteudo": p.conteudo,
@@ -318,13 +327,11 @@ def check_new_posts(request):
                 "id": p.user.id,
                 "username": p.user.username,
                 "nome": p.user.get_full_name() or p.user.username,
-                "foto": p.user.foto.url if getattr(p.user, "foto", None) else None
+                "foto": p.user.foto.url if getattr(p.user, "foto", None) else None,
+                "profile_url": profile_url  # <--- 🟢 3. ENVIE A URL NO JSON
             },
             "criado_em": p.criado_em.strftime("%d %b at %H:%M"),
-            "imagem": p.imagem.url if getattr(p, "imagem", None) else None,
-            "video": p.video.url if getattr(p, "video", None) else None,
-            "arquivo": p.arquivo.url if getattr(p, "arquivo", None) else None,
-            "arquivo_nome": p.arquivo.name.split("/")[-1] if getattr(p, "arquivo", None) else None,
+            # ... restante dos campos mantidos ...
             "likes": p.total_likes(),
             "comments": p.total_comments(),
             "shares": p.total_shares(),
