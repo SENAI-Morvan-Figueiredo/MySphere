@@ -383,7 +383,7 @@
                                                 {% endif %}
                                             </div>
                                             {% if chat.messages.last %}
-                                                <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:30 }}</span>
+                                                <span class="chat-preview">{{ chat.messages.last.conteudo|truncatechars:20 }}</span>
                                             {% else %}
                                                 <span class="chat-preview">Sem mensagens</span>
                                             {% endif %}
