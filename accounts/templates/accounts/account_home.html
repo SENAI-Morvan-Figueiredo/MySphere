@@ -140,7 +140,15 @@
                             <a href="{% url 'password_reset' %}" class="btn-profile-action">
                                 <span class="icon">🔄</span> Resetar Senha
                             </a>
+                            
                         </div>
+                        <!-- Logout Button -->
+                        <form method="post" action="{% url 'logout' %}" class="logout-form-card">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-logout">
+                                <span class="icon">🚪</span> Sair da Conta
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -266,13 +274,6 @@
                 </div>
                 {% endfor %}
 
-                <!-- Logout Button -->
-                <form method="post" action="{% url 'logout' %}" class="logout-form-card">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-logout">
-                        <span class="icon">🚪</span> Sair da Conta
-                    </button>
-                </form>
             </main>
 
             <!-- Right Sidebar - Empty for now, can add suggestions later -->

@@ -15,40 +15,8 @@ import json
 from django.views.decorators.http import require_POST
 from .forms import UserEditFormStaff
 from django.contrib.auth import views as auth_views
-from chat.models import Chat
 
 # Create your views here.
-
-
-
-
-@login_required
-def open_chat(request, user_id):
-    other_user = get_object_or_404(User, id=user_id, tenant=request.user.tenant)
-
-    # Impedir chat com si mesmo
-    if other_user == request.user:
-        return redirect('chat_list')
-
-    # Procurar chat existente (ordem não importa)
-    chat = Chat.objects.filter(
-        tenant=request.user.tenant,
-        user1__in=[request.user, other_user],
-        user2__in=[request.user, other_user]
-    ).first()
-
-    # Criar se não existir
-    if not chat:
-        chat = Chat.objects.create(
-            tenant=request.user.tenant,
-            user1=request.user,
-            user2=other_user
-        )
-
-    return redirect('chat_detail', chat_id=chat.id)
-
-
-
 
 @login_required
 def feed_view(request, username=None):
