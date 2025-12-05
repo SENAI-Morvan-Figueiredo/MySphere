@@ -8,7 +8,7 @@ from datetime import datetime
 
 @login_required
 def listar_eventos(request, modo=None):
-    eventos = Evento.objects.all().order_by('inicio')
+    eventos = Evento.objects.filter(tenant=request.user.tenant).order_by('inicio')
     pode_gerenciar = request.user.is_staff
 
     template = 'eventos/list_eventos.html' if modo == 'compacto' else 'eventos/index.html'
@@ -95,6 +95,8 @@ def editar_evento(request, evento_id):
         evento.descricao = request.POST.get('descricao', '')
         evento.inicio = inicio
         evento.fim = fim
+        if 'foto' in request.FILES:
+            evento.foto = request.FILES['foto']
         evento.save()
 
         messages.get_messages(request).used = True

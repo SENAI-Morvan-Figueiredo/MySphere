@@ -38,7 +38,10 @@ def feed_view(request):
 
     hoje = timezone.now()
     eventos = (
-        Evento.objects.filter(fim__gte=hoje)
+        Evento.objects.filter(
+            fim__gte=hoje,
+            tenant=request.user.tenant
+        )
         .order_by('fim')
     )[:3]
     

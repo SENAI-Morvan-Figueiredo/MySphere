@@ -704,3 +704,73 @@ body {
     padding-bottom: 80px !important;
   }
 }
+
+/* Modal Detail Styling */
+.modal-header {
+    text-align: center;
+}
+
+.modal-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h2 {
+    padding: 1.5rem 1.5rem 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1c1e21;
+}
+
+.modal-details {
+    padding: 1rem 1.5rem 1.5rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.detail-row:last-of-type {
+    border-bottom: none;
+}
+
+.detail-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #65676b;
+    font-size: 0.9rem;
+}
+
+.detail-label svg {
+    color: #2563eb;
+}
+
+.detail-value {
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.detail-description {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e4e6eb;
+}
+
+.detail-description h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1c1e21;
+}
+
+.detail-description p {
+    color: #65676b;
+    line-height: 1.6;
+}
