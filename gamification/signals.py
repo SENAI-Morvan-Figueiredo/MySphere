@@ -16,7 +16,7 @@ def criar_registro_de_pontos(sender, instance, created, **kwargs):
                 tenant=tenant,
                 points_atual=0,
                 points_total=0,
-                nivel=1
+                nivel='Iniciante'
             )
         else:
             print("Usuário criado sem tenant:", instance.username)

@@ -185,7 +185,7 @@
                             {% endif %}
                             <div class="author-info">
                                 <h4>{{ post.user.get_full_name|default:post.user.username }}</h4>
-                                <p class="post-time">{{ post.criado_em|date:"d M 'às' H:i" }}</p>
+                                <p class="post-time">{{ post.criado_em|date:"d/m/Y H:i" }}
                             </div>
                         </div>
                         <button class="post-menu">⋮</button>
@@ -259,7 +259,7 @@
 
                         <form class="comment-form" data-post-id="{{ post.post_id }}">
                             {% csrf_token %}
-                            <input type="text" name="conteudo" placeholder="Escreva um comentário..." />
+                            <input type="text" name="conteudo" placeholder="Faça um comentário..." />
                             <button type="submit">Enviar</button>
                         </form>
                     </div>

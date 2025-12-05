@@ -69,10 +69,10 @@
               <h3>{{ user.get_full_name|default:user.username }}</h3>
               <p class="profile-username">@{{ user.username }}</p>
             </div>
-            <div class="profile-stats">
+            <div class="profile-stats"> 
               <div class="stat">
                 <span class="stat-number">{{ user.posts_authored.count }}</span>
-                <span class="stat-label">Post</span>
+                <span class="stat-label">Posts</span>
               </div>
             </div>
           </div>
@@ -332,9 +332,9 @@
                 <input
                   type="text"
                   name="conteudo"
-                  placeholder="Write a comment..."
+                  placeholder="Faça um comentário..."
                 />
-                <button type="submit">Send</button>
+                <button type="submit">Enviar</button>
               </form>
             </div>
           </article>

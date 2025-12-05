@@ -41,11 +41,16 @@ def feed_view(request, username=None):
     # Marca se o usuário atual curtiu cada post
     for post in posts:
         post.user_has_liked = post.likes.filter(user=request.user).exists()
-
+        
+    total_likes = Like.objects.filter(post__user=profile_user).count()
+    total_comments = Comment.objects.filter(post__user=profile_user).count()
+    
     context = {
         'posts': posts,
         'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
         'user': request.user,
+        'total_likes': total_likes,
+        'total_comments': total_comments,
     }
 
     return render(request, 'accounts/account_home.html', context)
@@ -69,6 +74,9 @@ def feed_perfil_view(request, pk):
         .prefetch_related('likes', 'comments', 'shares', 'hashtags')
         .order_by('-criado_em')
     )
+    
+    total_likes = Like.objects.filter(post__user=profile_user).count()
+    total_comments = Comment.objects.filter(post__user=profile_user).count()
 
     # Marca se o usuário atual curtiu cada post
     for post in posts:
@@ -76,7 +84,9 @@ def feed_perfil_view(request, pk):
 
     context = {
         'posts': posts,
-        'profile_user': profile_user,  # <-- agora o template sabe de quem é o perfil
+        'profile_user': profile_user, 
+        'total_likes': total_likes,
+        'total_comments': total_comments,
     }
 
     return render(request, 'accounts/account_perfil.html', context)

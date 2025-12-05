@@ -442,3 +442,10 @@ td button[type="submit"]:hover {
   z-index: 10;
   /* ... */
 }
+.table-wrapper thead th {
+  /* Mantido: Garante que o cabeçalho fique fixo ao rolar */
+  position: sticky; 
+  top: 0;
+  z-index: 10;
+  /* ... */
+}
