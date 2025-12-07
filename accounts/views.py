@@ -289,7 +289,7 @@ class UserStaffEditView(UpdateView):
 # VIEW QUE ENVIA O EMAIL
 
 class ResetPasswordView(auth_views.PasswordResetView):
-    template_name = 'UserFotoUpdate'
+    template_name = 'accounts/password_reset.html'
     email_template_name = 'accounts/password_reset_email.html'
     html_email_template_name = 'accounts/password_reset_email.html'
     subject_template_name = 'accounts/password_reset_subject.txt'
