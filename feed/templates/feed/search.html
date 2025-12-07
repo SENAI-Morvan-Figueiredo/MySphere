@@ -130,6 +130,10 @@
         .back-link:hover {
             text-decoration: underline;
         }
+        .logo a {
+            cursor: pointer;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -138,7 +142,7 @@
         <header class="header">
             <div class="header-left">
                 <div class="logo">
-                    <h1>{{user.tenant.nome}}</h1>
+                    <a href="{% url 'feed:feed' %}"><h1>{{user.tenant.nome}}</h1></a>
                 </div>
                 <form action="{% url 'feed:search' %}" method="GET" class="search-bar">
                     <input type="text" name="q" placeholder="Buscar usuários ou hashtags..." value="{{ results.query }}" autocomplete="off" id="search-input">
@@ -170,17 +174,23 @@
                 <div class="results-section">
                     <h3>👤 Usuários ({{ results.users|length }})</h3>
                     {% for user_result in results.users %}
-                    <div class="user-result">
-                        {% if user_result.foto %}
-                            <img src="{{ user_result.foto.url }}" alt="{{ user_result.username }}" class="user-avatar-small">
+                        {% if user_result == request.user %} 
+                            <a href="{% url 'home' %}" style="text-decoration: none;">
                         {% else %}
-                            <div class="user-avatar-small default-avatar">{{ user_result.username|slice:":1"|upper }}</div>
+                            <a href="{% url 'perfil' user_result.pk %}" style="text-decoration: none;">
                         {% endif %}
-                        <div class="user-details">
-                            <h4>{{ user_result.get_full_name|default:user_result.username }}</h4>
-                            <p>@{{ user_result.username }}</p>
+                        <div class="user-result">
+                            {% if user_result.foto %}
+                                <img src="{{ user_result.foto.url }}" alt="{{ user_result.username }}" class="user-avatar-small">
+                            {% else %}
+                                <div class="user-avatar-small default-avatar">{{ user_result.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                            <div class="user-details">
+                                <h4>{{ user_result.get_full_name|default:user_result.username }}</h4>
+                                <p>@{{ user_result.username }}</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                     {% endfor %}
                 </div>
                 {% endif %}
