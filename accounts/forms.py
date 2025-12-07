@@ -55,3 +55,8 @@ class UserEditFormStaff(forms.ModelForm):
         widgets = {
             'data_nascimento': forms.DateInput(attrs={'type': 'date'})
         }
+
+class UserFotoUpdate(forms.ModelForm):
+    class Meta:
+        model: User
+        fields = ['foto']

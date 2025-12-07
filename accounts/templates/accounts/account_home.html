@@ -24,7 +24,7 @@
                 {% endif %}
                 <div class="user-info">
                     {% if user.foto %}
-                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small" />
+                    <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="user-avatar-small foto-usuario" />
                     {% else %}
                     <div class="user-avatar-small default-avatar">
                         {{ user.username|slice:":1"|upper }}
@@ -42,7 +42,7 @@
                 <div class="profile-card">
                     <div class="profile-header">
                         {% if user.foto %}
-                        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar" />
+                        <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="profile-avatar foto-usuario" />
                         {% else %}
                         <div class="profile-avatar default-avatar-large">
                             {{ user.username|slice:":1"|upper }}
@@ -104,15 +104,23 @@
                 <div class="profile-info-card">
                     <div class="profile-cover">
                         <div class="profile-photo-large">
-                            {% if profile_user.foto %}
-                            <img src="{{ profile_user.foto.url }}" alt="{{ profile_user.username }}" />
-                            {% else %}
-                            <div class="profile-avatar-xl default-avatar-large">
-                                {{ profile_user.username|slice:":1"|upper }}
-                            </div>
-                            {% endif %}
+                            <button id="btn-editar-foto" class="btn-edit-photo" style="background: none; border: none; cursor: pointer;">
+                                {% if profile_user.foto %}
+                                <img class="foto-usuario" id="foto-perfil" src="{{ profile_user.foto.url }}" alt="{{ profile_user.username }}" />
+                                {% else %}
+                                <div class="profile-avatar-xl default-avatar-large">
+                                    {{ profile_user.username|slice:":1"|upper }}
+                                </div>
+                                {% endif %}
+
+                                {% if user == profile_user %}
+
+                                {% endif %}
+                            </button>
                         </div>
                     </div>
+                    <input type="file" id="input-foto" accept="image/*" style="display: none;">
+
                     <div class="profile-details">
                         <h2>{{ profile_user.get_full_name|default:profile_user.username }}</h2>
                         <p class="profile-email">{{ profile_user.email }}</p>
@@ -178,7 +186,7 @@
                     <div class="post-header">
                         <div class="post-author">
                             {% if post.user.foto %}
-                            <img src="{{ post.user.foto.url }}" alt="{{ post.user.username }}" class="user-avatar-small" />
+                            <img src="{{ post.user.foto.url }}" alt="{{ post.user.username }}" class="user-avatar-small foto-usuario" />
                             {% else %}
                             <div class="user-avatar-small default-avatar">
                                 {{ post.user.username|slice:":1"|upper }}
@@ -317,6 +325,7 @@
 
     {% load static %}
     <script>
+        const atualizarFotoURL = "{% url 'atualizar_foto' %}";
         const atualizarSobreURL = "{% url 'atualizar_sobre' %}";
         const csrfToken = "{{ csrf_token }}";
     </script>

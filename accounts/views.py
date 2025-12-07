@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from django.views.decorators.http import require_POST
-from .forms import UserEditFormStaff
+from .forms import UserEditFormStaff, UserFotoUpdate
 from django.contrib.auth import views as auth_views
 
 # Create your views here.
@@ -289,8 +289,27 @@ class UserStaffEditView(UpdateView):
 # VIEW QUE ENVIA O EMAIL
 
 class ResetPasswordView(auth_views.PasswordResetView):
-    template_name = 'accounts/password_reset.html'
+    template_name = 'UserFotoUpdate'
     email_template_name = 'accounts/password_reset_email.html'
     html_email_template_name = 'accounts/password_reset_email.html'
     subject_template_name = 'accounts/password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
+
+# VIEW PARA MUDAR A FOTO DE PERFIL
+
+@login_required
+@csrf_exempt
+def atualizar_foto(request):
+    if request.method == "POST":
+        foto = request.FILES.get("foto")
+        if not foto:
+            return JsonResponse({"success": False, "error": "Nenhuma foto enviada."}, status=400)
+        user = request.user
+        user.foto = foto
+        user.save()
+
+        return JsonResponse({
+            "success": True,
+            "foto_url": user.foto.url
+        })
+    return JsonResponse({"success": False}, status=400)

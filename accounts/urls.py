@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('home/', views.feed_view, name='home'),
     path("atualizar_sobre/", views.atualizar_sobre, name="atualizar_sobre"),
+    path("atualizar-foto/", views.atualizar_foto, name="atualizar_foto"),
     path("perfil/<int:pk>/", views.feed_perfil_view, name='perfil'),
     path('perfil/<int:post_id>/like/<int:pk>/', views.like_post_perfil, name='like_post'),
     path('perfil/<int:post_id>/comment/<int:pk>/', views.comment_post_perfil, name='comment_post'),

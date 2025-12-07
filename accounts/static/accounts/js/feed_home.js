@@ -411,3 +411,43 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSalvar.style.display = "none";
   });
 });
+
+// ATUALIZAR A FOTO
+
+const btnFoto = document.getElementById("btn-editar-foto");
+const inputFoto = document.getElementById("input-foto");
+const imgPerfil = document.getElementById("foto-perfil");
+
+if (btnFoto) {
+    btnFoto.addEventListener("click", () => {
+        inputFoto.click();
+    });
+}
+
+if (inputFoto) {
+    inputFoto.addEventListener("change", () => {
+        const file = inputFoto.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("foto", file);
+
+        fetch(atualizarFotoURL, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const timestamp = "?t=" + new Date().getTime();
+                document.querySelectorAll(".foto-usuario").forEach(img => {
+                    img.src = data.foto_url + timestamp;
+                });
+            }
+        })
+        .catch(err => console.error("Erro ao atualizar foto:", err));
+    });
+}
