@@ -54,6 +54,7 @@
 .grid-3 {
   /* Padrão: Mínimo de 300px por coluna, mas com 3 colunas base para telas maiores */
   grid-template-columns: repeat(3, minmax(300px, 1fr)); 
+  
 }
 
 
@@ -81,27 +82,37 @@
   padding: 1.5rem;
 }
 
+.grafico {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .chart-card.wide {
-  grid-column: span 2; /* Em desktop, ocupa 2/3 da largura */
-}
+    width: 100%;
+    max-width: 1200px;      
+    margin: 0 auto;
+    padding: 20px;
 
-.chart-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1e293b;
-}
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 
-.chart-subtitle {
-  font-size: 0.875rem;
-  color: #64748b;
-  margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .chart-box {
-  position: relative;
-  width: 100%;
-  height: 300px; /* Altura padrão para desktop */
+    width: 100%;
 }
+
+.chart-box canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px;  
+}
+
 
 /* ==========================================================================
    Responsividade (Ajustes Finais de Gráfico/Grid)

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'staff/css/staff_dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'staff/css/staff.css' %}">
     <link rel="stylesheet" href="{% static 'css/global_scrollbar.css' %}">
+    {% block extra_css %} {% endblock %}
 </head>
 
   <body>
@@ -150,7 +151,7 @@
 
                 </div>
 
-                <div class="grid grid-3">
+                <div class="grafico">
                     <div class="card chart-card wide">
                     <h3 class="chart-title">Posts por Dia</h3>
                     <p class="chart-subtitle">Últimos 7 dias</p>
@@ -164,7 +165,6 @@
                     </div>
                     </div>
                 </div>
-
                 </div>
             </main>
             </div>
